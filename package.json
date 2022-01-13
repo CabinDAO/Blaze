@@ -1,5 +1,5 @@
 {
-  "name": "@dao-camp",
+  "name": "dao-camp",
   "private": true,
   "workspaces":[
     "packages/*"

@@ -1,5 +1,5 @@
 {
-  "name": "@dao-camp/app",
+  "name": "dao-camp/app",
   "private": true,
   "scripts": {
     "dev": "next dev",
