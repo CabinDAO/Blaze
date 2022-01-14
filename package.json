@@ -1,7 +1,13 @@
 {
   "name": "dao-camp",
+  "version": "1.0.0",
+  "description": "Hacker News for DAOs",
+  "main": "index.js",
+  "repository": "https://github.com/CabinDAO/dao-camp.git",
+  "author": "@delightfulabyss",
+  "license": "MIT",
   "private": true,
-  "workspaces":[
+  "workspaces": [
     "packages/*"
   ]
 }
