@@ -13,6 +13,7 @@
     "@cabindao/topo-theme": "^0.1.0",
     "@stitches/react": "^1.2.6",
     "ethers": "^5.5.3",
+    "graphql-tools": "^8.2.0",
     "next": "12.0.8",
     "react": "17.0.2",
     "react-dom": "17.0.2",
