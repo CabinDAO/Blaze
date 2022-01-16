@@ -6,7 +6,7 @@ import UserCard from "@/components/UserCard";
 import Post from "@/components/Post";
 import { useWallet } from "@/components/WalletAuth";
 
-const Text = styled("h2", {
+const Title = styled("h2", {
   marginTop: "$12",
   marginBottom: "$5",
 });
@@ -39,12 +39,14 @@ const Home: NextPage = () => {
       <header>
         {address && (
           <>
-            <Text>Profile</Text>
+            <Title>Profile</Title>
             <Card>
               <UserCard address={address} />
             </Card>
           </>
         )}
+
+        <Title>Today</Title>
 
         <TabBar>
           <Button>Submissions</Button>
@@ -52,12 +54,15 @@ const Home: NextPage = () => {
           <div style={{ marginLeft: "auto" }}></div>
           <Button type="secondary">Newest</Button>
         </TabBar>
+
         <PostList>
-          <Post />
-          <Post />
-          <Post />
-          <Post />
-          <Post />
+          <Post title="Post Title" />
+          <Post title="Design with Community in Mind: Cabin Core Contributor Mel Shields" />
+          <Post title="A brief history of decentralized cities and centralized states" />
+          <Post title="ConstitutionDAO: We Lost the Battle, But Will Win the War" />
+          <Post title="Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee" />
+          <Post title="Building a Decentralized City: Cabin Core Contributor Phil Levin" />
+          <Post title="Around the Campfire, Cabin Contributor Jon Hillis" />
         </PostList>
       </header>
     </div>

@@ -31,6 +31,13 @@ const UserCard = ({ address }: UserCardProps) => {
     <div>
       <AddressHeader>
         <WalletAddress address={address} />
+        <a
+          href={`https://etherscan.io/address/${address}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          [L]
+        </a>
       </AddressHeader>
       <UserMeta>
         <div>Joined Jan 1, 2022</div>

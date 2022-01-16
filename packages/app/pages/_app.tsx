@@ -12,6 +12,12 @@ const globalStyles = globalCss({
     color: "$forest",
     backgroundColor: "$sand",
   },
+  a: {
+    color: "$forest",
+    "&:hover": {
+      opacity: 0.5,
+    },
+  },
 });
 
 const Wrapper = styled("div", {

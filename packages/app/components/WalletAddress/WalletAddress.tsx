@@ -14,7 +14,7 @@ const WalletAddress = ({ address }: WalletAddressProps) => {
     return [address.slice(0, 6), address.slice(-4)].join("...");
   }, [address]);
 
-  return <AddressText>{addr}</AddressText>;
+  return <AddressText title={address}>{addr}</AddressText>;
 };
 
 export default WalletAddress;
