@@ -29,7 +29,7 @@ const UpvoteArrowIcon = styled(ArrowIcon, {
   },
 });
 
-const Wrapper = styled("button", {
+const Wrapper = styled("div", {
   backgroundColor: "transparent",
   borderColor: "transparent",
   borderWidth: 1,
