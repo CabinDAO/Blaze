@@ -89,7 +89,10 @@ const Nav = styled("nav", {
 const alchemyId = process.env.ALCHEMY_API_KEY;
 const chains = defaultChains;
 
-const connectors = [new InjectedConnector({ chains: defaultChains })];
+const connectors = [
+  new InjectedConnector({ chains: defaultChains }),
+  new WalletConnectConnector({options: {rpc: {1: `https://eth-goerli.alchemyapi.io/v2/${alchemyId}}`}}}),
+];
 
 const ProfileLink = () => {
   const { address, ens } = useWallet();
