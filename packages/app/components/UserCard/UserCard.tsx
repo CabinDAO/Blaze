@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { ExternalLinkIcon, CalendarIcon, ClockIcon } from "@radix-ui/react-icons";
 import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
 
@@ -50,8 +50,8 @@ const UserCard = ({ address, ens }: UserCardProps) => {
         </a>
       </AddressHeader>
       <UserMeta>
-        <div>Joined Jan 1, 2022</div>
-        <div>Last seen Jan 1, 2022</div>
+        <div><CalendarIcon/> Joined Jan 1, 2022</div>
+        <div><ClockIcon/> Last seen Jan 1, 2022</div>
       </UserMeta>
       <UserMeta>
         <div>
