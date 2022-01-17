@@ -61,7 +61,7 @@ const UserCard = ({ address, ens }: UserCardProps) => {
           <UserStat>345</UserStat>upvotes
         </div>
         <div>
-          <UserStat>6789</UserStat>upvoated
+          <UserStat>6789</UserStat>upvoted
         </div>
       </UserMeta>
     </div>
