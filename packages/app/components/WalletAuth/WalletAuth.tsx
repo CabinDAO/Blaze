@@ -26,8 +26,9 @@ import Link from "next/link";
 // };
 
 export const useWallet = () => {
-  const [{ data }] = useAccount();
+  const [{ data, error }] = useAccount();
   return {
+    isConnected: !error && !!data?.address,
     address: data?.address ?? null,
     ens: data?.ens ?? null,
   };

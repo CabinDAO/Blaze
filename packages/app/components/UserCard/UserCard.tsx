@@ -1,3 +1,4 @@
+import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
 
@@ -34,13 +35,17 @@ const UserCard = ({ address, ens }: UserCardProps) => {
   return (
     <div>
       <AddressHeader>
-        <WalletAddress address={address} ens={ens} />
+        <WalletAddress
+          address={address}
+          ens={ens}
+          css={{ marginRight: "$1" }}
+        />
         <a
           href={`https://etherscan.io/address/${address}`}
           target="_blank"
           rel="noreferrer"
         >
-          [L]
+          <ExternalLinkIcon />
         </a>
       </AddressHeader>
       <UserMeta>

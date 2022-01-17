@@ -1,7 +1,9 @@
 import type { NextPage } from "next";
 import { styled } from "@/stitches.config";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 import { Button, Heading, Input } from "@cabindao/topo";
+import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import Post from "@/components/Post";
 import { useWallet } from "@/components/WalletAuth";
@@ -11,20 +13,61 @@ const Title = styled("h2", {
   marginBottom: "$5",
 });
 
-const Card = styled("div", {
-  margin: "0 auto",
-  marginBottom: "$12",
-  maxWidth: 320,
-});
-
-const TabBar = styled("div", {
-  display: "flex",
+const TabBarWrapper = styled("div", {
   borderBottomWidth: 1,
   borderBottomStyle: "solid",
   borderColor: "$forest",
   boxSizing: "border-box",
   marginBottom: "$2",
 });
+const TabBarContent = styled("div", {
+  display: "flex",
+  marginBottom: -1,
+});
+const TabLink = styled("button", {
+  boxSizing: "border-box",
+  background: "none",
+  paddingLeft: "$4",
+  paddingRight: "$4",
+  border: 0,
+  cursor: "pointer",
+  defaultVariants: {
+    active: false,
+  },
+  variants: {
+    active: {
+      false: {
+        "&:hover": {
+          backgroundColor: "rgba(50, 72, 65, 0.1)",
+        },
+      },
+      true: {
+        backgroundColor: "$forest",
+        color: "$sand",
+      },
+    },
+  },
+});
+const TabButton = (props: any) => <TabLink {...props} />;
+const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
+  <TabBarWrapper {...props}>
+    <TabBarContent>{children}</TabBarContent>
+  </TabBarWrapper>
+);
+const MenuButton = (props: any) => {
+  return (
+    <Button
+      css={{
+        "&:hover": {
+          backgroundColor: "rgba(50, 72, 65, 0.1)",
+        },
+      }}
+      type="secondary"
+      rightIcon={<ChevronDownIcon />}
+      {...props}
+    />
+  );
+};
 
 const PostList = styled("div", {
   display: "flex",
@@ -49,10 +92,11 @@ const Home: NextPage = () => {
         <Title>Today</Title>
 
         <TabBar>
-          <Button>Submissions</Button>
-          <Button tone="wheat">Upvoted</Button>
-          <div style={{ marginLeft: "auto" }}></div>
-          <Button type="secondary">Newest</Button>
+          <TabButton active>Submissions</TabButton>
+          <TabButton>Upvoted</TabButton>
+          <div style={{ marginLeft: "auto" }}>
+            <MenuButton>Newest</MenuButton>
+          </div>
         </TabBar>
 
         <PostList>

@@ -4,8 +4,8 @@ import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { styled, globalCss } from "@/stitches.config";
 import type { AppProps } from "next/app";
 import { Button } from "@cabindao/topo";
-import { useAccount } from "wagmi";
 import WalletAddress from "@/components/WalletAddress";
+import Link from "next/link";
 import WalletAuth, { useWallet } from "@/components/WalletAuth";
 
 const globalStyles = globalCss({
@@ -26,9 +26,11 @@ const globalStyles = globalCss({
 
 const Wrapper = styled("div", {
   margin: "0 auto",
+  padding: "$4",
   maxWidth: 740,
   width: "100%",
   marginBottom: "$12",
+  boxSizing: "border-box",
 });
 
 const Header = styled("header", {
@@ -98,10 +100,24 @@ const ProfileLink = () => {
   const { address, ens } = useWallet();
   if (!address) return null;
   return (
-    <Button type="link">
-      <WalletAddress address={address} ens={ens} />
-    </Button>
+    <Link href="/profile">
+      <a>
+        <WalletAddress address={address} ens={ens} />
+      </a>
+    </Link>
   );
+};
+
+const SubmitLinkAction = () => {
+  const { isConnected } = useWallet();
+  if (isConnected) {
+    return (
+      <Link href="/submission/new" passHref>
+        <Button tone="wheat">Submit a Link</Button>
+      </Link>
+    );
+  }
+  return null;
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -110,13 +126,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     <WalletProvider autoConnect connectors={connectors}>
       <MainContainer>
         <Header>
-          <DaoCampLogo>#dao-camp</DaoCampLogo>
+          <Link href="/">
+            <a>
+              <DaoCampLogo>#dao-camp</DaoCampLogo>
+            </a>
+          </Link>
           <Nav>
             <Button type="link">Link</Button>
             <ProfileLink />
           </Nav>
           <UserActions>
-            <Button tone="wheat">Submit a Link</Button>
+            <SubmitLinkAction />
             <WalletAuth />
           </UserActions>
         </Header>

@@ -6,19 +6,24 @@ const AddressText = styled("span", {
   fontFamily: "$mono",
 });
 
-export interface WalletAddressProps {
+export interface WalletAddressProps
+  extends React.ComponentProps<typeof AddressText> {
   address: string;
   ens?: {
     name: string;
     avatar?: string | null;
   } | null;
 }
-const WalletAddress = ({ address, ens }: WalletAddressProps) => {
+const WalletAddress = ({ address, ens, ...props }: WalletAddressProps) => {
   const addr = useMemo(() => {
     return [address.slice(0, 6), address.slice(-4)].join("...");
   }, [address]);
 
-  return <AddressText title={address}>{ens?.name ?? addr}</AddressText>;
+  return (
+    <AddressText title={address} {...props}>
+      {ens?.name ?? addr}
+    </AddressText>
+  );
 };
 
 export default WalletAddress;
