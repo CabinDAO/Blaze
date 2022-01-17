@@ -5,10 +5,12 @@ import WalletAddress from "../WalletAddress";
 interface WalletContextState {
   address: string | null;
   setAddress: (address: string | null) => void;
+  isConnected: boolean;
 }
 const WalletContext = createContext<WalletContextState>({
   address: null,
   setAddress: () => {},
+  isConnected: false,
 });
 
 export const WalletProvider = ({
@@ -17,7 +19,10 @@ export const WalletProvider = ({
   children?: React.ReactNode;
 }) => {
   const [address, setAddress] = useState<string | null>(null);
-  const value = useMemo(() => ({ address, setAddress }), [address, setAddress]);
+  const value = useMemo(
+    () => ({ address, setAddress, isConnected: !!address }),
+    [address, setAddress]
+  );
   return (
     <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
   );
