@@ -22,9 +22,11 @@ const globalStyles = globalCss({
 
 const Wrapper = styled("div", {
   margin: "0 auto",
+  padding: "$4",
   maxWidth: 740,
   width: "100%",
   marginBottom: "$12",
+  boxSizing: "border-box",
 });
 
 const Header = styled("header", {
