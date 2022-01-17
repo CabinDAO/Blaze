@@ -8,13 +8,17 @@ const AddressText = styled("span", {
 
 export interface WalletAddressProps {
   address: string;
+  ens?: {
+    name: string;
+    avatar?: string | null;
+  } | null;
 }
-const WalletAddress = ({ address }: WalletAddressProps) => {
+const WalletAddress = ({ address, ens }: WalletAddressProps) => {
   const addr = useMemo(() => {
     return [address.slice(0, 6), address.slice(-4)].join("...");
   }, [address]);
 
-  return <AddressText title={address}>{addr}</AddressText>;
+  return <AddressText title={address}>{ens?.name ?? addr}</AddressText>;
 };
 
 export default WalletAddress;

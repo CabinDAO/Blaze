@@ -25,12 +25,16 @@ const UserStat = styled("div", {
 
 interface UserCardProps {
   address: string;
+  ens?: {
+    name: string;
+    avatar?: string | null;
+  } | null;
 }
-const UserCard = ({ address }: UserCardProps) => {
+const UserCard = ({ address, ens }: UserCardProps) => {
   return (
     <div>
       <AddressHeader>
-        <WalletAddress address={address} />
+        <WalletAddress address={address} ens={ens} />
         <a
           href={`https://etherscan.io/address/${address}`}
           target="_blank"

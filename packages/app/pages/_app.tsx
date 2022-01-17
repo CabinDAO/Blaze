@@ -1,12 +1,12 @@
-
-import { Provider as WalletProvider, chain, defaultChains } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
+import { Provider as WalletProvider, chain, defaultChains } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { styled, globalCss } from "@/stitches.config";
 import type { AppProps } from "next/app";
 import { Button } from "@cabindao/topo";
-import { useAccount } from 'wagmi';
+import { useAccount } from "wagmi";
 import WalletAddress from "@/components/WalletAddress";
+import WalletAuth, { useWallet } from "@/components/WalletAuth";
 
 const globalStyles = globalCss({
   body: {
@@ -89,14 +89,14 @@ const Nav = styled("nav", {
 const alchemyId = process.env.ALCHEMY_API_KEY;
 const chains = defaultChains;
 
-const connectors = [new InjectedConnector({chains: defaultChains})];
+const connectors = [new InjectedConnector({ chains: defaultChains })];
 
 const ProfileLink = () => {
-  const [{ data, error, loading }] = useAccount();
-  if (!data) return null;
+  const { address, ens } = useWallet();
+  if (!address) return null;
   return (
     <Button type="link">
-      <WalletAddress address={data?.address} />
+      <WalletAddress address={address} ens={ens} />
     </Button>
   );
 };
@@ -114,6 +114,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Nav>
           <UserActions>
             <Button tone="wheat">Submit a Link</Button>
+            <WalletAuth />
           </UserActions>
         </Header>
         <Wrapper>

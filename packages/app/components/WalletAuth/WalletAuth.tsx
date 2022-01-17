@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 import { Button } from "@cabindao/topo";
 import WalletAddress from "../WalletAddress";
-import { useConnect, useAccount, Connector } from 'wagmi';
+import { useConnect, useAccount, Connector } from "wagmi";
+import Link from "next/link";
 
 // interface WalletContextState {
 //   address: string | null;
@@ -24,15 +25,22 @@ import { useConnect, useAccount, Connector } from 'wagmi';
 //   );
 // };
 
-// export const useWallet = () => {
-//   return useContext(WalletContext);
-// };
+export const useWallet = () => {
+  const [{ data }] = useAccount();
+  return {
+    address: data?.address ?? null,
+    ens: data?.ens ?? null,
+  };
+};
 
 const WalletAuth = () => {
   // const { address, setAddress } = useContext(WalletContext);
-  const [{ data, error, loading }, connect] = useConnect()
-  const [{data: accountData, error: accountError, loading: accountLoading }, disconnect] = useAccount();
-  if (data) {
+  const [{ data, error, loading }, connect] = useConnect();
+  const [
+    { data: accountData, error: accountError, loading: accountLoading },
+    disconnect,
+  ] = useAccount();
+  if (data.connected) {
     return (
       <div>
         <Button onClick={disconnect} type="secondary">
@@ -42,11 +50,11 @@ const WalletAuth = () => {
     );
   }
   return (
-    <Button
-      onClick={() => connect(data.connectors[0])}
-    >
-      Connect
-    </Button>
+    <Link href="/user/sign_in" passHref>
+      <a>
+        <Button type="secondary">Connect</Button>
+      </a>
+    </Link>
   );
 };
 
