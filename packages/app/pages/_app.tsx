@@ -1,7 +1,11 @@
-import WalletAuth, { useWallet, WalletProvider } from "@/components/WalletAuth";
+
+import { Provider as WalletProvider, chain, defaultChains } from 'wagmi';
+import { InjectedConnector } from 'wagmi/connectors/injected';
+import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 import { styled, globalCss } from "@/stitches.config";
 import type { AppProps } from "next/app";
 import { Button } from "@cabindao/topo";
+import { useAccount } from 'wagmi';
 import WalletAddress from "@/components/WalletAddress";
 
 const globalStyles = globalCss({
@@ -82,12 +86,17 @@ const Nav = styled("nav", {
   columnGap: "$4",
 });
 
+const alchemyId = process.env.ALCHEMY_API_KEY;
+const chains = defaultChains;
+
+const connectors = [new InjectedConnector({chains: defaultChains})];
+
 const ProfileLink = () => {
-  const { address } = useWallet();
-  if (!address) return null;
+  const [{ data, error, loading }] = useAccount();
+  if (!data) return null;
   return (
     <Button type="link">
-      <WalletAddress address={address} />
+      <WalletAddress address={data?.address} />
     </Button>
   );
 };
@@ -95,7 +104,7 @@ const ProfileLink = () => {
 function MyApp({ Component, pageProps }: AppProps) {
   globalStyles();
   return (
-    <WalletProvider>
+    <WalletProvider autoConnect connectors={connectors}>
       <MainContainer>
         <Header>
           <DaoCampLogo>#dao-camp</DaoCampLogo>
@@ -105,7 +114,6 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Nav>
           <UserActions>
             <Button tone="wheat">Submit a Link</Button>
-            <WalletAuth />
           </UserActions>
         </Header>
         <Wrapper>
