@@ -1,8 +1,9 @@
-import { ExternalLinkIcon } from "@radix-ui/react-icons";
+import { ExternalLinkIcon, CalendarIcon, ClockIcon } from "@radix-ui/react-icons";
 import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
 
 const AddressHeader = styled("div", {
+  display: "flex",
   fontWeight: "$bold",
   fontSize: 40,
   lineHeight: 1.3,
@@ -26,12 +27,20 @@ const UserStat = styled("div", {
 
 interface UserCardProps {
   address: string;
+  ens?: {
+    name: string;
+    avatar?: string | null;
+  } | null;
 }
-const UserCard = ({ address }: UserCardProps) => {
+const UserCard = ({ address, ens }: UserCardProps) => {
   return (
     <div>
       <AddressHeader>
-        <WalletAddress address={address} css={{ marginRight: "$1" }} />
+        <WalletAddress
+          address={address}
+          ens={ens}
+          css={{ marginRight: "$1" }}
+        />
         <a
           href={`https://etherscan.io/address/${address}`}
           target="_blank"
@@ -41,8 +50,8 @@ const UserCard = ({ address }: UserCardProps) => {
         </a>
       </AddressHeader>
       <UserMeta>
-        <div>Joined Jan 1, 2022</div>
-        <div>Last seen Jan 1, 2022</div>
+        <div><CalendarIcon/> Joined Jan 1, 2022</div>
+        <div><ClockIcon/> Last seen Jan 1, 2022</div>
       </UserMeta>
       <UserMeta>
         <div>
@@ -52,7 +61,7 @@ const UserCard = ({ address }: UserCardProps) => {
           <UserStat>345</UserStat>upvotes
         </div>
         <div>
-          <UserStat>6789</UserStat>upvoated
+          <UserStat>6789</UserStat>upvoted
         </div>
       </UserMeta>
     </div>

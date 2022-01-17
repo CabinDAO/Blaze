@@ -76,7 +76,7 @@ const PostList = styled("div", {
 });
 
 const Home: NextPage = () => {
-  const { address } = useWallet();
+  const { address, ens } = useWallet();
   return (
     <div>
       <header>
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
           <>
             <Title>Profile</Title>
             <Card>
-              <UserCard address={address} />
+              <UserCard address={address} ens={ens} />
             </Card>
           </>
         )}

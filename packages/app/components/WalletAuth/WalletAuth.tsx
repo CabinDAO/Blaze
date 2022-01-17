@@ -1,54 +1,61 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 import { Button } from "@cabindao/topo";
 import WalletAddress from "../WalletAddress";
+import { useConnect, useAccount, Connector } from "wagmi";
+import Link from "next/link";
 
-interface WalletContextState {
-  address: string | null;
-  setAddress: (address: string | null) => void;
-  isConnected: boolean;
-}
-const WalletContext = createContext<WalletContextState>({
-  address: null,
-  setAddress: () => {},
-  isConnected: false,
-});
+// interface WalletContextState {
+//   address: string | null;
+//   setAddress: (address: string | null) => void;
+// }
+// const WalletContext = createContext<WalletContextState>({
+//   address: null,
+//   setAddress: () => {},
+// });
 
-export const WalletProvider = ({
-  children,
-}: {
-  children?: React.ReactNode;
-}) => {
-  const [address, setAddress] = useState<string | null>(null);
-  const value = useMemo(
-    () => ({ address, setAddress, isConnected: !!address }),
-    [address, setAddress]
-  );
-  return (
-    <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
-  );
-};
+// export const WalletProvider = ({
+//   children,
+// }: {
+//   children?: React.ReactNode;
+// }) => {
+//   const [address, setAddress] = useState<string | null>(null);
+//   const value = useMemo(() => ({ address, setAddress }), [address, setAddress]);
+//   return (
+//     <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
+//   );
+// };
 
 export const useWallet = () => {
-  return useContext(WalletContext);
+  const [{ data, error }] = useAccount();
+  return {
+    isConnected: !error && !!data?.address,
+    address: data?.address ?? null,
+    ens: data?.ens ?? null,
+  };
 };
 
 const WalletAuth = () => {
-  const { address, setAddress } = useContext(WalletContext);
-  if (address) {
+  // const { address, setAddress } = useContext(WalletContext);
+  const [{ data, error, loading }, connect] = useConnect();
+  const [
+    { data: accountData, error: accountError, loading: accountLoading },
+    disconnect,
+  ] = useAccount();
+  if (data.connected) {
     return (
       <div>
-        <Button onClick={() => setAddress(null)} type="secondary">
+        <Button onClick={disconnect} type="secondary">
           Disconnect
         </Button>
       </div>
     );
   }
   return (
-    <Button
-      onClick={() => setAddress("0x0000000000000000000000000000000000000000")}
-    >
-      connect
-    </Button>
+    <Link href="/user/sign_in" passHref>
+      <a>
+        <Button type="secondary">Connect</Button>
+      </a>
+    </Link>
   );
 };
 
