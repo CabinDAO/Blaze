@@ -3,6 +3,7 @@ import { styled } from "@/stitches.config";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 import { Button, Heading, Input } from "@cabindao/topo";
+import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import Post from "@/components/Post";
 import { useWallet } from "@/components/WalletAuth";
@@ -10,12 +11,6 @@ import { useWallet } from "@/components/WalletAuth";
 const Title = styled("h2", {
   marginTop: "$12",
   marginBottom: "$5",
-});
-
-const Card = styled("div", {
-  margin: "0 auto",
-  marginBottom: "$12",
-  maxWidth: 320,
 });
 
 const TabBarWrapper = styled("div", {

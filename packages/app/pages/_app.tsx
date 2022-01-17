@@ -3,6 +3,7 @@ import { styled, globalCss } from "@/stitches.config";
 import type { AppProps } from "next/app";
 import { Button } from "@cabindao/topo";
 import WalletAddress from "@/components/WalletAddress";
+import Link from "next/link";
 
 const globalStyles = globalCss({
   body: {
@@ -88,10 +89,24 @@ const ProfileLink = () => {
   const { address } = useWallet();
   if (!address) return null;
   return (
-    <Button type="link">
-      <WalletAddress address={address} />
-    </Button>
+    <Link href="/profile">
+      <a>
+        <WalletAddress address={address} />
+      </a>
+    </Link>
   );
+};
+
+const SubmitLinkAction = () => {
+  const { isConnected } = useWallet();
+  if (isConnected) {
+    return (
+      <Link href="/submission/new" passHref>
+        <Button tone="wheat">Submit a Link</Button>
+      </Link>
+    );
+  }
+  return null;
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -100,13 +115,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     <WalletProvider>
       <MainContainer>
         <Header>
-          <DaoCampLogo>#dao-camp</DaoCampLogo>
+          <Link href="/">
+            <a>
+              <DaoCampLogo>#dao-camp</DaoCampLogo>
+            </a>
+          </Link>
           <Nav>
             <Button type="link">Link</Button>
             <ProfileLink />
           </Nav>
           <UserActions>
-            <Button tone="wheat">Submit a Link</Button>
+            <SubmitLinkAction />
             <WalletAuth />
           </UserActions>
         </Header>
