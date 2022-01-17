@@ -132,7 +132,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             </a>
           </Link>
           <Nav>
-            <Button type="link">Link</Button>
+            <Button type="link">LINKS</Button>
             <ProfileLink />
           </Nav>
           <UserActions>

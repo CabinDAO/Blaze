@@ -3,6 +3,7 @@ import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
 
 const AddressHeader = styled("div", {
+  display: "flex",
   fontWeight: "$bold",
   fontSize: 40,
   lineHeight: 1.3,
