@@ -14,28 +14,7 @@ export interface ISelectProps {
 }
 
 export const StyledSelect = styled("select", {
-  boxSizing: "border-box",
-  background: "none",
-  paddingLeft: "$4",
-  paddingRight: "$4",
-  border: 0,
-  cursor: "pointer",
-  defaultVariants: {
-    active: false,
-  },
-  variants: {
-    active: {
-      false: {
-        "&:hover": {
-          backgroundColor: "rgba(50, 72, 65, 0.1)",
-        },
-      },
-      true: {
-        backgroundColor: "$forest",
-        color: "$sand",
-      },
-    },
-  },
+    height: "100%"
 });
 export const StyledOption = styled("option", {
   boxSizing: "border-box",
@@ -85,13 +64,13 @@ const Select = (props: ISelectProps) => {
   };
   return (
     <div>
-      <select onChange={selectHandler}>
+      <StyledSelect onChange={selectHandler}>
         {props.options.map((option) => (
           <StyledOption key={uuidv4()} value={option.value}>
             {option.text}
           </StyledOption>
         ))}
-      </select>
+      </StyledSelect>
     </div>
   );
 };
