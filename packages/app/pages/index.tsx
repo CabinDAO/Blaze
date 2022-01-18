@@ -1,12 +1,10 @@
 import type { NextPage } from "next";
 import { styled } from "@/stitches.config";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-
-import { Button, Heading, Input } from "@cabindao/topo";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import Post from "@/components/Post";
 import { useWallet } from "@/components/WalletAuth";
+import Select from "@/components/Select";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -54,20 +52,6 @@ const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
     <TabBarContent>{children}</TabBarContent>
   </TabBarWrapper>
 );
-const MenuButton = (props: any) => {
-  return (
-    <Button
-      css={{
-        "&:hover": {
-          backgroundColor: "rgba(50, 72, 65, 0.1)",
-        },
-      }}
-      type="secondary"
-      rightIcon={<ChevronDownIcon />}
-      {...props}
-    />
-  );
-};
 
 const PostList = styled("div", {
   display: "flex",
@@ -95,7 +79,7 @@ const Home: NextPage = () => {
           <TabButton active>Submissions</TabButton>
           <TabButton>Upvoted</TabButton>
           <div style={{ marginLeft: "auto" }}>
-            <MenuButton>Newest</MenuButton>
+            <Select options={[{ text: "Newest", value: "Newest" }, {text: "Trending", value: "Trending"}]} />
           </div>
         </TabBar>
 
