@@ -7,9 +7,9 @@ import { useEffect } from "react";
 const ConnectList = styled("div", {
   display: "flex",
   flexDirection: "column",
-  maxWidth: 500,
+  maxWidth: 250,
   gap: "$2",
-  margin: "0 auto",
+  margin: "25% auto"
 });
 
 const SignIn = () => {
