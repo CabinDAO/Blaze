@@ -44,11 +44,15 @@ const IconText = styled("span", {
 });
 
 export interface PostProps {
-  title: string;
+  title: string,
+  domainText: string,
+  url: string,
+  walletAddress: string,
+  submissionDate: number,
+  numberOfComments: number,
 }
-const Post = ({ title }: PostProps) => {
+const Post = ({ title, url, domainText, walletAddress, submissionDate, numberOfComments }: PostProps) => {
   const [upvoted, setUpvoted] = useState(false);
-  const address = "0x0000000000000000000000000000000000000000";
 
   return (
     <PostRow>
@@ -57,25 +61,25 @@ const Post = ({ title }: PostProps) => {
       </div>
       <PostInfo>
         <Title>
-          <a href="https://creators.mirror.xyz/">{title}</a>
+          <a href={url}>{title}</a>
         </Title>
         <PostMeta>
-          <DomainText>creatorcabins.com</DomainText>
+          <DomainText>{domainText}</DomainText>
           <MetaAddress>
             via{" "}
-            <Link href={`/address/${address}`}>
-              <a title={`View profile of ${address}`}>
-                <WalletAddress address={address} />
+            <Link href={`/address/${walletAddress}`}>
+              <a title={`View profile of ${walletAddress}`}>
+                <WalletAddress address={walletAddress} />
               </a>
             </Link>
           </MetaAddress>
         </PostMeta>
         <PostMeta>
           <IconText>
-            <ClockIcon /> 3 hours ago
+            <ClockIcon /> {submissionDate}
           </IconText>
           <IconText>
-            <SpeechIcon /> 15 comments
+            <SpeechIcon /> {numberOfComments.toString()} comments
           </IconText>
         </PostMeta>
       </PostInfo>

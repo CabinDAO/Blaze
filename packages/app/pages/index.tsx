@@ -2,9 +2,10 @@ import type { NextPage } from "next";
 import { styled } from "@/stitches.config";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
-import Post from "@/components/Post";
+import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
 import Select from "@/components/Select";
+import PostListProps from "@/types";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -53,11 +54,60 @@ const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
   </TabBarWrapper>
 );
 
-const PostList = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  rowGap: "$4",
-});
+const dummyData: PostListProps = {
+  posts: [
+    {
+      title:
+        "Design with Community in Mind: Cabin Core Contributor Mel Shields",
+      domainText: "www.cabincreators.com",
+      url: "www.creatorcabins.com",
+      walletAddress: "0x0",
+      submissionDate: 6,
+      numberOfComments: 5,
+    },
+    {
+      title: "A brief history of decentralized cities and centralized states",
+      domainText: "www.cabincreators.com",
+      url: "www.creatorcabins.com",
+      walletAddress: "0x0",
+      submissionDate: 5,
+      numberOfComments: 0,
+    },
+    {
+      title: "ConstitutionDAO: We Lost the Battle, But Will Win the War",
+      domainText: "www.cabincreators.com",
+      url: "www.creatorcabins.com",
+      walletAddress: "0x0",
+      submissionDate: 4,
+      numberOfComments: 27,
+    },
+    {
+      title: "Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee",
+      domainText: "www.cabincreators.com",
+      url: "www.creatorcabins.com",
+      walletAddress: "0x0",
+      submissionDate: 3,
+      numberOfComments: 9,
+    },
+    {
+      title: "Building a Decentralized City: Cabin Core Contributor Phil Levin",
+      domainText: "www.cabincreators.com",
+      url: "www.creatorcabins.com",
+      walletAddress: "0x0",
+      submissionDate: 2,
+      numberOfComments: 13,
+    },
+    {
+      title: "Around the Campfire, Cabin Contributor Jon Hillis",
+      domainText: "www.cabincreators.com",
+      url: "www.creatorcabins.com",
+      walletAddress: "0x0",
+      submissionDate: 1,
+      numberOfComments: 2,
+    },
+  ],
+  sort: "newest",
+};
 
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
@@ -82,15 +132,7 @@ const Home: NextPage = () => {
             <Select options={[{ text: "Newest", value: "Newest" }, {text: "Trending", value: "Trending"}]} />
           </div>
         </TabBar>
-
-        <PostList>
-          <Post title="Post Title" />
-          <Post title="Design with Community in Mind: Cabin Core Contributor Mel Shields" />
-          <Post title="A brief history of decentralized cities and centralized states" />
-          <Post title="ConstitutionDAO: We Lost the Battle, But Will Win the War" />
-          <Post title="Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee" />
-          <Post title="Building a Decentralized City: Cabin Core Contributor Phil Levin" />
-          <Post title="Around the Campfire, Cabin Contributor Jon Hillis" />
+        <PostList posts={dummyData.posts}>
         </PostList>
       </header>
     </div>
