@@ -76,7 +76,7 @@ const Post = ({ title, url, domainText, walletAddress, submissionDate, numberOfC
         </PostMeta>
         <PostMeta>
           <IconText>
-            <ClockIcon /> {submissionDate}
+            <ClockIcon /> {submissionDate} hours ago
           </IconText>
           <IconText>
             <SpeechIcon /> {numberOfComments.toString()} comments

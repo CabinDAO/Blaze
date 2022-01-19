@@ -1,17 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { styled } from "@/stitches.config";
+import {Option, SelectProps} from "@/types";
 
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Button } from "@cabindao/topo";
 
-export interface Option {
-  text: string;
-  value: string;
-}
-export interface ISelectProps {
-  options: Option[];
-}
+
 
 export const StyledSelect = styled("select", {
 });
@@ -33,15 +28,10 @@ const MenuButton = (props: any) => {
   );
 };
 
-const Select = (props: ISelectProps) => {
-  const selectHandler = (e: Event) => {
-    const select = e.target as HTMLSelectElement;
-    const value = select.value;
-    console.log(value);
-  };
+const Select = (props: SelectProps) => {
   return (
     <div>
-      <StyledSelect onChange={selectHandler}>
+      <StyledSelect onChange={props.sortHandler}>
         {props.options.map((option) => (
           <StyledOption key={uuidv4()} value={option.value}>
             {option.text}

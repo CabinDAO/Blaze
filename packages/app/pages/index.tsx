@@ -5,7 +5,9 @@ import UserCard from "@/components/UserCard";
 import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
 import Select from "@/components/Select";
+import { useState, useCallback } from "react";
 import PostListProps from "@/types";
+import { setFlagsFromString } from "v8";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -61,7 +63,7 @@ const dummyData: PostListProps = {
         "Design with Community in Mind: Cabin Core Contributor Mel Shields",
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
-      walletAddress: "0x0",
+      walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 6,
       numberOfComments: 5,
     },
@@ -69,7 +71,7 @@ const dummyData: PostListProps = {
       title: "A brief history of decentralized cities and centralized states",
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
-      walletAddress: "0x0",
+      walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 5,
       numberOfComments: 0,
     },
@@ -77,7 +79,7 @@ const dummyData: PostListProps = {
       title: "ConstitutionDAO: We Lost the Battle, But Will Win the War",
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
-      walletAddress: "0x0",
+      walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 4,
       numberOfComments: 27,
     },
@@ -85,7 +87,7 @@ const dummyData: PostListProps = {
       title: "Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee",
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
-      walletAddress: "0x0",
+      walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 3,
       numberOfComments: 9,
     },
@@ -93,7 +95,7 @@ const dummyData: PostListProps = {
       title: "Building a Decentralized City: Cabin Core Contributor Phil Levin",
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
-      walletAddress: "0x0",
+      walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 2,
       numberOfComments: 13,
     },
@@ -101,16 +103,19 @@ const dummyData: PostListProps = {
       title: "Around the Campfire, Cabin Contributor Jon Hillis",
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
-      walletAddress: "0x0",
+      walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 1,
       numberOfComments: 2,
     },
   ],
-  sort: "newest",
 };
 
 const Home: NextPage = () => {
+  const sortHandler = useCallback((sort: "newest" | "trending") => {
+    setSort(sort);
+  }, []);
   const { address, ens } = useWallet();
+  const [sort, setSort] = useState<"newest" | "trending">("newest");
   return (
     <div>
       <header>
@@ -129,10 +134,10 @@ const Home: NextPage = () => {
           <TabButton active>Submissions</TabButton>
           <TabButton>Upvoted</TabButton>
           <div style={{ marginLeft: "auto" }}>
-            <Select options={[{ text: "Newest", value: "Newest" }, {text: "Trending", value: "Trending"}]} />
+            <Select options={[{ text: "Newest", value: "Newest" }, {text: "Trending", value: "Trending"}]} sortHandler={sortHandler} />
           </div>
         </TabBar>
-        <PostList posts={dummyData.posts}>
+        <PostList posts={dummyData.posts} sort={sort}>
         </PostList>
       </header>
     </div>

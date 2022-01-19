@@ -1,4 +1,4 @@
-export interface PostListProps {
+export default interface PostListProps {
     posts: {
       title: string;
       domainText: string;
@@ -7,5 +7,13 @@ export interface PostListProps {
       submissionDate: number;
       numberOfComments: number;
     }[];
-    sort: "newest" | "trending";
+  }
+
+  export interface Option {
+    text: string;
+    value: string;
+  }
+  export interface SelectProps {
+    options: Option[];
+    sortHandler: (sort: "newest"|"trending") => void;
   }

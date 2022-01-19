@@ -1,4 +1,5 @@
 import { styled } from "@/stitches.config";
+import { useState } from "react";
 import Post from "../Post";
 import {v4 as uuidV4} from "uuid";
 import { PostListProps } from "@/types";
