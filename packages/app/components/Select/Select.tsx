@@ -14,31 +14,8 @@ export interface ISelectProps {
 }
 
 export const StyledSelect = styled("select", {
-    height: "100%"
 });
 export const StyledOption = styled("option", {
-  boxSizing: "border-box",
-  background: "none",
-  paddingLeft: "$4",
-  paddingRight: "$4",
-  border: 0,
-  cursor: "pointer",
-  defaultVariants: {
-    active: false,
-  },
-  variants: {
-    active: {
-      false: {
-        "&:hover": {
-          backgroundColor: "rgba(50, 72, 65, 0.1)",
-        },
-      },
-      true: {
-        backgroundColor: "$forest",
-        color: "$sand",
-      },
-    },
-  },
 });
 
 const MenuButton = (props: any) => {
