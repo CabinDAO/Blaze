@@ -66,7 +66,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 6,
       numberOfComments: 5,
-      numberOfUpVotes: 10,
+      numberOfUpvotes: 10,
     },
     {
       title: "A brief history of decentralized cities and centralized states",
@@ -75,7 +75,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 5,
       numberOfComments: 0,
-      numberOfUpVotes: 0,
+      numberOfUpvotes: 0,
     },
     {
       title: "ConstitutionDAO: We Lost the Battle, But Will Win the War",
@@ -84,7 +84,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 4,
       numberOfComments: 27,
-      numberOfUpVotes: 100,
+      numberOfUpvotes: 100,
     },
     {
       title: "Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee",
@@ -93,6 +93,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 3,
       numberOfComments: 9,
+      numberOfUpvotes: 1943,
     },
     {
       title: "Building a Decentralized City: Cabin Core Contributor Phil Levin",
@@ -101,7 +102,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 2,
       numberOfComments: 13,
-      numberOfUpVotes: 376,
+      numberOfUpvotes: 376,
     },
     {
       title: "Around the Campfire, Cabin Contributor Jon Hillis",
@@ -110,6 +111,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 1,
       numberOfComments: 43,
+      numberOfUpvotes: 66,
     },
   ],
 };
@@ -136,10 +138,15 @@ const Home: NextPage = () => {
             <TabButton active>Submissions</TabButton>
             <TabButton>Upvoted</TabButton>
             <div style={{ marginLeft: "auto" }}>
-              <DropdownMenu options={[{text: "Newest", value:"newest"},{text: "Trending", value: "trending"}]}/>
+              <DropdownMenu
+                options={[
+                  { text: "Newest", value: "newest" },
+                  { text: "Trending", value: "trending" },
+                ]}
+              />
             </div>
           </TabBar>
-          <PostList posts={dummyData.posts} sort={sortType.value}/>
+          <PostList posts={dummyData.posts} sort={sortType.value} />
         </SortProvider>
       </header>
     </div>
