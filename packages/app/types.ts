@@ -8,6 +8,7 @@ export default interface PostListProps {
     walletAddress: string;
     submissionDate: number;
     numberOfComments: number;
+    numberOfUpvotes: number;
   }[];
 }
 

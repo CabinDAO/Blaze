@@ -66,6 +66,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 6,
       numberOfComments: 5,
+      numberOfUpVotes: 10,
     },
     {
       title: "A brief history of decentralized cities and centralized states",
@@ -74,6 +75,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 5,
       numberOfComments: 0,
+      numberOfUpVotes: 0,
     },
     {
       title: "ConstitutionDAO: We Lost the Battle, But Will Win the War",
@@ -82,6 +84,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 4,
       numberOfComments: 27,
+      numberOfUpVotes: 100,
     },
     {
       title: "Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee",
@@ -98,6 +101,7 @@ const dummyData: PostListProps = {
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 2,
       numberOfComments: 13,
+      numberOfUpVotes: 376,
     },
     {
       title: "Around the Campfire, Cabin Contributor Jon Hillis",
@@ -105,7 +109,7 @@ const dummyData: PostListProps = {
       url: "www.creatorcabins.com",
       walletAddress: "0x0000000000000000000000000000000000000000",
       submissionDate: 1,
-      numberOfComments: 2,
+      numberOfComments: 43,
     },
   ],
 };
