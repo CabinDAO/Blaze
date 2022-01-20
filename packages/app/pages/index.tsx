@@ -111,11 +111,7 @@ const dummyData: PostListProps = {
 };
 
 const Home: NextPage = () => {
-  const sortHandler = useCallback((sort: "newest" | "trending") => {
-    setSort(sort);
-  }, []);
   const { address, ens } = useWallet();
-  const [sort, setSort] = useState<"newest" | "trending">("newest");
   return (
     <div>
       <header>
@@ -134,7 +130,7 @@ const Home: NextPage = () => {
           <TabButton active>Submissions</TabButton>
           <TabButton>Upvoted</TabButton>
           <div style={{ marginLeft: "auto" }}>
-            <Select options={[{ text: "Newest", value: "Newest" }, {text: "Trending", value: "Trending"}]} sortHandler={sortHandler} />
+            <Select options={[{ text: "Newest", value: "Newest" }, {text: "Trending", value: "Trending"}]}/>
           </div>
         </TabBar>
         <PostList posts={dummyData.posts} sort={sort}>

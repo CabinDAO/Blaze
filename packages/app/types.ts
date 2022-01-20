@@ -13,7 +13,6 @@ export default interface PostListProps {
     text: string;
     value: string;
   }
-  export interface SelectProps {
+  export interface DropdownProps {
     options: Option[];
-    sortHandler: (sort: "newest"|"trending") => void;
   }
