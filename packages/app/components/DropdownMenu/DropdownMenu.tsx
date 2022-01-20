@@ -1,18 +1,41 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@cabindao/topo";
 import { DropdownProps } from "@/types";
-import {v4 as uuidv4} from "uuid/v4";
+import { v4 as uuidv4 } from "uuid";
+import { styled } from "@/stitches.config";
 
-const DropdownMenu = ({options}: DropdownProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const toggle = useCallback(() => setIsOpen(!isOpen), [isOpen]);
-  return (
-  <div className="filter">
-      <Button type="primary">Filter</Button>
-      {isOpen && 
-        options.map(option => <Button key={uuidv4()}type="primary">{option}</Button>)
+const StyledDiv = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+}
+);
+
+const DropdownMenu = (props: DropdownProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const toggle = useCallback(() => setIsOpen(!isOpen), [isOpen]);
+
+  useEffect(() => {
+      if (isOpen) {
+        document.addEventListener("click", toggle);
       }
-  </div>)
+      return () => {
+        document.removeEventListener("click", toggle);
+      }
+  }, [isOpen, toggle]);
+
+  return (
+    <StyledDiv className="filter">
+      <Button type="primary" onClick={toggle}>
+        Filter
+      </Button>
+      {isOpen &&
+        props.options.map((option) => (
+          <Button key={uuidv4()} type="secondary">
+            {option.text}
+          </Button>
+        ))}
+    </StyledDiv>
+  );
 };
 
 export default DropdownMenu;

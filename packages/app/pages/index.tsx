@@ -4,10 +4,9 @@ import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
-import Select from "@/components/Select";
-import { useState, useCallback } from "react";
+import DropdownMenu from "@/components/DropdownMenu";
 import PostListProps from "@/types";
-import { setFlagsFromString } from "v8";
+import sortCtx, { SortProvider } from "@/context/SortContext";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -126,15 +125,16 @@ const Home: NextPage = () => {
 
         <Title>Today</Title>
 
-        <TabBar>
-          <TabButton active>Submissions</TabButton>
-          <TabButton>Upvoted</TabButton>
-          <div style={{ marginLeft: "auto" }}>
-            <Select options={[{ text: "Newest", value: "Newest" }, {text: "Trending", value: "Trending"}]}/>
-          </div>
-        </TabBar>
-        <PostList posts={dummyData.posts} sort={sort}>
-        </PostList>
+        <SortProvider value={}>
+          <TabBar>
+            <TabButton active>Submissions</TabButton>
+            <TabButton>Upvoted</TabButton>
+            <div style={{ marginLeft: "auto" }}>
+              <DropdownMenu options={[{text: "newest", value:"newest"},{text: "trending", value: "trending"}]}/>
+            </div>
+          </TabBar>
+          <PostList posts={dummyData.posts} sort={"newest"}/>
+        </SortProvider>
       </header>
     </div>
   );
