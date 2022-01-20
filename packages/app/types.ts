@@ -20,6 +20,9 @@ export interface DropdownProps {
 }
 
 export interface SortContext {
-  sortType: string;
-  setSortType: (sortType: string) => void;
+  sortType: {
+    text: string;
+    value: string;
+  };
+  changeSortType: (sortType: {text: string, value: string}) => void;
 }

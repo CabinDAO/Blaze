@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 import { styled } from "@/stitches.config";
+import { useContext } from "react";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
 import DropdownMenu from "@/components/DropdownMenu";
 import PostListProps from "@/types";
-import sortCtx, { SortProvider } from "@/context/SortContext";
+import SortCtx, { SortProvider } from "@/context/SortContext";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -111,6 +112,7 @@ const dummyData: PostListProps = {
 
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
+  const { sortType } = useContext(SortCtx);
   return (
     <div>
       <header>
@@ -125,15 +127,15 @@ const Home: NextPage = () => {
 
         <Title>Today</Title>
 
-        <SortProvider value={}>
+        <SortProvider>
           <TabBar>
             <TabButton active>Submissions</TabButton>
             <TabButton>Upvoted</TabButton>
             <div style={{ marginLeft: "auto" }}>
-              <DropdownMenu options={[{text: "newest", value:"newest"},{text: "trending", value: "trending"}]}/>
+              <DropdownMenu options={[{text: "Newest", value:"newest"},{text: "Trending", value: "trending"}]}/>
             </div>
           </TabBar>
-          <PostList posts={dummyData.posts} sort={"newest"}/>
+          <PostList posts={dummyData.posts} sort={sortType.value}/>
         </SortProvider>
       </header>
     </div>
