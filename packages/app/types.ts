@@ -15,8 +15,8 @@ export default interface PostListProps {
 
 export interface SortContext {
   sortType: {
-    text: string;
-    value: string;
+    key: string;
+    label: string;
   };
-  changeSortType: (sortType: {text: string, value: string}) => void;
+  changeSortType: (sortType: {key: string, label: string}) => void;
 }

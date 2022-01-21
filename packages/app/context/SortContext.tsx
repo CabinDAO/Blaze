@@ -1,10 +1,13 @@
 import { createContext, Context, useState, FC } from "react";
 import {SortContext} from "@/types"
 
-const SortCtx: Context<SortContext> = createContext<SortContext>({sortType: {text: "Newest", value: "newest"}, changeSortType: () => {}});
+const SortCtx: Context<SortContext> = createContext<SortContext>({sortType: {key: "newest", label: "Newest"}, changeSortType: () => {}});
 
 export const SortProvider: FC = ({ children }) => {
-    const [sortType, setSortType] = useState<SortContext["sortType"]>({text: "Newest", value: "newest"});
+    const [sortType, setSortType] = useState<SortContext["sortType"]>({
+      key: "newest",
+      label: "Newest",
+    });
     const changeSortType = (newSortType: SortContext["sortType"]) => {
         setSortType(newSortType);
     }
