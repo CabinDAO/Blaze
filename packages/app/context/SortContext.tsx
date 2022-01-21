@@ -5,8 +5,8 @@ const SortCtx: Context<SortContext> = createContext<SortContext>({sortType: {tex
 
 export const SortProvider: FC = ({ children }) => {
     const [sortType, setSortType] = useState<SortContext["sortType"]>({text: "Newest", value: "newest"});
-    const changeSortType = (sortType: SortContext["sortType"]) => {
-        setSortType(sortType);
+    const changeSortType = (newSortType: SortContext["sortType"]) => {
+        setSortType(newSortType);
     }
     return <SortCtx.Provider value={{sortType, changeSortType}}>{children}</SortCtx.Provider>
 }

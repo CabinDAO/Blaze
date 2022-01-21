@@ -1,15 +1,16 @@
 import { Context } from 'react';
 
+export interface PostProps {
+  title: string,
+  domainText: string,
+  url: string,
+  walletAddress: string,
+  submissionDate: number,
+  numberOfComments: number,
+  numberOfUpvotes: number,
+}
 export default interface PostListProps {
-  posts: {
-    title: string;
-    domainText: string;
-    url: string;
-    walletAddress: string;
-    submissionDate: number;
-    numberOfComments: number;
-    numberOfUpvotes: number;
-  }[];
+  posts: PostProps []
 }
 
 export interface Option {

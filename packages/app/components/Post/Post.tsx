@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
+import { PostProps } from "@/types";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -43,15 +44,8 @@ const IconText = styled("span", {
   gap: "$1",
 });
 
-export interface PostProps {
-  title: string,
-  domainText: string,
-  url: string,
-  walletAddress: string,
-  submissionDate: number,
-  numberOfComments: number,
-}
-const Post = ({ title, url, domainText, walletAddress, submissionDate, numberOfComments }: PostProps) => {
+
+const Post = ({ title, url, domainText, walletAddress, submissionDate, numberOfComments, numberOfUpvotes }: PostProps) => {
   const [upvoted, setUpvoted] = useState(false);
 
   return (

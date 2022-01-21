@@ -113,7 +113,7 @@ const dummyData: PostListProps = {
       numberOfComments: 43,
       numberOfUpvotes: 66,
     },
-  ],
+  ]
 };
 
 const Home: NextPage = () => {

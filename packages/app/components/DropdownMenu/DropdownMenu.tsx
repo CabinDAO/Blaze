@@ -23,7 +23,6 @@ const DropdownMenu = (props: DropdownProps) => {
       document.removeEventListener("click", toggle);
     };
   }, [isOpen, toggle]);
-
   return (
     <StyledDiv className="filter">
       <Button type="primary" onClick={toggle}>
