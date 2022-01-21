@@ -13,14 +13,6 @@ export default interface PostListProps {
   posts: PostProps []
 }
 
-export interface Option {
-  text: string;
-  value: string;
-}
-export interface DropdownProps {
-  options: Option[];
-}
-
 export interface SortContext {
   sortType: {
     text: string;

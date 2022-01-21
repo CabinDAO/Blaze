@@ -5,7 +5,7 @@ import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
-import DropdownMenu from "@/components/DropdownMenu";
+import Select from "@cabindao/topo";
 import PostListProps from "@/types";
 import SortCtx, { SortProvider } from "@/context/SortContext";
 
@@ -118,7 +118,7 @@ const dummyData: PostListProps = {
 
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
-  const { sortType } = useContext(SortCtx);
+  const { sortType, changeSortType } = useContext(SortCtx);
   return (
     <div>
       <header>
@@ -138,11 +138,11 @@ const Home: NextPage = () => {
             <TabButton active>Submissions</TabButton>
             <TabButton>Upvoted</TabButton>
             <div style={{ marginLeft: "auto" }}>
-              <DropdownMenu
-                options={[
-                  { text: "Newest", value: "newest" },
-                  { text: "Trending", value: "trending" },
-                ]}
+              <Select
+              disabled={false}
+              options={[{key: "Newest", label: "newest"}, {key: "Trending", label: "trending"}]}
+              value={sortType.value}
+              onChange={() => changeSortType()}
               />
             </div>
           </TabBar>
