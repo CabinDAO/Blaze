@@ -10,7 +10,8 @@ export interface PostProps {
   numberOfUpvotes: number,
 }
 export default interface PostListProps {
-  posts: PostProps []
+  posts: PostProps[],
+  sort: SortContext['sortType']
 }
 
 export interface SortContext {
@@ -18,5 +19,5 @@ export interface SortContext {
     key: string;
     label: string;
   };
-  changeSortType: (sortType: {key: string, label: string}) => void;
+  setSortType: (sortType: {key: string, label: string}) => void;
 }

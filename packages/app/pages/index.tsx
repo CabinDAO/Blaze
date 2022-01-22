@@ -7,7 +7,7 @@ import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
 import { Select } from "@cabindao/topo";
 import PostListProps from "@/types";
-import SortCtx, { SortProvider } from "@/context/SortContext";
+import SortProvider, { SortCtx } from "@/context/SortContext";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -56,69 +56,66 @@ const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
   </TabBarWrapper>
 );
 
-const dummyData: PostListProps = {
-  posts: [
-    {
-      title:
-        "Design with Community in Mind: Cabin Core Contributor Mel Shields",
-      domainText: "www.cabincreators.com",
-      url: "www.creatorcabins.com",
-      walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 6,
-      numberOfComments: 5,
-      numberOfUpvotes: 10,
-    },
-    {
-      title: "A brief history of decentralized cities and centralized states",
-      domainText: "www.cabincreators.com",
-      url: "www.creatorcabins.com",
-      walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 5,
-      numberOfComments: 0,
-      numberOfUpvotes: 0,
-    },
-    {
-      title: "ConstitutionDAO: We Lost the Battle, But Will Win the War",
-      domainText: "www.cabincreators.com",
-      url: "www.creatorcabins.com",
-      walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 4,
-      numberOfComments: 27,
-      numberOfUpvotes: 100,
-    },
-    {
-      title: "Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee",
-      domainText: "www.cabincreators.com",
-      url: "www.creatorcabins.com",
-      walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 3,
-      numberOfComments: 9,
-      numberOfUpvotes: 1943,
-    },
-    {
-      title: "Building a Decentralized City: Cabin Core Contributor Phil Levin",
-      domainText: "www.cabincreators.com",
-      url: "www.creatorcabins.com",
-      walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 2,
-      numberOfComments: 13,
-      numberOfUpvotes: 376,
-    },
-    {
-      title: "Around the Campfire, Cabin Contributor Jon Hillis",
-      domainText: "www.cabincreators.com",
-      url: "www.creatorcabins.com",
-      walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 1,
-      numberOfComments: 43,
-      numberOfUpvotes: 66,
-    },
-  ]
-};
+const dummyData: PostListProps["posts"] = [
+  {
+    title: "Design with Community in Mind: Cabin Core Contributor Mel Shields",
+    domainText: "www.cabincreators.com",
+    url: "www.creatorcabins.com",
+    walletAddress: "0x0000000000000000000000000000000000000000",
+    submissionDate: 6,
+    numberOfComments: 5,
+    numberOfUpvotes: 10,
+  },
+  {
+    title: "A brief history of decentralized cities and centralized states",
+    domainText: "www.cabincreators.com",
+    url: "www.creatorcabins.com",
+    walletAddress: "0x0000000000000000000000000000000000000000",
+    submissionDate: 5,
+    numberOfComments: 0,
+    numberOfUpvotes: 0,
+  },
+  {
+    title: "ConstitutionDAO: We Lost the Battle, But Will Win the War",
+    domainText: "www.cabincreators.com",
+    url: "www.creatorcabins.com",
+    walletAddress: "0x0000000000000000000000000000000000000000",
+    submissionDate: 4,
+    numberOfComments: 27,
+    numberOfUpvotes: 100,
+  },
+  {
+    title: "Growing the Writer’s Guild: Cabin Core Contributor Roxine Kee",
+    domainText: "www.cabincreators.com",
+    url: "www.creatorcabins.com",
+    walletAddress: "0x0000000000000000000000000000000000000000",
+    submissionDate: 3,
+    numberOfComments: 9,
+    numberOfUpvotes: 1943,
+  },
+  {
+    title: "Building a Decentralized City: Cabin Core Contributor Phil Levin",
+    domainText: "www.cabincreators.com",
+    url: "www.creatorcabins.com",
+    walletAddress: "0x0000000000000000000000000000000000000000",
+    submissionDate: 2,
+    numberOfComments: 13,
+    numberOfUpvotes: 376,
+  },
+  {
+    title: "Around the Campfire, Cabin Contributor Jon Hillis",
+    domainText: "www.cabincreators.com",
+    url: "www.creatorcabins.com",
+    walletAddress: "0x0000000000000000000000000000000000000000",
+    submissionDate: 1,
+    numberOfComments: 43,
+    numberOfUpvotes: 66,
+  },
+];
 
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
-  const { sortType, changeSortType } = useContext(SortCtx);
+  const { sortType, setSortType } = useContext(SortCtx);
   return (
     <div>
       <header>
@@ -144,18 +141,16 @@ const Home: NextPage = () => {
                   { key: "newest", label: "Newest" },
                   { key: "trending", label: "Trending" },
                 ]}
-                value={sortType.label}
-                onChange={() =>
-                  changeSortType(
-                    sortType.label === "newest"
-                      ? { key: "trending", label: "Trending" }
-                      : { key: "newest", label: "Newest" }
-                  )
-                }
+                placeholder="Sort:"
+                onChange={(key: string) => {
+                  const newSortType = key === "newest" ? { key: "trending", label: "Trending" } : { key: "newest", label: "Newest" };
+                  setSortType(newSortType);
+                  console.log(sortType);
+                }}
               />
             </div>
           </TabBar>
-          <PostList posts={dummyData.posts} sort={sortType} />
+          <PostList posts={dummyData} sort={sortType} />
         </SortProvider>
       </header>
     </div>

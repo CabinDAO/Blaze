@@ -13,12 +13,12 @@ const StyledPostList = styled("div", {
 
 
 
-const PostList = (props) => {
+const PostList = ({posts, sort}: PostListProps) => {
 
   return (
     <StyledPostList>
-      {props.sort === "newest" && props.posts.sort((a, b) => a.submissionDate - b.submissionDate).map((post) => <Post key={uuidV4()} {...post} />)}
-      {props.sort === "trending" && props.posts.sort((a, b) => a.numberOfUpvotes - b.numberOfUpvotes).map((post) => <Post key={uuidV4()} {...post} />)}
+      {sort.key === "newest" && posts.sort((a, b) => a.submissionDate - b.submissionDate).map((post) => <Post key={uuidV4()} {...post} />)}
+      {sort.key === "trending" && posts.sort((a, b) => a.numberOfUpvotes - b.numberOfUpvotes).map((post) => <Post key={uuidV4()} {...post} />)}
     </StyledPostList>
   );
 };
