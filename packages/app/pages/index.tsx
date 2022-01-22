@@ -5,7 +5,7 @@ import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
-// import Select from "@cabindao/topo";
+import { Select } from "@cabindao/topo";
 import PostListProps from "@/types";
 import SortCtx, { SortProvider } from "@/context/SortContext";
 
@@ -138,7 +138,7 @@ const Home: NextPage = () => {
             <TabButton active>Submissions</TabButton>
             <TabButton>Upvoted</TabButton>
             <div style={{ marginLeft: "auto" }}>
-              {/* <Select
+              <Select
                 disabled={false}
                 options={[
                   { key: "newest", label: "Newest" },
@@ -152,10 +152,10 @@ const Home: NextPage = () => {
                       : { key: "newest", label: "Newest" }
                   )
                 }
-              /> */}
+              />
             </div>
           </TabBar>
-          <PostList posts={dummyData.posts} sort={"trending"} />
+          <PostList posts={dummyData.posts} sort={sortType} />
         </SortProvider>
       </header>
     </div>
