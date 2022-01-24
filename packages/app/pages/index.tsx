@@ -70,7 +70,14 @@ const Home: NextPage = () => {
         )}
         <Title>Today</Title>
         <TabBar>
-          <TabButton active>Links</TabButton>
+          {!address && <TabButton active>Links</TabButton>}
+          {address && (
+            <>
+              <TabButton active>Submissions</TabButton>
+              <TabButton active>Upvotes</TabButton>
+            </>
+          )}
+
           <div style={{ marginLeft: "auto" }}>
             <Select
               disabled={false}
