@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
+import { PostProps } from "@/types";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -43,12 +44,9 @@ const IconText = styled("span", {
   gap: "$1",
 });
 
-export interface PostProps {
-  title: string;
-}
-const Post = ({ title }: PostProps) => {
+
+const Post = ({ title, url, domainText, walletAddress, submissionDate, numberOfComments, numberOfUpvotes }: PostProps) => {
   const [upvoted, setUpvoted] = useState(false);
-  const address = "0x0000000000000000000000000000000000000000";
 
   return (
     <PostRow>
@@ -57,25 +55,25 @@ const Post = ({ title }: PostProps) => {
       </div>
       <PostInfo>
         <Title>
-          <a href="https://creators.mirror.xyz/">{title}</a>
+          <a href={url}>{title}</a>
         </Title>
         <PostMeta>
-          <DomainText>creatorcabins.com</DomainText>
+          <DomainText>{domainText}</DomainText>
           <MetaAddress>
             via{" "}
-            <Link href={`/address/${address}`}>
-              <a title={`View profile of ${address}`}>
-                <WalletAddress address={address} />
+            <Link href={`/address/${walletAddress}`}>
+              <a title={`View profile of ${walletAddress}`}>
+                <WalletAddress address={walletAddress} />
               </a>
             </Link>
           </MetaAddress>
         </PostMeta>
         <PostMeta>
           <IconText>
-            <ClockIcon /> 3 hours ago
+            <ClockIcon /> {submissionDate} hours ago
           </IconText>
           <IconText>
-            <SpeechIcon /> 15 comments
+            <SpeechIcon /> {numberOfComments.toString()} comments
           </IconText>
         </PostMeta>
       </PostInfo>

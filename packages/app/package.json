@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cabindao/topo": "^0.2.2",
+    "@cabindao/topo": "^0.3.0",
     "@cabindao/topo-theme": "^0.1.0",
     "@radix-ui/react-icons": "^1.0.3",
     "@stitches/react": "^1.2.6",

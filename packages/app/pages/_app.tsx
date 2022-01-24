@@ -11,6 +11,7 @@ import type { AppProps } from "next/app";
 import { Button } from "@cabindao/topo";
 import WalletAddress from "@/components/WalletAddress";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import WalletAuth, { useWallet } from "@/components/WalletAuth";
 import Router, { useRouter } from "next/router";
 import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
@@ -279,6 +280,7 @@ const ResponsiveNav = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
   globalStyles();
+  const { pathname } = useRouter();
   return (
     <WalletProvider autoConnect connectors={connectors}>
       <MainContainer>
