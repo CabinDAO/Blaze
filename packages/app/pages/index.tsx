@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { styled } from "@/stitches.config";
-import { useContext } from "react";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import PostList from "@/components/PostList";
@@ -55,26 +54,15 @@ const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
     <TabBarContent>{children}</TabBarContent>
   </TabBarWrapper>
 );
-
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
   const { posts, sort, updateSort} = useStore();
   return (
     <div>
       <header>
-        {address && (
-          <>
-            <Title>Profile</Title>
-            <Card>
-              <UserCard address={address} ens={ens} />
-            </Card>
-          </>
-        )}
-
         <Title>Today</Title>
         <TabBar>
-          <TabButton active>Submissions</TabButton>
-          <TabButton>Upvoted</TabButton>
+          <TabButton active>Links</TabButton>
           <div style={{ marginLeft: "auto" }}>
             <Select
               disabled={false}
