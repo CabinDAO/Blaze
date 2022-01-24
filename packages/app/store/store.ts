@@ -73,7 +73,6 @@ export const useStore = create<AppState>((set) => ({
       const post = state.posts.find((post) => post.id === postId);
       if (post) {
         post.numberOfUpvotes += 1;
-        console.log(post.numberOfUpvotes);
       }
       
       return { posts: state.posts };
