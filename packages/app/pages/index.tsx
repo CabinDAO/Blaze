@@ -11,6 +11,9 @@ import AppState, { Sort } from "@/types";
 const Title = styled("h2", {
   marginTop: "$12",
   marginBottom: "$5",
+  '&:last-of-type': {
+    marginTop: 0,
+  }
 });
 
 const TabBarWrapper = styled("div", {
