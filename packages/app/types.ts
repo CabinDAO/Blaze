@@ -9,15 +9,8 @@ export interface PostProps {
   numberOfComments: number,
   numberOfUpvotes: number,
 }
-export default interface PostListProps {
+export interface AppState {
   posts: PostProps[],
-  sort: SortContext['sortType']
-}
-
-export interface SortContext {
-  sortType: {
-    key: string;
-    label: string;
-  };
-  setSortType: (sortType: {key: string, label: string}) => void;
+  sort: "newest" | "trending" | "controversial",
+  updateSort: (sort: "newest" | "trending") => void,
 }
