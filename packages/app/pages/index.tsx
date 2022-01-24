@@ -7,7 +7,7 @@ import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
 import { Select } from "@cabindao/topo";
 import { useStore } from "@/store/store";
-import AppState from "@/types";
+import AppState, {Sort} from "@/types";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
                 { key: "controversial", label: "Controversial" },
               ]}
               placeholder="Sort:"
-              onChange={(key: AppState["sort"]) => updateSort(key)}
+              onChange={(key: Sort) => updateSort(key)}
             />
           </div>
         </TabBar>

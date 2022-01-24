@@ -1,5 +1,5 @@
 import create from 'zustand'
-import AppState from '@/types'
+import AppState, { Sort } from '@/types'
 
 export const useStore = create<AppState>((set) => ({
     posts: [
@@ -59,5 +59,5 @@ export const useStore = create<AppState>((set) => ({
   },
 ],
     sort: "newest",
-    updateSort: (sort: AppState["sort"]) => set({sort}),
+    updateSort: (sort: Sort) => set({sort}),
 }));

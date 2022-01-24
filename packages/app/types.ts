@@ -7,8 +7,8 @@ export interface PostProps {
   numberOfComments: number,
   numberOfUpvotes: number,
 }
-export type PostListProps = PostProps[];
-export type Sort = "newest" | "trending" | "controversial";
+export type PostListProps =  PostProps[];
+export type Sort =  "newest" | "trending" | "controversial";
 export default interface AppState {
   posts: PostListProps;
   sort: Sort;

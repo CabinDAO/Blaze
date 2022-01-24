@@ -13,7 +13,7 @@ const StyledPostList = styled("div", {
 
 
 
-const PostList = ({ posts }: {posts: PostListProps}, { sort }: {sort: Sort}) => {
+const PostList = ({posts, sort}) => {
 
   return (
     <StyledPostList>
