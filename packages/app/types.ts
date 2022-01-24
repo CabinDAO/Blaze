@@ -1,5 +1,3 @@
-import { Context } from 'react';
-
 export interface PostProps {
   title: string,
   domainText: string,
@@ -9,8 +7,11 @@ export interface PostProps {
   numberOfComments: number,
   numberOfUpvotes: number,
 }
-export interface AppState {
+export default interface PostListProps {
   posts: PostProps[],
+}
+export interface AppState {
+  posts: PostListProps,
   sort: "newest" | "trending" | "controversial",
   updateSort: (sort: "newest" | "trending") => void,
 }
