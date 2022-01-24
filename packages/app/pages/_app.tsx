@@ -8,7 +8,6 @@ import WalletAddress from "@/components/WalletAddress";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import WalletAuth, { useWallet } from "@/components/WalletAuth";
-import SortCtx from "@/contexts/SortContext";
 
 const globalStyles = globalCss({
   body: {
