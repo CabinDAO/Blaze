@@ -3,6 +3,7 @@ import { Button } from "@cabindao/topo";
 import WalletAddress from "../WalletAddress";
 import { useConnect, useAccount, Connector } from "wagmi";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 // interface WalletContextState {
 //   address: string | null;
@@ -35,8 +36,9 @@ export const useWallet = () => {
 };
 
 const WalletAuth = () => {
-  // const { address, setAddress } = useContext(WalletContext);
+  const router = useRouter();
   const [{ data, error, loading }, connect] = useConnect();
+
   const [
     { data: accountData, error: accountError, loading: accountLoading },
     disconnect,
@@ -50,6 +52,12 @@ const WalletAuth = () => {
       </div>
     );
   }
+
+  if (router.pathname === "/user/sign_in") {
+    return null;
+  }
+  console.log(router.pathname);
+
   return (
     <Link href="/user/sign_in" passHref>
       <a>

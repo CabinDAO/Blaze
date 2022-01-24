@@ -1,4 +1,9 @@
-import { Provider as WalletProvider, chain, defaultChains } from "wagmi";
+import {
+  Provider as WalletProvider,
+  chain,
+  defaultChains,
+  useAccount,
+} from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { styled, globalCss } from "@/stitches.config";
@@ -8,6 +13,9 @@ import WalletAddress from "@/components/WalletAddress";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import WalletAuth, { useWallet } from "@/components/WalletAuth";
+import Router, { useRouter } from "next/router";
+import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
 
 const globalStyles = globalCss({
   body: {
@@ -125,6 +133,151 @@ const SubmitLinkAction = () => {
   return null;
 };
 
+const MobileWrapper = styled("div", {
+  flex: 1,
+  marginLeft: "auto",
+  justifyContent: "end",
+  display: "flex",
+  "@sm": {
+    display: "none",
+  },
+});
+const DesktopWrapper = styled("div", {
+  display: "none",
+  marginLeft: "auto",
+  flex: 1,
+  "@sm": {
+    display: "flex",
+    marginLeft: "auto",
+  },
+});
+const MobileMenuButton = styled("button", {
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  margin: 0,
+  padding: "$2",
+  "&:hover": {
+    backgroundColor: "rgba(50, 72, 65, 0.1)",
+  },
+  variants: {
+    active: {
+      true: {
+        backgroundColor: "$forest",
+        // color: "$sand",
+      },
+    },
+  },
+});
+
+const CloseButton = styled(Button, {
+  position: "absolute",
+  top: 8,
+  right: 8,
+  "&:hover": {
+    backgroundColor: "$wheat",
+    color: "$forest",
+  },
+});
+const MenuBox = styled("div", {
+  position: "absolute",
+  overflow: "auto",
+  display: "flex",
+  width: "100vw",
+  height: "100vh",
+  flexDirection: "column",
+  gap: "$4",
+  top: 0,
+  left: 0,
+  right: 0,
+  boxSizing: "border-box",
+  padding: "$4 $2",
+  paddingTop: 50,
+  backgroundColor: "$forest",
+  color: "$wheat",
+  "& a": {
+    color: "$wheat",
+  },
+});
+const MobileMenu = () => {
+  const router = useRouter();
+  const [{ data }, disconnect] = useAccount();
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    function closeOnChange() {
+      setIsOpen(false);
+    }
+    Router.events.on("routeChangeStart", closeOnChange);
+    return () => {
+      Router.events.off("routeChangeStart", closeOnChange);
+    };
+  }, [router]);
+
+  return (
+    <MobileWrapper>
+      <MobileMenuButton
+        active={isOpen}
+        onClick={() => setIsOpen((prev) => !prev)}
+      >
+        <HamburgerMenuIcon />
+      </MobileMenuButton>
+      {isOpen && (
+        <MenuBox>
+          <CloseButton type="icon" onClick={() => setIsOpen(false)}>
+            <Cross1Icon />
+          </CloseButton>
+          <Link href="/">
+            <a>Home</a>
+          </Link>
+          {data?.address ? (
+            <>
+              <Link href="/profile">
+                <a>Profile</a>
+              </Link>
+              <Link href="/submission/new">
+                <a>Submit a Link</a>
+              </Link>
+              <a
+                href="/"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsOpen(false);
+                  disconnect();
+                }}
+              >
+                Disconnect
+              </a>
+            </>
+          ) : (
+            <Link href="/user/sign_in">
+              <a>Connect</a>
+            </Link>
+          )}
+        </MenuBox>
+      )}
+    </MobileWrapper>
+  );
+};
+
+const ResponsiveNav = () => {
+  return (
+    <>
+      <DesktopWrapper>
+        <Nav>
+          <Button type="link">LINKS</Button>
+          <ProfileLink />
+        </Nav>
+        <UserActions>
+          <SubmitLinkAction />
+          <WalletAuth />
+        </UserActions>
+      </DesktopWrapper>
+      <MobileMenu />
+    </>
+  );
+};
+
 function MyApp({ Component, pageProps }: AppProps) {
   globalStyles();
   const { pathname } = useRouter();
@@ -137,14 +290,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               <DaoCampLogo>#dao-camp</DaoCampLogo>
             </a>
           </Link>
-          <Nav>
-            <Button type="link">LINKS</Button>
-            <ProfileLink />
-          </Nav>
-          <UserActions>
-            <SubmitLinkAction />
-            {pathname=="/user/sign_in" ? <Link href="/" passHref><Button type="secondary">Back</Button></Link> : <WalletAuth />}
-          </UserActions>
+          <ResponsiveNav />
         </Header>
         <Wrapper>
           <Component {...pageProps} />
