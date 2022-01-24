@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
+import { useStore } from "@/store/store";
 import { PostProps } from "@/types";
 
 const PostRow = styled("div", {
@@ -45,13 +46,13 @@ const IconText = styled("span", {
 });
 
 
-const Post = ({ title, url, domainText, walletAddress, submissionDate, numberOfComments, numberOfUpvotes }: PostProps) => {
-  const [upvoted, setUpvoted] = useState(false);
+const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numberOfComments, numberOfUpvotes }: PostProps) => {
+  const { upvotePost } = useStore();
 
   return (
     <PostRow>
       <div>
-        <Upvote upvoted={upvoted} onClick={() => setUpvoted((prev) => !prev)} />
+        <Upvote upvoted={numberOfUpvotes > 0 ? true : false} count={numberOfUpvotes} onClick={() => upvotePost(id)} />
       </div>
       <PostInfo>
         <Title>

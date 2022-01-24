@@ -1,5 +1,6 @@
 import { styled } from "@/stitches.config";
 import { useMemo } from "react";
+import { useStore } from "@/store/store";
 
 const ArrowIcon = ({ className }: { className?: string }) => {
   return (
@@ -55,69 +56,69 @@ const Wrapper = styled("div", {
       },
       comment: {},
     },
-    upvoted: {
-      true: {
-        backgroundColor: "$forest",
-        color: "$sand",
-        "&:hover": {
-          [`& ${UpvoteArrowIcon}`]: {
-            opacity: 0.5,
-          },
-        },
-      },
-    },
+    // upvoted: {
+    //   true: {
+    //     backgroundColor: "$forest",
+    //     color: "$sand",
+    //     "&:hover": {
+    //       [`& ${UpvoteArrowIcon}`]: {
+    //         opacity: 0.5,
+    //       },
+    //     },
+    //   },
+    // },
   },
-  compoundVariants: [
-    {
-      upvoted: true,
-      type: "post",
-      css: {
-        "&:hover": {
-          backgroundColor: "$forest",
-          color: "$sand",
-        },
-      },
-    },
-    {
-      upvoted: false,
-      type: "post",
-      css: {
-        "&:hover": {
-          backgroundColor: "$forest",
-          color: "$sand",
-        },
-        [`& ${UpvoteArrowIcon}`]: {
-          fill: "$sand",
-        },
-      },
-    },
-    {
-      upvoted: true,
-      type: "comment",
-      css: {
-        backgroundColor: "transparent",
-        borderColor: "transparent",
-        color: "$forest",
-        "&:hover": {},
-        [`& ${UpvoteArrowIcon}`]: {
-          fill: "$forest",
-        },
-      },
-    },
-    {
-      upvoted: false,
-      type: "comment",
-      css: {
-        // backgroundColor: "transparent",
-        borderColor: "transparent",
-        "&:hover": {
-          [`& ${UpvoteArrowIcon}`]: {
-            fill: "rgba(50, 72, 65, 0.1)",
-          },
-        },
-      },
-    },
-  ],
+  // compoundVariants: [
+  //   {
+  //     upvoted: true,
+  //     type: "post",
+  //     css: {
+  //       "&:hover": {
+  //         backgroundColor: "$forest",
+  //         color: "$sand",
+  //       },
+  //     },
+  //   },
+  //   {
+  //     upvoted: false,
+  //     type: "post",
+  //     css: {
+  //       "&:hover": {
+  //         backgroundColor: "$forest",
+  //         color: "$sand",
+  //       },
+  //       [`& ${UpvoteArrowIcon}`]: {
+  //         fill: "$sand",
+  //       },
+  //     },
+  //   },
+  //   {
+  //     upvoted: true,
+  //     type: "comment",
+  //     css: {
+  //       backgroundColor: "transparent",
+  //       borderColor: "transparent",
+  //       color: "$forest",
+  //       "&:hover": {},
+  //       [`& ${UpvoteArrowIcon}`]: {
+  //         fill: "$forest",
+  //       },
+  //     },
+  //   },
+  //   {
+  //     upvoted: false,
+  //     type: "comment",
+  //     css: {
+  //       // backgroundColor: "transparent",
+  //       borderColor: "transparent",
+  //       "&:hover": {
+  //         [`& ${UpvoteArrowIcon}`]: {
+  //           fill: "rgba(50, 72, 65, 0.1)",
+  //         },
+  //       },
+  //     },
+  //   },
+  // ],
 });
 
 export interface UpvoteProps {
