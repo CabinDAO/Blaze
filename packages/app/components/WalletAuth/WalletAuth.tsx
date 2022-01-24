@@ -46,7 +46,7 @@ const WalletAuth = () => {
   if (data.connected) {
     return (
       <div>
-        <Button onClick={disconnect} type="secondary">
+        <Button onClick={disconnect} css={{color: "black"}} type="secondary" tone="wheat">
           Disconnect
         </Button>
       </div>
