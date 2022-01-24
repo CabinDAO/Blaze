@@ -4,6 +4,9 @@ import { styled } from "@/stitches.config";
 
 const AddressText = styled("span", {
   fontFamily: "$mono",
+  '&:hover': {
+    textDecoration: "underline",
+  },
 });
 
 export interface WalletAddressProps

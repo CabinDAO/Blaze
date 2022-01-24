@@ -18,6 +18,7 @@ const UserMeta = styled("div", {
   "& > *": {
     flex: 1,
   },
+  fontSize: "$sm",
 });
 
 const UserStat = styled("div", {
