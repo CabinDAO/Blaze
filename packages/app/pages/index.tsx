@@ -6,7 +6,7 @@ import PostList from "@/components/PostList";
 import { useWallet } from "@/components/WalletAuth";
 import { Select } from "@cabindao/topo";
 import { useStore } from "@/store/store";
-import AppState, {Sort} from "@/types";
+import AppState, { Sort } from "@/types";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -56,13 +56,28 @@ const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
 );
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
-  const { posts, sort, updateSort} = useStore();
+  const { posts, sort, updateSort } = useStore();
   return (
     <div>
       <header>
+        {address && (
+          <>
+            <Title>Profile</Title>
+            <Card>
+              <UserCard address={address} ens={ens} />
+            </Card>
+          </>
+        )}
         <Title>Today</Title>
         <TabBar>
-          <TabButton active>Links</TabButton>
+          {!address && <TabButton active>Links</TabButton>}
+          {address && (
+            <>
+              <TabButton active>Submissions</TabButton>
+              <TabButton active>Upvotes</TabButton>
+            </>
+          )}
+
           <div style={{ marginLeft: "auto" }}>
             <Select
               disabled={false}
