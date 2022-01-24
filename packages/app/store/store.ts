@@ -1,5 +1,5 @@
 import create from 'zustand'
-import PostListProps, {AppState, PostProps} from '@/types'
+import AppState from '@/types'
 
 export const useStore = create<AppState>((set) => ({
     posts: [

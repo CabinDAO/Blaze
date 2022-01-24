@@ -1,8 +1,8 @@
 import { styled } from "@/stitches.config";
 import { useState } from "react";
 import Post from "../Post";
-import {v4 as uuidV4} from "uuid";
-import PostListProps from "@/types";
+import { v4 as uuidV4 } from "uuid";
+import {PostListProps, Sort} from "@/types";
 
 
 const StyledPostList = styled("div", {
@@ -13,7 +13,7 @@ const StyledPostList = styled("div", {
 
 
 
-const PostList = ({posts, sort}: PostListProps) => {
+const PostList = ({ posts }: {posts: PostListProps}, { sort }: {sort: Sort}) => {
 
   return (
     <StyledPostList>
