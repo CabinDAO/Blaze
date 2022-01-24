@@ -86,7 +86,7 @@ const Home: NextPage = () => {
                 { key: "trending", label: "Trending" },
                 { key: "controversial", label: "Controversial" },
               ]}
-              placeholder="Sort:"
+              placeholder="Sort Links:"
               onChange={(key: Sort) => updateSort(key)}
             />
           </div>
