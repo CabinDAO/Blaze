@@ -74,7 +74,7 @@ const Home: NextPage = () => {
           {address && (
             <>
               <TabButton active>Submissions</TabButton>
-              <TabButton active>Upvotes</TabButton>
+              <TabButton>Upvotes</TabButton>
             </>
           )}
 
