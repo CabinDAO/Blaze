@@ -1,5 +1,6 @@
 import { styled } from "@/stitches.config";
 import { useMemo } from "react";
+import { useStore } from "@/store/store";
 
 const ArrowIcon = ({ className }: { className?: string }) => {
   return (
@@ -55,17 +56,17 @@ const Wrapper = styled("div", {
       },
       comment: {},
     },
-    upvoted: {
-      true: {
-        backgroundColor: "$forest",
-        color: "$sand",
-        "&:hover": {
-          [`& ${UpvoteArrowIcon}`]: {
-            opacity: 0.5,
-          },
+  upvoted: {
+    true: {
+      backgroundColor: "$forest",
+      color: "$sand",
+      "&:hover": {
+        [`& ${UpvoteArrowIcon}`]: {
+          opacity: 0.5,
         },
       },
     },
+  },
   },
   compoundVariants: [
     {

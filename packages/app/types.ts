@@ -1,4 +1,5 @@
 export interface PostProps {
+  id: string;
   title: string,
   domainText: string,
   url: string,
@@ -13,4 +14,5 @@ export default interface AppState {
   posts: PostListProps;
   sort: Sort;
   updateSort: (sort: Sort) => void;
+  upvotePost: (postId: string) => void;
 }
