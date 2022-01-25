@@ -81,7 +81,9 @@ const Home: NextPage = () => {
             </>
           )}
 
-          <div style={{ marginLeft: "auto" }}>
+          <div style={{
+            marginLeft: "auto",
+          }}>
             <Select
               disabled={false}
               options={[
