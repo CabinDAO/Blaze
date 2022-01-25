@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { styled } from "@/stitches.config";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
@@ -9,13 +9,12 @@ import { Select } from "@cabindao/topo";
 import { useStore } from "@/store/store";
 import AppState, { Sort } from "@/types";
 
-
 const Title = styled("h2", {
   marginTop: "$12",
   marginBottom: "$5",
-  '&:last-of-type': {
+  "&:last-of-type": {
     marginTop: 0,
-  }
+  },
 });
 
 const TabBarWrapper = styled("div", {
@@ -25,7 +24,6 @@ const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
   marginBottom: "$2",
 });
-Select.toString = () => ".select";
 const TabBarContent = styled("div", {
   display: "flex",
   marginBottom: -1,
@@ -39,7 +37,6 @@ const TabLink = styled("button", {
   paddingRight: "$4",
   border: 0,
   cursor: "pointer",
-  zIndex: 1,
   defaultVariants: {
     active: false,
   },
@@ -59,18 +56,46 @@ const TabLink = styled("button", {
 });
 const TabButton = (props: any) => <TabLink {...props} />;
 const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => {
-  return(<TabBarWrapper {...props}>
-    <TabBarContent {...props}>{children}</TabBarContent>
-  </TabBarWrapper>)
+  return (
+    <TabBarWrapper {...props}>
+      <TabBarContent {...props}>{children}</TabBarContent>
+    </TabBarWrapper>
+  );
 };
-
+const StickyTabBar = styled(TabBar, {
+  backgroundColor: "$sand",
+  variants: {
+    position: {
+      fixed: {
+        position: "static",
+      },
+      sticky: {
+        position: "sticky",
+        top: 0,
+        left: 0,
+      }
+    }
+  }
+});
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
   const { posts, sort, updateSort } = useStore();
   const [activeTab, setActiveTab] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+  const handleScroll = () => {
+    const offset = window.scrollY;
+    if (offset > 200) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+  });
   return (
     <div>
-      <header>
         {address && (
           <>
             <Title>Profile</Title>
@@ -80,7 +105,7 @@ const Home: NextPage = () => {
           </>
         )}
         <Title>Today</Title>
-        <TabBar>
+        <StickyTabBar position={scrolled ? "sticky" : "fixed"}>
           {!address && (
             <TabButton
               active={activeTab == 0 ? true : false}
@@ -96,7 +121,7 @@ const Home: NextPage = () => {
                 onClick={() => setActiveTab(0)}
               >
                 Links
-              </TabButton>  
+              </TabButton>
               <TabButton
                 active={activeTab == 1 ? true : false}
                 onClick={() => setActiveTab(1)}
@@ -108,6 +133,12 @@ const Home: NextPage = () => {
                 onClick={() => setActiveTab(2)}
               >
                 Upvotes
+              </TabButton>
+              <TabButton
+                active={activeTab == 3 ? true : false}
+                onClick={() => setActiveTab(3)}
+              >
+                Comments
               </TabButton>
             </>
           )}
@@ -128,9 +159,8 @@ const Home: NextPage = () => {
               onChange={(key: Sort) => updateSort(key)}
             />
           </div>
-        </TabBar>
-        <PostList posts={posts} sort={sort} />
-      </header>
+        </StickyTabBar>
+      <PostList posts={posts} sort={sort} />
     </div>
   );
 };
