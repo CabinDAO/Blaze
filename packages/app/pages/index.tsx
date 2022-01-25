@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useState } from "react";
 import { styled } from "@/stitches.config";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
@@ -7,6 +8,7 @@ import { useWallet } from "@/components/WalletAuth";
 import { Select } from "@cabindao/topo";
 import { useStore } from "@/store/store";
 import AppState, { Sort } from "@/types";
+
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -23,17 +25,21 @@ const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
   marginBottom: "$2",
 });
+Select.toString = () => ".select";
 const TabBarContent = styled("div", {
   display: "flex",
   marginBottom: -1,
+  alignItems: "flex-end",
 });
 const TabLink = styled("button", {
   boxSizing: "border-box",
+  height: "$10",
   background: "none",
   paddingLeft: "$4",
   paddingRight: "$4",
   border: 0,
   cursor: "pointer",
+  zIndex: 1,
   defaultVariants: {
     active: false,
   },
@@ -52,14 +58,16 @@ const TabLink = styled("button", {
   },
 });
 const TabButton = (props: any) => <TabLink {...props} />;
-const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
-  <TabBarWrapper {...props}>
-    <TabBarContent>{children}</TabBarContent>
-  </TabBarWrapper>
-);
+const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => {
+  return(<TabBarWrapper {...props}>
+    <TabBarContent {...props}>{children}</TabBarContent>
+  </TabBarWrapper>)
+};
+
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
   const { posts, sort, updateSort } = useStore();
+  const [activeTab, setActiveTab] = useState(0);
   return (
     <div>
       <header>
@@ -73,17 +81,42 @@ const Home: NextPage = () => {
         )}
         <Title>Today</Title>
         <TabBar>
-          {!address && <TabButton active>Links</TabButton>}
+          {!address && (
+            <TabButton
+              active={activeTab == 0 ? true : false}
+              onClick={() => setActiveTab(0)}
+            >
+              Links
+            </TabButton>
+          )}
           {address && (
             <>
-              <TabButton active>Submissions</TabButton>
-              <TabButton>Upvotes</TabButton>
+              <TabButton
+                active={activeTab == 0 ? true : false}
+                onClick={() => setActiveTab(0)}
+              >
+                Links
+              </TabButton>  
+              <TabButton
+                active={activeTab == 1 ? true : false}
+                onClick={() => setActiveTab(1)}
+              >
+                Submissions
+              </TabButton>
+              <TabButton
+                active={activeTab == 2 ? true : false}
+                onClick={() => setActiveTab(2)}
+              >
+                Upvotes
+              </TabButton>
             </>
           )}
 
-          <div style={{
-            marginLeft: "auto",
-          }}>
+          <div
+            style={{
+              marginLeft: "auto",
+            }}
+          >
             <Select
               disabled={false}
               options={[
@@ -91,7 +124,7 @@ const Home: NextPage = () => {
                 { key: "trending", label: "Trending" },
                 { key: "controversial", label: "Controversial" },
               ]}
-              placeholder="Sort Links:"
+              value={"newest"}
               onChange={(key: Sort) => updateSort(key)}
             />
           </div>
