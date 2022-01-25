@@ -11,7 +11,7 @@ export const useStore = create<AppState>((set) => ({
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
       walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 6,
+      submissionDate: 1642774657,
       numberOfComments: 5,
       numberOfUpvotes: 10,
     },
@@ -21,7 +21,7 @@ export const useStore = create<AppState>((set) => ({
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
       walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 5,
+      submissionDate: 1642763857,
       numberOfComments: 0,
       numberOfUpvotes: 0,
     },
@@ -31,7 +31,7 @@ export const useStore = create<AppState>((set) => ({
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
       walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 4,
+      submissionDate: 1642591057,
       numberOfComments: 27,
       numberOfUpvotes: 100,
     },
@@ -41,7 +41,7 @@ export const useStore = create<AppState>((set) => ({
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
       walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 3,
+      submissionDate: 1642504657,
       numberOfComments: 9,
       numberOfUpvotes: 1943,
     },
@@ -51,7 +51,7 @@ export const useStore = create<AppState>((set) => ({
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
       walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 2,
+      submissionDate: 1642527043,
       numberOfComments: 13,
       numberOfUpvotes: 376,
     },
@@ -61,7 +61,7 @@ export const useStore = create<AppState>((set) => ({
       domainText: "www.cabincreators.com",
       url: "www.creatorcabins.com",
       walletAddress: "0x0000000000000000000000000000000000000000",
-      submissionDate: 1,
+      submissionDate: 1643121108,
       numberOfComments: 43,
       numberOfUpvotes: 66,
     },
@@ -74,7 +74,7 @@ export const useStore = create<AppState>((set) => ({
       if (post) {
         post.numberOfUpvotes += 1;
       }
-      
+
       return { posts: state.posts };
     });
   },

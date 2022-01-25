@@ -6,6 +6,7 @@ import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
 import { PostProps } from "@/types";
+import { format, formatDistanceToNow, fromUnixTime } from "date-fns";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -52,7 +53,11 @@ const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numbe
   return (
     <PostRow>
       <div>
-        <Upvote upvoted={numberOfUpvotes > 0 ? true : false} count={numberOfUpvotes} onClick={() => upvotePost(id)} />
+        <Upvote
+          upvoted={numberOfUpvotes > 0 ? true : false}
+          count={numberOfUpvotes}
+          onClick={() => upvotePost(id)}
+        />
       </div>
       <PostInfo>
         <Title>
@@ -71,7 +76,7 @@ const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numbe
         </PostMeta>
         <PostMeta>
           <IconText>
-            <ClockIcon /> {submissionDate} hours ago
+            <ClockIcon /> {formatDistanceToNow(fromUnixTime(submissionDate), { addSuffix: true, includeSeconds: true })}
           </IconText>
           <IconText>
             <SpeechIcon /> {numberOfComments.toString()} comments
