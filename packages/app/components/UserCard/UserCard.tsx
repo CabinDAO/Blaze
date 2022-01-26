@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, CalendarIcon, ClockIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, ClockIcon, ExternalLinkIcon } from "../Icons";
 import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
 
@@ -42,17 +42,15 @@ const UserCard = ({ address, ens }: UserCardProps) => {
           ens={ens}
           css={{ marginRight: "$1" }}
         />
-        <a
-          href={`https://etherscan.io/address/${address}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <ExternalLinkIcon />
-        </a>
+        <ExternalLinkIcon href={`https://etherscan.io/address/${address}`} />
       </AddressHeader>
       <UserMeta>
-        <div><CalendarIcon/> Joined Jan 1, 2022</div>
-        <div><ClockIcon/> Last seen Jan 1, 2022</div>
+        <div>
+          <CalendarIcon /> Joined Jan 1, 2022
+        </div>
+        <div>
+          <ClockIcon /> Last seen Jan 1, 2022
+        </div>
       </UserMeta>
       <UserMeta>
         <div>

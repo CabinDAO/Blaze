@@ -44,6 +44,10 @@ const IconText = styled("span", {
   display: "flex",
   alignItems: "center",
   gap: "$1",
+  "&:last-of-type:hover": {
+    cursor: "pointer",
+    textDecoration: "underline",
+  }
 });
 
 
@@ -76,10 +80,15 @@ const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numbe
         </PostMeta>
         <PostMeta>
           <IconText>
-            <ClockIcon /> {formatDistanceToNow(fromUnixTime(submissionDate), { addSuffix: true, includeSeconds: true })}
+            <ClockIcon />{" "}
+            {formatDistanceToNow(fromUnixTime(submissionDate), {
+              addSuffix: true,
+              includeSeconds: true,
+            })}
           </IconText>
           <IconText>
-            <SpeechIcon /> {numberOfComments.toString()} comments
+            <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}
+            {numberOfUpvotes > 0 ? numberOfComments.toString() + " comments": "Add a comment"} {}
           </IconText>
         </PostMeta>
       </PostInfo>
