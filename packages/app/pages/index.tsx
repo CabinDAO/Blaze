@@ -18,9 +18,6 @@ const Title = styled("h2", {
 });
 
 const TabBarWrapper = styled("div", {
-  borderBottomWidth: 1,
-  borderBottomStyle: "solid",
-  borderColor: "$forest",
   boxSizing: "border-box",
   marginBottom: "$2",
 });
@@ -64,6 +61,9 @@ const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => {
 };
 const StickyTabBar = styled(TabBar, {
   backgroundColor: "$sand",
+  borderBottomWidth: 1,
+  borderBottomStyle: "solid",
+  borderColor: "$forest",
   variants: {
     position: {
       fixed: {
@@ -73,9 +73,9 @@ const StickyTabBar = styled(TabBar, {
         position: "sticky",
         top: 0,
         left: 0,
-      }
-    }
-  }
+      },
+    },
+  },
 });
 const Home: NextPage = () => {
   const { address, ens } = useWallet();
