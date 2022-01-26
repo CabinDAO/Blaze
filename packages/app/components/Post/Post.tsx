@@ -86,10 +86,10 @@ const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numbe
               includeSeconds: true,
             })}
           </IconText>
-          <IconText>
+          {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}
             {numberOfUpvotes > 0 ? numberOfComments.toString() + " comments": "Add a comment"} {}
-          </IconText>
+          </IconText> */}
         </PostMeta>
       </PostInfo>
     </PostRow>

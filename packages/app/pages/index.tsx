@@ -134,12 +134,12 @@ const Home: NextPage = () => {
               >
                 Upvotes
               </TabButton>
-              <TabButton
+            {/* <TabButton
                 active={activeTab == 3 ? true : false}
                 onClick={() => setActiveTab(3)}
               >
                 Comments
-              </TabButton>
+              </TabButton> */}
             </>
           )}
 
