@@ -14,7 +14,9 @@ export const ClockIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const SpeechIcon = ({ className }: { className?: string }) => (
+export const SpeechIcon = (
+  { className, fill }: { className?: string, fill: boolean },
+) => (
   <svg
     className={className}
     width="12"
@@ -25,6 +27,7 @@ export const SpeechIcon = ({ className }: { className?: string }) => (
   >
     <path
       d="M8.5 8.5H0.5V0.5H11.5V10.9129L8.8254 8.62037L8.68496 8.5H8.5Z"
+      fill={fill === true ? "#324841" : ""}
       stroke="#324841"
     />
   </svg>
