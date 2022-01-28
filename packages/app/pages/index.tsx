@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { DoubleArrowUpIcon, SunIcon, TargetIcon } from "@radix-ui/react-icons";
 import { styled } from "@/stitches.config";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
@@ -60,6 +61,20 @@ const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => {
     </TabBarWrapper>
   );
 };
+
+const MobileTabs = styled("div", {
+  display: "block",
+  "@sm": {
+    display: "none",
+  },
+});
+const DesktopTabs = styled("div", {
+  display: "none",
+  "@sm": {
+    display: "block",
+  },
+});
+
 const StickyTabBar = styled(TabBar, {
   backgroundColor: "$sand",
   borderBottomWidth: 1,
@@ -95,6 +110,22 @@ const Home: NextPage = () => {
     }
   };
 
+  const leftNav = useMemo(() => {
+    if (address) {
+      return [
+        { label: "Links", value: "links" },
+        { label: "Submissions", value: "submissions" },
+        { label: "Upvotes", value: "upvotes" },
+      ];
+    }
+    return [
+      {
+        label: "Links",
+        value: "links",
+      },
+    ];
+  }, [address]);
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
   });
@@ -110,42 +141,58 @@ const Home: NextPage = () => {
       )}
       <Title>Today</Title>
       <StickyTabBar position={scrolled ? "sticky" : "fixed"}>
-        {!address && (
-          <TabButton
-            active={activeTab == 0 ? true : false}
-            onClick={() => setActiveTab(0)}
-          >
-            Links
-          </TabButton>
-        )}
-        {address && (
-          <>
+        <MobileTabs>
+          {leftNav.length === 1 ? (
+            <TabButton active>{leftNav[0].label}</TabButton>
+          ) : (
+            <DropdownMenu
+              active
+              options={leftNav}
+              value={leftNav[activeTab]?.value}
+              onChange={(val) =>
+                setActiveTab(leftNav.findIndex((opt) => opt.value === val))
+              }
+            />
+          )}
+        </MobileTabs>
+        <DesktopTabs>
+          {!address && (
             <TabButton
               active={activeTab == 0 ? true : false}
               onClick={() => setActiveTab(0)}
             >
               Links
             </TabButton>
-            <TabButton
-              active={activeTab == 1 ? true : false}
-              onClick={() => setActiveTab(1)}
-            >
-              Submissions
-            </TabButton>
-            <TabButton
-              active={activeTab == 2 ? true : false}
-              onClick={() => setActiveTab(2)}
-            >
-              Upvotes
-            </TabButton>
-            {/* <TabButton
+          )}
+          {address && (
+            <>
+              <TabButton
+                active={activeTab == 0 ? true : false}
+                onClick={() => setActiveTab(0)}
+              >
+                Links
+              </TabButton>
+              <TabButton
+                active={activeTab == 1 ? true : false}
+                onClick={() => setActiveTab(1)}
+              >
+                Submissions
+              </TabButton>
+              <TabButton
+                active={activeTab == 2 ? true : false}
+                onClick={() => setActiveTab(2)}
+              >
+                Upvotes
+              </TabButton>
+              {/* <TabButton
                 active={activeTab == 3 ? true : false}
                 onClick={() => setActiveTab(3)}
               >
                 Comments
               </TabButton> */}
-          </>
-        )}
+            </>
+          )}
+        </DesktopTabs>
 
         <div
           style={{
@@ -155,9 +202,30 @@ const Home: NextPage = () => {
         >
           <DropdownMenu
             options={[
-              { value: "newest", label: "Newest" },
-              { value: "trending", label: "Trending" },
-              { value: "controversial", label: "Controversial" },
+              {
+                value: "newest",
+                label: (
+                  <>
+                    <SunIcon /> Newest
+                  </>
+                ),
+              },
+              {
+                value: "trending",
+                label: (
+                  <>
+                    <DoubleArrowUpIcon /> Trending
+                  </>
+                ),
+              },
+              {
+                value: "controversial",
+                label: (
+                  <>
+                    <TargetIcon /> Controversial
+                  </>
+                ),
+              },
             ]}
             value={sort}
             onChange={(key: Sort) => updateSort(key)}

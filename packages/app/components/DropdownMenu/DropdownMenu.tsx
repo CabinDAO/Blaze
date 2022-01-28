@@ -13,11 +13,13 @@ const Trigger = styled(Dropdown.Trigger, {
   cursor: "pointer",
   display: "flex",
   flexDirection: "row",
+  gap: "$2",
   alignItems: "center",
   minWidth: 124,
   height: 40,
   fontFamily: "$sans",
   fontSize: "$sm",
+  lineHeight: "16px",
   color: "$forest",
   fontWeight: "$regular",
   variants: {
@@ -41,7 +43,7 @@ const Trigger = styled(Dropdown.Trigger, {
 });
 
 const TriggerIcon = styled(ChevronDownIcon, {
-  marginLeft: "$1",
+  verticalAlign: "middle",
   variants: {
     orientation: {
       up: {
