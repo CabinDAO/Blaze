@@ -19,7 +19,7 @@ export default async function handler(
     try {
       const { authorization } = req.headers;
 
-      if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
+      if (authorization === `Bearer ${process.env.API_KEY}`) {
         let rss = await parse(MirrorRSSFeedURLs[0], {});
         res.status(200).json(rss);
       } else {
