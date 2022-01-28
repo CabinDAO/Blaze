@@ -14,6 +14,7 @@
     "@cabindao/topo-theme": "^0.1.0",
     "@radix-ui/react-icons": "^1.0.3",
     "@stitches/react": "^1.2.6",
+    "apollo-server-micro": "^3.6.2",
     "date-fns": "^2.28.0",
     "ethers": "^5.5.3",
     "graphql-tools": "^8.2.0",
