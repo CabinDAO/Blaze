@@ -20,7 +20,12 @@ export default async function handler(
       const { authorization } = req.headers;
 
       if (authorization === `Bearer ${process.env.API_KEY}`) {
-        let rss = await parse(MirrorRSSFeedURLs[0], {});
+        let rss = await parse(MirrorRSSFeedURLs[0], {
+          transformRequest: (data) => {
+            data.items = data.items.slice(0, 10);
+            return data;
+            }
+        });
         res.status(200).json(rss);
       } else {
         res
