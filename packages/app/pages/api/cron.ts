@@ -2,10 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "rss-to-json";
 import OrbitDB from "orbit-db";
 import Ipfs from "ipfs";
-import DaoCampDB from "../../scripts/db";
+import DCDB from "../../lib/db";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import { getUnixTime } from "date-fns";
 
 // Initialize the cors middleware
 const cors = initMiddleware(
@@ -75,13 +74,13 @@ export default async function handler(
       });
       const combinedData = [...linkData1, ...linkData2, ...linkData3, linkData4];
 
-      const DCDB = new DaoCampDb(Ipfs, OrbitDB);
-
-      DCDB.load();
-      for (link in combinedData) {
-        await DCDB.addNewLink(link.title, link.url);
-      }
-      res.status(200).json(combinedData);
+      let newLinks = [];
+      combinedData.forEach(obj =>
+        newLinks.push(DCDB.addNewLink(obj.title, obj.url))
+      );
+      Promise.all(newLinks).then((links) =>
+        res.status(200).json({ status: "success", newLinks: links })
+      );
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err.message });
     }

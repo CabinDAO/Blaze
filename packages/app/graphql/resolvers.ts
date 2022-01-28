@@ -1,6 +1,6 @@
 const OrbitDB = require('orbit-db');
 const Ipfs = require('ipfs');
-const DaoCampDb = require('./scripts/db');
+const DaoCampDb = require('./lib/orbit-db');
 const DCDB = new DaoCampDb(Ipfs, OrbitDB);
 
 const resolvers = {

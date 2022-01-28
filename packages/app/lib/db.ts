@@ -1,7 +1,7 @@
-const { v4: uuidv4 } = require("uuid");
-const { getUnixTime } = require("date-fns");
+const { v4 } = require("uuid");
+const { getUnixTime } =  require("date-fns");
 
-export default class DaoCampDb {
+class DaoCampDb {
   constructor(Ipfs, OrbitDB) {
     this.Ipfs = Ipfs;
     this.OrbitDB = OrbitDB;
@@ -74,40 +74,40 @@ export default class DaoCampDb {
   }
 
   async addNewLink(title, url) {
-    const _id = uuidv4();
+    const id = v4();
     const upvotesStoreName = `${id}-link-upvotes-received`;
     const counter = await this.orbitdb.counter(
       upvotesStoreName,
       this.defaultOptions
     );
     const link = {
-      id: id,
+      _id: id,
       title: title,
       postedBy: url,
       url: url,
       timeStamp: getUnixTime(new Date()),
       upvotes: counter.id,
     };
-    await this.links.add(link);
+    await this.links.put(link);
     return link;
   }
 
   async upvoteLink(walletAddress, linkId) {
     const profile = await this.profiles.get(walletAddress);
-    const link = await this.links.get(id);
+    const link = await this.links.get(linkId);
     const counter = await this.orbitdb.counter(
       link.counter,
       this.defaultOptions
     );
     await counter.load();
     const cid = await counter.inc();
-    const link = {
-      id: uuidv4(),
+    const upvote = {
+      id: v4(),
       upvotedBy: profile.id,
       timeStamp: getUnixTime(new Date()),
       link: link.id,
     };
-    await this.upvotes.put(link);
+    await this.upvotes.put(upvote);
     return link;
   }
   async getProfile(profileId) {
@@ -157,17 +157,18 @@ export default class DaoCampDb {
     const upvote = await this.upvotes.get(upvoteId);
     return upvote.link;
   }
-}
+ }
 
-try {
-  const Ipfs = require("ipfs");
-  const OrbitDB = require("orbit-db");
+if (typeof window !== undefined) {
+  const Ipfs = require('ipfs');
+  const OrbitDB = require('orbit-db');
   const DCDB = new DaoCampDb(Ipfs, OrbitDB);
+  DCDB.create();
   DCDB.onready = () => {
     console.log(DCDB.orbitdb.id);
   };
-  DCDB.create();
-} catch (e) {
-  console.log(e);
-  window.DCDB = new DaoCampDb(window.Ipfs, window.OrbitDB);
-}
+  module.exports = exports = DCDB;
+} else {
+  window.NPP = new DaoCampDb(window.Ipfs, window.OrbitDB);
+ }
+

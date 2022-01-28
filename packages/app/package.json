@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:init": "node scripts/db.ts"
+    "db:init": "node lib/db.ts"
   },
   "dependencies": {
     "@cabindao/topo": "^0.3.0",
