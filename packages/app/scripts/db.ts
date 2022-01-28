@@ -88,8 +88,8 @@ export default class DaoCampDb {
       timeStamp: getUnixTime(new Date()),
       upvotes: counter.id,
     };
-    const cid = await this.links.add(link);
-    return cid;
+    await this.links.add(link);
+    return link;
   }
 
   async upvoteLink(walletAddress, linkId) {
