@@ -1,7 +1,7 @@
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
-import { useWallet } from "@/components/WalletAuth";
-import { useEffect } from "react";
+import {useWallet} from "@/components/WalletAuth";
+import {useEffect} from "react";
 
 const UnknownUser = () => {
   return (
@@ -12,7 +12,7 @@ const UnknownUser = () => {
 };
 
 const Profile = () => {
-  const { address } = useWallet();
+  const {address, ens} = useWallet();
 
   if (!address) {
     return <UnknownUser />;
@@ -21,7 +21,7 @@ const Profile = () => {
   return (
     <div>
       <Card>
-        <UserCard address={address} />
+        <UserCard address={address} ens={ens} />
       </Card>
     </div>
   );

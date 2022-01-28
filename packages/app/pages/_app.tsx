@@ -4,17 +4,17 @@ import {
   defaultChains,
   useAccount,
 } from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { styled, globalCss } from "@/stitches.config";
-import type { AppProps } from "next/app";
-import { Button } from "@cabindao/topo";
+import {InjectedConnector} from "wagmi/connectors/injected";
+import {WalletConnectConnector} from "wagmi/connectors/walletConnect";
+import {styled, globalCss} from "@/stitches.config";
+import type {AppProps} from "next/app";
+import {Button} from "@cabindao/topo";
 import WalletAddress from "@/components/WalletAddress";
 import Link from "next/link";
-import WalletAuth, { useWallet } from "@/components/WalletAuth";
-import Router, { useRouter } from "next/router";
-import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import WalletAuth, {useWallet} from "@/components/WalletAuth";
+import Router, {useRouter} from "next/router";
+import {HamburgerMenuIcon, Cross1Icon} from "@radix-ui/react-icons";
+import {useEffect, useState} from "react";
 
 const globalStyles = globalCss({
   body: {
@@ -100,16 +100,16 @@ const alchemyId = process.env.ALCHEMY_API_KEY;
 const chains = defaultChains;
 
 const connectors = [
-  new InjectedConnector({ chains: defaultChains }),
+  new InjectedConnector({chains: defaultChains}),
   new WalletConnectConnector({
     options: {
-      rpc: { 1: `https://eth-goerli.alchemyapi.io/v2/${alchemyId}}` },
+      rpc: {1: `https://eth-goerli.alchemyapi.io/v2/${alchemyId}}`},
     },
   }),
 ];
 
 const ProfileLink = () => {
-  const { address, ens } = useWallet();
+  const {address, ens} = useWallet({fetchEns: true});
   if (!address) return null;
   return (
     <Link href="/profile">
@@ -121,7 +121,7 @@ const ProfileLink = () => {
 };
 
 const SubmitLinkAction = () => {
-  const { isConnected } = useWallet();
+  const {isConnected} = useWallet();
   if (isConnected) {
     return (
       <Link href="/submission/new" passHref>
@@ -200,7 +200,7 @@ const MenuBox = styled("div", {
 });
 const MobileMenu = () => {
   const router = useRouter();
-  const [{ data }, disconnect] = useAccount();
+  const [{data}, disconnect] = useAccount();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -237,8 +237,8 @@ const MobileMenu = () => {
               <Link href="/submission/new">
                 <a>Submit a Link</a>
               </Link>
-              <a
-                href="/"
+              <Button
+                type="link"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsOpen(false);
@@ -246,7 +246,7 @@ const MobileMenu = () => {
                 }}
               >
                 Disconnect
-              </a>
+              </Button>
             </>
           ) : (
             <Link href="/user/sign_in">
@@ -277,9 +277,9 @@ const ResponsiveNav = () => {
   );
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({Component, pageProps}: AppProps) {
   globalStyles();
-  const { pathname } = useRouter();
+  const {pathname} = useRouter();
   return (
     <WalletProvider autoConnect connectors={connectors}>
       <MainContainer>

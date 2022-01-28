@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
-import { Button } from "@cabindao/topo";
+import React, {createContext, useContext, useMemo, useState} from "react";
+import {Button} from "@cabindao/topo";
 import WalletAddress from "../WalletAddress";
-import { useConnect, useAccount, Connector } from "wagmi";
+import {useConnect, useAccount, Connector} from "wagmi";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 // interface WalletContextState {
 //   address: string | null;
@@ -26,8 +26,8 @@ import { useRouter } from "next/router";
 //   );
 // };
 
-export const useWallet = () => {
-  const [{ data, error }] = useAccount();
+export const useWallet = (options?: {fetchEns?: boolean}) => {
+  const [{data, error}] = useAccount(options);
   return {
     isConnected: !error && !!data?.address,
     address: data?.address ?? null,
@@ -37,16 +37,16 @@ export const useWallet = () => {
 
 const WalletAuth = () => {
   const router = useRouter();
-  const [{ data, error, loading }, connect] = useConnect();
+  const [{data, error, loading}, connect] = useConnect();
 
   const [
-    { data: accountData, error: accountError, loading: accountLoading },
+    {data: accountData, error: accountError, loading: accountLoading},
     disconnect,
   ] = useAccount();
   if (data.connected) {
     return (
       <div>
-        <Button onClick={disconnect} css={{color: "black"}} type="secondary" tone="wheat">
+        <Button onClick={disconnect} type="secondary" tone="forest">
           Disconnect
         </Button>
       </div>
@@ -56,7 +56,6 @@ const WalletAuth = () => {
   if (router.pathname === "/user/sign_in") {
     return null;
   }
-  console.log(router.pathname);
 
   return (
     <Link href="/user/sign_in" passHref>
