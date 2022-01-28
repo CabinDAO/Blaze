@@ -1,7 +1,14 @@
-const resolvers = {
+const OrbitDB = require('orbit-db');
+const Ipfs = require('ipfs');
+const DaoCampDb = require('./scripts/db');
+const DCDB = new DaoCampDb(Ipfs, OrbitDB);
+
+const resolverMap = {
   Query: {
     links: async () => {
-      //get all links in orbitdb
+      //load most recent version of link store
+      //return list of all links
+
     },
     profile: async (id) => {
       //get profile by id from orbitdb
@@ -10,18 +17,7 @@ const resolvers = {
   Mutuation: {
     createProfile: async (id) => {},
     upvoteLink: async (_, { id: id }) => {
-      //get link in orbitdb
-      const link = find(links, { id: id });
-      if (!post) {
-        throw new Error(`Couldn't find link with id ${id}`);
-      }
-      post.votes++;
-      //save updated link in orbitdb
-      return post;
     },
-    upvoteComment: async (_, { id: id }) => { },
-    commentOnLink: async (_, { id: id, text: text }) => { },
-    commentOnComment: async (_, { id: id, text: text }) => { }
   },
   Profile: {
     walletAddress: async (profile) => {
@@ -56,30 +52,30 @@ const resolvers = {
     upvotes: async (link) => {
       //get upvotes from orbitdb
     },
-    comments: async (link) => {
-      //get comments from orbitdb
-    },
+    // comments: async (link) => {
+    //   //get comments from orbitdb
+    // },
   },
-  Comment: {
-    postedBy: async (comment) => {
-      //get posted by from orbitdb
-    },
-    timeStamp: async (comment) => {
-      //get time stamp from orbitdb
-    },
-    text: async (comment) => {
-      //get text from orbitdb
-    },
-    link: async (comment) => {
-      //get link from orbitdb
-    },
-    upvotes: async (comment) => {
-      //get upvotes from orbitdb
-    },
-    comments: async (comment) => {
-      //get comments from orbitdb
-    }
-  },
+  // Comment: {
+  //   postedBy: async (comment) => {
+  //     //get posted by from orbitdb
+  //   },
+  //   timeStamp: async (comment) => {
+  //     //get time stamp from orbitdb
+  //   },
+  //   text: async (comment) => {
+  //     //get text from orbitdb
+  //   },
+  //   link: async (comment) => {
+  //     //get link from orbitdb
+  //   },
+  //   upvotes: async (comment) => {
+  //     //get upvotes from orbitdb
+  //   },
+  //   comments: async (comment) => {
+  //     //get comments from orbitdb
+  //   }
+  // },
   Upvote: {
     upvoter: async (upvote) => {
       //get upvoter from orbitdb
@@ -90,9 +86,9 @@ const resolvers = {
     link: async (upvote) => {
       //get link from orbitdb
     },
-    comment: async (upvote) => {
-      //get comment from orbitdb
-    },
+    // comment: async (upvote) => {
+    //   //get comment from orbitdb
+    // },
   }
 };
 export default resolvers;
