@@ -1,12 +1,12 @@
-import { styled } from "@/stitches.config";
+import {styled} from "@/stitches.config";
 import Link from "next/link";
-import { useState } from "react";
-import { ClockIcon, SpeechIcon } from "@/components/Icons";
+import {ClockIcon, SpeechIcon} from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
-import { useStore } from "@/store/store";
-import { PostProps } from "@/types";
-import { format, formatDistanceToNow, fromUnixTime } from "date-fns";
+import {useStore} from "@/store/store";
+import {PostProps} from "@/types";
+import {formatDistanceToNow, fromUnixTime} from "date-fns";
+// import {useEnsLookup} from "wagmi";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -14,8 +14,6 @@ const PostRow = styled("div", {
 });
 const PostInfo = styled("div", {
   flex: 1,
-  // display: "flex",
-  // flexDirection: "column",
 });
 const Title = styled("div", {
   fontWeight: "$regular",
@@ -47,12 +45,24 @@ const IconText = styled("span", {
   "&:last-of-type:hover": {
     cursor: "pointer",
     textDecoration: "underline",
-  }
+  },
 });
 
+const Post = ({
+  id,
+  title,
+  url,
+  domainText,
+  walletAddress,
+  submissionDate,
+  numberOfComments,
+  numberOfUpvotes,
+}: PostProps) => {
+  const {upvotePost} = useStore();
 
-const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numberOfComments, numberOfUpvotes }: PostProps) => {
-  const { upvotePost } = useStore();
+  // const [{data: ensName}] = useEnsLookup({
+  //   address: walletAddress,
+  // });
 
   return (
     <PostRow>
@@ -73,7 +83,10 @@ const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numbe
             via{" "}
             <Link href={`/address/${walletAddress}`}>
               <a title={`View profile of ${walletAddress}`}>
-                <WalletAddress address={walletAddress} />
+                <WalletAddress
+                  address={walletAddress}
+                  // ens={ensName ? {name: ensName} : null}
+                />
               </a>
             </Link>
           </MetaAddress>

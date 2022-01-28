@@ -1,14 +1,14 @@
-import type { NextPage } from "next";
-import { useState, useEffect, useMemo } from "react";
-import { DoubleArrowUpIcon, SunIcon, TargetIcon } from "@radix-ui/react-icons";
-import { styled } from "@/stitches.config";
+import type {NextPage} from "next";
+import {useState, useEffect, useMemo} from "react";
+import {DoubleArrowUpIcon, SunIcon, TargetIcon} from "@radix-ui/react-icons";
+import {styled} from "@/stitches.config";
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import PostList from "@/components/PostList";
-import { useWallet } from "@/components/WalletAuth";
-import { Select } from "@cabindao/topo";
-import { useStore } from "@/store/store";
-import AppState, { Sort } from "@/types";
+import {useWallet} from "@/components/WalletAuth";
+import {Select} from "@cabindao/topo";
+import {useStore} from "@/store/store";
+import AppState, {Sort} from "@/types";
 import DropdownMenu from "@/components/DropdownMenu";
 
 const Title = styled("h2", {
@@ -54,7 +54,7 @@ const TabLink = styled("button", {
   },
 });
 const TabButton = (props: any) => <TabLink {...props} />;
-const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => {
+const TabBar = ({children, ...props}: {children?: React.ReactNode}) => {
   return (
     <TabBarWrapper {...props}>
       <TabBarContent {...props}>{children}</TabBarContent>
@@ -97,8 +97,8 @@ const StickyTabBar = styled(TabBar, {
   },
 });
 const Home: NextPage = () => {
-  const { address, ens } = useWallet();
-  const { posts, sort, updateSort } = useStore();
+  const {address, ens} = useWallet({fetchEns: true});
+  const {posts, sort, updateSort} = useStore();
   const [activeTab, setActiveTab] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const handleScroll = () => {
@@ -113,9 +113,9 @@ const Home: NextPage = () => {
   const leftNav = useMemo(() => {
     if (address) {
       return [
-        { label: "Links", value: "links" },
-        { label: "Submissions", value: "submissions" },
-        { label: "Upvotes", value: "upvotes" },
+        {label: "Links", value: "links"},
+        {label: "Submissions", value: "submissions"},
+        {label: "Upvotes", value: "upvotes"},
       ];
     }
     return [
