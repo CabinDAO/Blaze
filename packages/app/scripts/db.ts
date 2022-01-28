@@ -36,7 +36,7 @@ export default class DaoCampDb {
     if (this.onready) this.onready();
   }
 
-  async addNewProfile(walletAddress) {
+  async createProfile(walletAddress) {
     const upvotesStoreName = `${walletAddress}-upvotes-received`;
     const upvotedStoreName = `${walletAddress}-links-upvoted`;
 
@@ -64,7 +64,7 @@ export default class DaoCampDb {
   }
 
   async addNewLink(title, url) {
-    const id = uuidv4();
+    const _id = uuidv4();
     const upvotesStoreName = `${id}-link-upvotes-received`;
     const counter = await this.orbitdb.counter(upvotesStoreName, this.defaultOptions);
     const link = {
@@ -85,13 +85,14 @@ export default class DaoCampDb {
     const counter = await this.orbitdb.counter(link.counter, this.defaultOptions);
     await counter.load()
     const cid = await counter.inc()
-    const cid = await this.upvotes.put({
+    const link = {
       id: uuidv4(),
       upvotedBy: profile.id,
       timeStamp: getUnixTime(new Date()),
       link: link.id
-    });
-    return cid;
+    };
+    await this.upvotes.put(link);
+    return link;
   }
   async getProfile(profileId) {
     return await this.profiles.get(profileId);
@@ -101,53 +102,29 @@ export default class DaoCampDb {
     return await this.links.query(q => q.orderBy('timeStamp', 'desc'));
   }
 
+  async getLink(linkId) {
+    return await this.links.get(linkId);
+  }
+
   async getLinkUpvotes(linkId) {
     return await this.upvotes.query(q => q.link === linkId);
   }
 
-  async getwalletaddress(profileId) {
-    const profile = await this.profiles.query(q => q.id === profileId);
-    return profile.walletAddress;
+  async getUpvotedLinks(walletAddress) {
+    const profile = await this.profiles.get(walletAddress);
+    return await this.upvotes.query(q => q.upvotedBy === profile.id);
+  }
+  async getSubmittedLinks(walletAddress) {
+    const profile = await this.profiles.get(walletAddress);
+    return await this.links.query(q => q.postedBy === profile.id);
   }
 
-  async getJoinedDate(profileId) {
-    const profile = await this.profiles.query(q => q.id === profileId);
-    return profile.joinDate;
-  }
 
-  async getLastSeenDate(profileId) {
-    const profile = await this.profiles.query(q => q.id === profileId);
-    return profile.lastSeenDate;
-  }
 
   // async getUpvotesReceived(profileId) {}
   // async getLinksSubmitted(profileId) {}
 
-  async getLinksUpvotedCount(profileId) {
-    const profile = await this.profiles.query(q => q.id === profileId);
-    return profile.linksUpvoted.value;
-    
-  }
 
-  async getLinkPostedBy(linkId) {
-    const link = await this.links.get(linkId);
-    return link.postedBy;
-  }
-
-  async getLinkTitle(linkId) {
-    const link = await this.links.get(linkId);
-    return link.title;
-  }
-
-  async getLinkUrl(linkId) {
-    const link = await this.links.get(linkId);
-    return link.url;
-  }
-
-  async getLinkTimeStamp(linkId) {
-    const link = await this.links.get(linkId);
-    return link.timeStamp;
-  }
 
   async getLinkUpvotes(linkId) {
     const upvotes = await this.upvotes.query(q => q.link === linkId);
@@ -174,11 +151,12 @@ try {
     const OrbitDB = require("orbit-db");
     const DCDB = new DaoCampDb(Ipfs, OrbitDB);
     DCDB.onready = () => {
-    console.log(DCDB.orbitdb.id)
+      console.log(DCDB.orbitdb.id);
     }
-    DCDB.create()
+  DCDB.create();
     
 } catch (e) {
-  console.log(e)
+  console.log(e);
+  window.DCDB = new DaoCampDb(window.Ipfs, window.OrbitDB);
 }
 

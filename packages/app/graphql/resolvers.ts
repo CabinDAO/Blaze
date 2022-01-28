@@ -6,51 +6,95 @@ const DCDB = new DaoCampDb(Ipfs, OrbitDB);
 const resolverMap = {
   Query: {
     links: async () => {
-      //load most recent version of link store
-      //return list of all links
-
+      await DCDB.load();
+      const links = await DCDB.links.query();
+      await DCDB.close();
+      //return links
+      return links;
     },
-    profile: async (id) => {
-      //get profile by id from orbitdb
+    profile: async (profileId) => {
+      await DCDB.load();
+      const profile = await DCDB.profiles.get(profilId);
+      await DCDB.close();
+      return profile;
     },
   },
   Mutuation: {
-    createProfile: async (id) => {},
+    createProfile: async (walletAddress) => {
+      await DCDB.load();
+      const profile = await DCDB.createProfile(walletAddress);
+      await DCDB.close();
+      return profile;
+    },
     upvoteLink: async (_, { id: id }) => {
+      await DCDB.load();
+      const upvote = await DCDB.upvoteLink(id);
+      await DCDB.close();
+      return upvote;
     },
   },
   Profile: {
     walletAddress: async (profile) => {
-      //get wallet address from orbitdb
+      await DCDB.load();
+      const profile = await DCDB.profiles.get(profile.id);
+      await DCDB.close();
+      return profile.walletAddress;
     },
     joinDate: async (profile) => {
-      //get join date from orbitdb
+      await DCDB.load();
+      const profile = await DCDB.profiles.get(profile.id);
+      await DCDB.close();
+      return profile.joinDate;
     },
     lastSeenDate: async (profile) => {
-      //get last seen date from orbitdb
+      await DCDB.load();
+      const profile = await DCDB.profiles.get(profile.id);
+      await DCDB.close();
+      return profile.lastSeenDate;
     },
     upvotesReceived: async (profile) => {
-      //get upvotes received from orbitdb
+      await DCDB.load();
+      const profile = await DCDB.profiles.get(profile.id);
+      await DCDB.close();
+      return profile.upvotesReceived.value;
     },
     linksUpvoted: async (profile) => {
-      //get links upvoted from orbitdb
-    }
+      await DCDB.load();
+      const profile = await DCDB.profiles.get(profile.id);
+      await DCDB.close();
+      return profile.linksUpvoted.value;
+    },
   },
   Link: {
     postedBy: async (link) => {
-      //get posted by from orbitdb
+      await DCDB.load();
+      const link = await DCDB.links.get(link.id);
+      await DCDB.close();
+      return link.postedBy;
     },
     timeStamp: async (link) => {
-      //get time stamp from orbitdb
+      await DCDB.load();
+      const link = await DCDB.links.get(link.id);
+      await DCDB.close();
+      return link.timeStamp;
     },
     title: async (link) => {
-      //get title from orbitdb
+      await DCDB.load();
+      const link = await DCDB.links.get(link.id);
+      await DCDB.close();
+      return link.title;
     },
     url: async (link) => {
-      //get url from orbitdb
+      await DCDB.load();
+      const link = await DCDB.links.get(link.id);
+      await DCDB.close();
+      return link.url;
     },
     upvotes: async (link) => {
-      //get upvotes from orbitdb
+      await DCDB.load();
+      const link = await DCDB.links.get(link.id);
+      await DCDB.close();
+      return link.upvotes.value;
     },
     // comments: async (link) => {
     //   //get comments from orbitdb
@@ -77,18 +121,27 @@ const resolverMap = {
   //   }
   // },
   Upvote: {
-    upvoter: async (upvote) => {
-      //get upvoter from orbitdb
+    upvotedBy: async (upvote) => {
+      await DCDB.load();
+      const upvote = await DCDB.upvotes.get(upvote.id);
+      await DCDB.close();
+      return upvote.upvotedBy;
     },
     timeStamp: async (upvote) => {
-      //get time stamp from orbitdb
+      await DCDB.load();
+      const upvote = await DCDB.upvotes.get(upvote.id);
+      await DCDB.close();
+      return upvote.timeStamp;
     },
     link: async (upvote) => {
-      //get link from orbitdb
+      await DCDB.load();
+      const upvote = await DCDB.upvotes.get(upvote.id);
+      await DCDB.close();
+      return upvote.link;
     },
     // comment: async (upvote) => {
     //   //get comment from orbitdb
     // },
-  }
+  },
 };
-export default resolvers;
+export default resolverMap;
