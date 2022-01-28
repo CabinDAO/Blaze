@@ -8,6 +8,7 @@ import { useWallet } from "@/components/WalletAuth";
 import { Select } from "@cabindao/topo";
 import { useStore } from "@/store/store";
 import AppState, { Sort } from "@/types";
+import DropdownMenu from "@/components/DropdownMenu";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -64,6 +65,9 @@ const StickyTabBar = styled(TabBar, {
   borderBottomWidth: 1,
   borderBottomStyle: "solid",
   borderColor: "$forest",
+  "& > *": {
+    marginBottom: -1,
+  },
   variants: {
     position: {
       fixed: {
@@ -96,70 +100,70 @@ const Home: NextPage = () => {
   });
   return (
     <div>
+      {address && (
+        <>
+          <Title>Profile</Title>
+          <Card>
+            <UserCard address={address} ens={ens} />
+          </Card>
+        </>
+      )}
+      <Title>Today</Title>
+      <StickyTabBar position={scrolled ? "sticky" : "fixed"}>
+        {!address && (
+          <TabButton
+            active={activeTab == 0 ? true : false}
+            onClick={() => setActiveTab(0)}
+          >
+            Links
+          </TabButton>
+        )}
         {address && (
           <>
-            <Title>Profile</Title>
-            <Card>
-              <UserCard address={address} ens={ens} />
-            </Card>
-          </>
-        )}
-        <Title>Today</Title>
-        <StickyTabBar position={scrolled ? "sticky" : "fixed"}>
-          {!address && (
             <TabButton
               active={activeTab == 0 ? true : false}
               onClick={() => setActiveTab(0)}
             >
               Links
             </TabButton>
-          )}
-          {address && (
-            <>
-              <TabButton
-                active={activeTab == 0 ? true : false}
-                onClick={() => setActiveTab(0)}
-              >
-                Links
-              </TabButton>
-              <TabButton
-                active={activeTab == 1 ? true : false}
-                onClick={() => setActiveTab(1)}
-              >
-                Submissions
-              </TabButton>
-              <TabButton
-                active={activeTab == 2 ? true : false}
-                onClick={() => setActiveTab(2)}
-              >
-                Upvotes
-              </TabButton>
+            <TabButton
+              active={activeTab == 1 ? true : false}
+              onClick={() => setActiveTab(1)}
+            >
+              Submissions
+            </TabButton>
+            <TabButton
+              active={activeTab == 2 ? true : false}
+              onClick={() => setActiveTab(2)}
+            >
+              Upvotes
+            </TabButton>
             {/* <TabButton
                 active={activeTab == 3 ? true : false}
                 onClick={() => setActiveTab(3)}
               >
                 Comments
               </TabButton> */}
-            </>
-          )}
+          </>
+        )}
 
-          <div
-            style={{
-              marginLeft: "auto",
-            }}
-          >
-            <Select
-              disabled={false}
-              options={[
-                { key: "newest", label: "Newest" },
-                { key: "trending", label: "Trending" },
-                { key: "controversial", label: "Controversial" },
-              ]}
-              value={"newest"}
-              onChange={(key: Sort) => updateSort(key)}
-            />
-          </div>
-        </StickyTabBar>
+        <div
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+          }}
+        >
+          <DropdownMenu
+            options={[
+              { value: "newest", label: "Newest" },
+              { value: "trending", label: "Trending" },
+              { value: "controversial", label: "Controversial" },
+            ]}
+            value={sort}
+            onChange={(key: Sort) => updateSort(key)}
+          />
+        </div>
+      </StickyTabBar>
       <PostList posts={posts} sort={sort} />
     </div>
   );
