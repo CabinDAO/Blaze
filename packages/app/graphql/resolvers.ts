@@ -3,7 +3,7 @@ const Ipfs = require('ipfs');
 const DaoCampDb = require('./scripts/db');
 const DCDB = new DaoCampDb(Ipfs, OrbitDB);
 
-const resolverMap = {
+const resolvers = {
   Query: {
     links: async () => {
       await DCDB.load();
@@ -144,4 +144,4 @@ const resolverMap = {
     // },
   },
 };
-export default resolverMap;
+export default resolvers;
