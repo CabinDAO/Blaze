@@ -3,11 +3,22 @@ import { parse } from "rss-to-json";
 import OrbitDB from "orbit-db";
 import Ipfs from "ipfs";
 import DaoCampDB from "../../scripts/db";
+import initMiddleware from "../../lib/init-middleware";
+import Cors from "cors";
 
+
+
+// Initialize the cors middleware
+const cors = initMiddleware(
+  Cors({
+    // Only allow requests with GET, POST and OPTIONS
+    methods: ['GET', 'POST'],
+  })
+)
 //Mirror feeds to seed database
 // Cabin, Krause House, MirrorDAO, Songcamp, Seed Club
 const MirrorRSSFeedURLs = [
-  "https://dao.submirror.xyz, https://creators.submirror.xyz, https://krausehouse.submirror.xyz/",
+  "https://dao.submirror.xyz", "https://creators.submirror.xyz", "https://krausehouse.submirror.xyz/",
   "https://songcamp.submirror.xyz/",
   "https://club.submirror.xyz/",
 ];
@@ -15,16 +26,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  await cors(req, res);
   if (req.method === "POST") {
     try {
       const { authorization } = req.headers;
-
       if (authorization === `Bearer ${process.env.API_KEY}`) {
         let rss = await parse(MirrorRSSFeedURLs[0], {
           transformRequest: (data) => {
             data.items = data.items.slice(0, 10);
             return data;
-            }
+          }
         });
         res.status(200).json(rss);
       } else {
