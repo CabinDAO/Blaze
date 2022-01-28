@@ -6,7 +6,11 @@ import DaoCampDB from "../../scripts/db";
 
 //Mirror feeds to seed database
 // Cabin, Krause House, MirrorDAO, Songcamp, Seed Club
-const MirrorFeedURLs = ["https://dao.mirror.xyz/OvXLCC3v2hUR06ay0g6wvn3zH1mShq4z3VCfto6TBKY, "]
+const MirrorRSSFeedURLs = [
+  "https://dao.submirror.xyz, https://creators.submirror.xyz, https://krausehouse.submirror.xyz/",
+  "https://songcamp.submirror.xyz/",
+  "https://club.submirror.xyz/",
+];
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,10 +20,12 @@ export default async function handler(
       const { authorization } = req.headers;
 
       if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
-
-        res.status(200).json({ success: true });
+        let rss = await parse(MirrorRSSFeedURLs[0], {});
+        res.status(200).json(rss);
       } else {
-        res.status(401).json({ success: false });
+        res
+          .status(401)
+          .json({ success: false, message: "Unauthorized access" });
       }
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err.message });
