@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "rss-to-json";
 import OrbitDB from "orbit-db";
 import Ipfs from "ipfs";
-import DCDB from "../../lib/db";
+import DaoCampDb from "../../lib/db";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
 
@@ -29,6 +29,13 @@ export default async function handler(
   await cors(req, res);
   if (req.method === "POST") {
     try {
+        const Ipfs = require("ipfs");
+        const OrbitDB = require("orbit-db");
+        const DCDB = new DaoCampDb(Ipfs, OrbitDB);
+        DCDB.create();
+        DCDB.onready = () => {
+          console.log(DCDB.orbitdb.id);
+        };
       // const { authorization } = req.headers;
       // if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
       //   let rss = await parse(MirrorRSSFeedURLs[0], {
@@ -67,6 +74,7 @@ export default async function handler(
       await writeLinksToDB(links);
       res.status(200).json({ status: "success", newLinks: links });
     } catch (err) {
+      console.log(err);
       res.status(500).json({ statusCode: 500, message: err.message });
     }
   } else {

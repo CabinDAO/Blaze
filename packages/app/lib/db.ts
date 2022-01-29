@@ -1,7 +1,16 @@
-const { v4 } = require("uuid");
-const { getUnixTime } = require("date-fns");
-
+import { v4 as uuidv4 } from 'uuid';
+import getUnixTime from 'date-fns/getUnixTime';
 class DaoCampDb {
+  orbitdb: any;
+  OrbitDB: any;
+  Ipfs: any;
+  node: any;
+  defaultOptions: any;
+  onready: (() => void) | undefined;
+  profiles: any;
+  links: any;
+  upvotes: any;
+
   constructor(Ipfs, OrbitDB) {
     this.Ipfs = Ipfs;
     this.OrbitDB = OrbitDB;
@@ -41,25 +50,15 @@ class DaoCampDb {
   }
 
   async createProfile(walletAddress) {
-    const upvotesStoreName = `${walletAddress}-upvotes-received`;
-    const upvotedStoreName = `${walletAddress}-links-upvoted`;
 
-    const counter1 = await this.orbitdb.counter(
-      upvotesStoreName,
-      this.defaultOptions
-    );
-    const counter2 = await this.orbitdb.counter(
-      upvotedStoreName,
-      this.defaultOptions
-    );
 
     const profile = {
       _id: walletAddress,
       walletAddress: walletAddress,
       joinDate: getUnixTime(new Date()),
       lastSeenDate: getUnixTime(new Date()),
-      upvotesReceived: counter1.id,
-      linksUpvoted: counter2.id,
+      upvotesReceived: 0,
+      linksUpvoted: 0,
     };
     const cid = await this.profiles.put(profile);
     return cid;
@@ -75,19 +74,14 @@ class DaoCampDb {
   }
 
   async addNewLink(title, url) {
-    const id = v4();
-    const upvotesStoreName = `${id}-link-upvotes-received`;
-    const counter = await this.orbitdb.counter(
-      upvotesStoreName,
-      this.defaultOptions
-    );
+    const id = uuidv4();
     const link = {
       _id: id,
       title: title,
       postedBy: url,
       url: url,
       timeStamp: getUnixTime(new Date()),
-      upvotes: counter.id,
+      upvotes: 0
     };
     await this.links.put(link);
     return link;
@@ -95,15 +89,10 @@ class DaoCampDb {
 
   async upvoteLink(walletAddress, linkId) {
     const profile = await this.profiles.get(walletAddress);
+    await profile.put("upvotesReceived", profile.upvotesReceived++);
     const link = await this.links.get(linkId);
-    const counter = await this.orbitdb.counter(
-      link.counter,
-      this.defaultOptions
-    );
-    await counter.load();
-    const cid = await counter.inc();
     const upvote = {
-      id: v4(),
+      id: uuidv4(),
       upvotedBy: profile.id,
       timeStamp: getUnixTime(new Date()),
       link: link.id,
@@ -139,11 +128,6 @@ class DaoCampDb {
   // async getUpvotesReceived(profileId) {}
   // async getLinksSubmitted(profileId) {}
 
-  async getLinkUpvotes(linkId) {
-    const upvotes = await this.upvotes.query((q) => q.link === linkId);
-    return upvotes;
-  }
-
   async getUpvoter(upvoteId) {
     const upvote = await this.upvotes.get(upvoteId);
     return upvote.upvotedBy;
@@ -160,15 +144,16 @@ class DaoCampDb {
   }
 }
 
-if (typeof window !== undefined) {
-  const Ipfs = require("ipfs");
-  const OrbitDB = require("orbit-db");
-  const DCDB = new DaoCampDb(Ipfs, OrbitDB);
-  DCDB.create();
-  DCDB.onready = () => {
-    console.log(DCDB.orbitdb.id);
-  };
-  module.exports = exports = DCDB;
-} else {
-  window.NPP = new DaoCampDb(window.Ipfs, window.OrbitDB);
-}
+// if (typeof window !== undefined) {
+//   const Ipfs = require("ipfs");
+//   const OrbitDB = require("orbit-db");
+//   const DCDB = new DaoCampDb(Ipfs, OrbitDB);
+//   DCDB.create();
+//   DCDB.onready = () => {
+//     console.log(DCDB.orbitdb.id);
+//   };
+//   module.exports = exports = DCDB;
+// } else {
+//   window.DCDB = new DaoCampDb(window.Ipfs, window.OrbitDB);
+// }
+export default DaoCampDb;
