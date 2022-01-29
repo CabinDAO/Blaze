@@ -43,44 +43,29 @@ export default async function handler(
       //     .status(401)
       //     .json({ success: false, message: "Unauthorized access" });
       // }
-      const rawData1 = await parse(MirrorRSSFeedURLs[0], {});
-      const rawData2 = await parse(MirrorRSSFeedURLs[1], {});
-      const rawData3 = await parse(MirrorRSSFeedURLs[2], {});
-      const rawData4 = await parse(MirrorRSSFeedURLs[3], {});
-      const linkData1 = rawData1.items.slice(0, 10).map((item) => {
-        return {
-          title: item.title,
-          url: item.link,
-        };
-      });
-      const linkData2 = rawData1.items.slice(0, 10).map((item) => {
-        return {
-          title: item.title,
-          url: item.link,
- 
-        };
-      });
-      const linkData3 = rawData1.items.slice(0, 10).map((item) => {
-        return {
-          title: item.title,
-          url: item.link,
-        };
-      });
-      const linkData4 = rawData1.items.slice(0, 10).map((item) => {
-        return {
-          title: item.title,
-          url: item.link,
-        };
-      });
-      const combinedData = [...linkData1, ...linkData2, ...linkData3, linkData4];
-
-      let newLinks = [];
-      combinedData.forEach(obj =>
-        newLinks.push(DCDB.addNewLink(obj.title, obj.url))
-      );
-      Promise.all(newLinks).then((links) =>
-        res.status(200).json({ status: "success", newLinks: links })
-      );
+      
+      const fetchMirrorData = async (urlArray) => {
+        let combinedData = [];
+        for (const url of urlArray) {
+          const rawData = await parse(url, {});
+          const linkData = await rawData.items.slice(0, 10).map((item) => {
+            return {
+              title: item.title,
+              url: item.link,
+            };
+          });
+          combinedData.push(...linkData);
+        }
+        return combinedData;
+      };
+      const writeLinksToDB = async (linksArray) => {
+        for (const link in linksArray) {
+          await DCDB.addNewLink(link.title, link.url);
+        }
+      };
+      const links = await fetchMirrorData(MirrorRSSFeedURLs);
+      await writeLinksToDB(links);
+      res.status(200).json({ status: "success", newLinks: links });
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err.message });
     }
