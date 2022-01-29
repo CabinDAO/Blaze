@@ -1,8 +1,7 @@
 const { v4 } = require("uuid");
-const { getUnixTime } =  require("date-fns");
+const { getUnixTime } = require("date-fns");
 
 class DaoCampDb {
-
   constructor(Ipfs, OrbitDB) {
     this.Ipfs = Ipfs;
     this.OrbitDB = OrbitDB;
@@ -22,6 +21,7 @@ class DaoCampDb {
   }
 
   async _init() {
+    const peerInfo = await this.node.id();
     this.orbitdb = await this.OrbitDB.createInstance(this.node);
     this.defaultOptions = {
       accessController: {
@@ -158,11 +158,11 @@ class DaoCampDb {
     const upvote = await this.upvotes.get(upvoteId);
     return upvote.link;
   }
- }
+}
 
 if (typeof window !== undefined) {
-  const Ipfs = require('ipfs');
-  const OrbitDB = require('orbit-db');
+  const Ipfs = require("ipfs");
+  const OrbitDB = require("orbit-db");
   const DCDB = new DaoCampDb(Ipfs, OrbitDB);
   DCDB.create();
   DCDB.onready = () => {
@@ -171,5 +171,4 @@ if (typeof window !== undefined) {
   module.exports = exports = DCDB;
 } else {
   window.NPP = new DaoCampDb(window.Ipfs, window.OrbitDB);
- }
-
+}
