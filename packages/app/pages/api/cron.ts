@@ -1,8 +1,6 @@
+(global as any).WebSocket = require("isomorphic-ws");
 import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "rss-to-json";
-import OrbitDB from "orbit-db";
-import Ipfs from "ipfs";
-import DaoCampDb from "../../lib/db";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
 
@@ -43,7 +41,7 @@ export default async function handler(
       //     .status(401)
       //     .json({ success: false, message: "Unauthorized access" });
       // }
-      
+
       const fetchMirrorData = async (urlArray) => {
         let combinedData = [];
         for (const url of urlArray) {
