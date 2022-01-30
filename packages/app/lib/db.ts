@@ -14,7 +14,7 @@ export const ProfileSchema = {
   description: "User profiles for users of the application",
   type: "object",
   properties: {
-    id: {
+    _id: {
       type: "string",
       description: "The unique identifier for the user profile",
     },
@@ -47,7 +47,7 @@ export const LinkSchema = {
     description: "User profiles for users of the application",
     type: "object",
     properties: {
-        id: {
+        _id: {
             type: "string",
             description: "The unique identifier for the user profile",
         },
@@ -79,7 +79,7 @@ export const UpvoteSchema = {
     description: "Upvotes given by the users of the application",
     type: "object",
     properties: {
-        id: {
+        _id: {
             type: "string",
             description: "The unique identifier for the upvote",
         },
