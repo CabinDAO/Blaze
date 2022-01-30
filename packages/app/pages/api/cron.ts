@@ -7,7 +7,7 @@ import Cors from "cors";
 // Initialize the cors middleware
 const cors = initMiddleware(
   Cors({
-    // Only allow requests with GET, POST and OPTIONS
+    // Only allow requests with GET, POST
     methods: ["GET", "POST"],
   })
 );
