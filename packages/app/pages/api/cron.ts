@@ -29,13 +29,6 @@ export default async function handler(
   await cors(req, res);
   if (req.method === "POST") {
     try {
-        const Ipfs = require("ipfs");
-        const OrbitDB = require("orbit-db");
-        const DCDB = new DaoCampDb(Ipfs, OrbitDB);
-        DCDB.create();
-        DCDB.onready = () => {
-          console.log(DCDB.orbitdb.id);
-        };
       // const { authorization } = req.headers;
       // if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
       //   let rss = await parse(MirrorRSSFeedURLs[0], {
@@ -67,11 +60,10 @@ export default async function handler(
       };
       const writeLinksToDB = async (linksArray) => {
         for (const link in linksArray) {
-          await DCDB.addNewLink(link.title, link.url);
         }
       };
-      const links = await fetchMirrorData(MirrorRSSFeedURLs);
-      await writeLinksToDB(links);
+      // const links = await fetchMirrorData(MirrorRSSFeedURLs);
+      // await writeLinksToDB(links);
       res.status(200).json({ status: "success", newLinks: links });
     } catch (err) {
       console.log(err);
