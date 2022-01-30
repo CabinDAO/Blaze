@@ -27,7 +27,7 @@ export default async function handler(
                 await createCollection(client, thread, "profiles", ProfileSchema);
                 await createCollection(client, thread, "links", LinkSchema);
                 await createCollection(client, thread, "upvotes",  UpvoteSchema);
-                res.status(200).json({ status: "success", message: "DB and Collections created — ready to seed.", threadID: thread });
+                res.status(200).json({ status: "success", message: "DB and Collections created — ready to seed.", threadID: thread.toString()});
             } else {
                 res
                     .status(401)
