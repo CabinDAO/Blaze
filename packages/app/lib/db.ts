@@ -42,22 +42,14 @@ export const ProfileSchema = {
   required: ["id", "walletAddress"],
 };
 export const LinkSchema = {
-    $id: "www.creatorcabins.com/profile.json",
+    $id: "www.creatorcabins.com/links.json",
     $schema: "http://json-schema.org/draft-07/schema#",
-    description: "User profiles for users of the application",
+    description: " RSS feed links for the application",
     type: "object",
     properties: {
         _id: {
             type: "string",
-            description: "The unique identifier for the user profile",
-        },
-        postedBy: {
-            type: "string",
-            description: "The wallet address of the user",
-        },
-        timeStamp: {
-            type: "number",
-            description: "The date the link was submitted",
+            description: "The unique identifier for the link",
         },
         title: {
             type: "string",
@@ -67,6 +59,14 @@ export const LinkSchema = {
             type: "string",
             description: "The url of the link",
         },
+        postedBy: {
+            type: "string",
+            description: "The wallet address of the user",
+        },
+        timeStamp: {
+            type: "number",
+            description: "The date the link was submitted",
+        },
         upvotes: {
             type: "number",
             description: "The number of upvotes the link has received",
@@ -75,28 +75,28 @@ export const LinkSchema = {
     required: ["id", "postedBy", "timeStamp", "title", "url"],  
 };
 export const UpvoteSchema = {
-    $schema: "http://json-schema.org/draft-07/schema#",
-    description: "Upvotes given by the users of the application",
-    type: "object",
-    properties: {
-        _id: {
-            type: "string",
-            description: "The unique identifier for the upvote",
-        },
-        upvoter: {
-            type: "string",
-            description: "The profile id of the user who upvoted the link",
-        },
-        timeStamp: {
-            type: "number",
-            description: "The date the upvote was given",
-        },
-        link: {
-            type: "string",
-            description: "The link id of the link that was upvoted",
-        },
+  $id: "www.creatorcabins.com/links.json",
+  $schema: "http://json-schema.org/draft-07/schema#",
+  description: "Upvotes given by the users of the application",
+  type: "object",
+  properties: {
+    _id: {
+      type: "string",
+      description: "The unique identifier for the upvote",
     },
-
+    upvoter: {
+      type: "string",
+      description: "The profile id of the user who upvoted the link",
+    },
+    timeStamp: {
+      type: "number",
+      description: "The date the upvote was given",
+    },
+    link: {
+      type: "string",
+      description: "The link id of the link that was upvoted",
+    },
+  },
 };
 
 export const setupThreadClient = async (auth: UserAuth) => {
