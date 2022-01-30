@@ -25,11 +25,6 @@ const MirrorRSSFeedURLs = [
   ["seedclub.xyz","https://club.submirror.xyz/"],
 ];
 
-//Database ID
-const threadID = ThreadID.fromString(
-  "bafk6nxlqsutchg5yb6k62xzkre3ciihixqoalmvftsgvk53vpk7kb6y"
-); 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -41,6 +36,8 @@ export default async function handler(
       if (authorization === `Bearer ${process.env.API_KEY}`) {
         const userAuth = await auth({ key: process.env.API_KEY || "", secret: process.env.API_SECRET || "" });
         const client = await setupThreadClient(userAuth);
+        const threadList = await client.listDBs();
+        const threadId = ThreadID.fromString(threadList[0].id);
 
         const fetchMirrorData = async (urlArray) => {
           let combinedData = [];
@@ -63,7 +60,7 @@ export default async function handler(
           return combinedData;
         };
         const fetchedData = await fetchMirrorData(MirrorRSSFeedURLs);
-        const links = await createInstance(client, threadID, "links", fetchedData);
+        const links = await createInstance(client, threadId, "links", fetchedData);
         res.status(200).json({ status: "success", message: "New Mirror links added to database", links: links });
       } else {
                 res

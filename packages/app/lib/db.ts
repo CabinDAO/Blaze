@@ -39,7 +39,7 @@ export const ProfileSchema = {
       description: "The links upvoted by the user",
     },
   },
-  required: ["id", "walletAddress"],
+  required: ["_id", "walletAddress"],
 };
 export const LinkSchema = {
     $id: "www.creatorcabins.com/links.json",
@@ -72,7 +72,7 @@ export const LinkSchema = {
             description: "The number of upvotes the link has received",
         },
     },
-    required: ["id", "postedBy", "timeStamp", "title", "url"],  
+    required: ["_id", "postedBy", "timeStamp", "title", "url"],  
 };
 export const UpvoteSchema = {
   $id: "www.creatorcabins.com/links.json",
@@ -97,6 +97,7 @@ export const UpvoteSchema = {
       description: "The link id of the link that was upvoted",
     },
   },
+  required: ["_id", "upvoter", "timeStamp", "link"],
 };
 
 export const setupThreadClient = async (auth: UserAuth) => {

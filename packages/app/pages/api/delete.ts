@@ -28,7 +28,7 @@ export default async function handler(
         const client = await setupThreadClient(userAuth);
         await client.deleteDB(
           ThreadID.fromString(
-            "bafk3cdnnk7uu2nbkeqizywtfpf4klqua5q3g3y3jqevxmkqyxjutqjq"
+            "bafk4qpsgjpgr2ervkjaqtaultkwwytrfvruqrdrpzgnhgs2zrfuwk6a"
           )
         );
         res.status(200).json({ status: "success" });
