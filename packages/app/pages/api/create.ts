@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import { setupThreadClient, createDB, auth } from "@/lib/db";
+import { setupThreadClient, createDB, createCollection, auth, ProfileSchema, LinkSchema, UpvoteSchema } from "@/lib/db";
+import { ThreadID } from "@textile/hub";
 
 // Initialize the cors middleware
 const cors = initMiddleware(
@@ -19,11 +20,14 @@ export default async function handler(
     if (req.method === "POST") {
         try {
             const { authorization } = req.headers;
-            if (authorization === `Bearer ${process.env.API_SECRET}`) {
+            if (authorization === `Bearer ${process.env.API_KEY}`) {
                 const userAuth = await auth({ key: process.env.API_KEY || "", secret: process.env.API_SECRET || "" });
                 const client = await setupThreadClient(userAuth);
                 const thread = await createDB(client);
-                res.status(200).json({ status: "success", message: "DB created—ready to seed", threadID: thread });
+                await createCollection(client, thread, "profiles", ProfileSchema);
+                await createCollection(client, thread, "links", LinkSchema);
+                await createCollection(client, thread, "upvotes",  UpvoteSchema);
+                res.status(200).json({ status: "success", message: "DB and Collections created — ready to seed.", threadID: thread });
             } else {
                 res
                     .status(401)

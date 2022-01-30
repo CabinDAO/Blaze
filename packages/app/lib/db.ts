@@ -8,51 +8,10 @@ import {
   QueryJSON,
 } from "@textile/hub";
 
-/*
-type Profile @entity {
-  id: ID!
-  walletAddress: String!
-  joinDate: DateTime!
-  lastSeenDate: DateTime!
-  upvotesReceived: [Upvote]
-  linksUpvoted: [Post]
-
-}
-
-type Links @entity {
-  id: ID!
-  postedBy: Profile!
-  timeStamp: DateTime!
-  title: String!
-  url: String!
-  upvotes: [Upvote]
-  comments: [Comment]
-}
-
-type Comment @entity {
-  id: ID!
-  postedBy: Profile
-  timeStamp: DateTime!
-  text: String!
-  link: Link!
-  upvotes: [Upvote]
-  comments: [Comment]
-}
-
-type Upvote @entity {
-  id: ID!
-  upvoter: Profile!
-  timeStamp: DateTime!
-  link: Link
-  comment: Comment
-}
-
-*/
-
-const profileSchema = {
+export const ProfileSchema = {
   $id: "www.creatorcabins.com/profile.json",
   $schema: "http://json-schema.org/draft-07/schema#",
-  description: "User profiles for users of the dao-camp application",
+  description: "User profiles for users of the application",
   type: "object",
   properties: {
     id: {
@@ -72,27 +31,72 @@ const profileSchema = {
       description: "The date the user last logged in to the application",
     },
     upvotesReceived: {
-      type: "array",
-      description: "The upvotes received by the user",
-      items: {
-        $ref: "#/definitions/Upvote",
-      },
+      type: "number",
+      description: "The number of upvotes received by the user",
     },
     linksUpvoted: {
-      type: "array",
+      type: "number",
       description: "The links upvoted by the user",
-      items: {
-        $ref: "#/definitions/Link",
-      },
     },
   },
   required: ["id", "walletAddress"],
 };
-const linkSchema = {
-  $schema: "http://json-schema.org/draft-07/schema#",
+export const LinkSchema = {
+    $id: "www.creatorcabins.com/profile.json",
+    $schema: "http://json-schema.org/draft-07/schema#",
+    description: "User profiles for users of the application",
+    type: "object",
+    properties: {
+        id: {
+            type: "string",
+            description: "The unique identifier for the user profile",
+        },
+        postedBy: {
+            type: "string",
+            description: "The wallet address of the user",
+        },
+        timeStamp: {
+            type: "number",
+            description: "The date the link was submitted",
+        },
+        title: {
+            type: "string",
+            description: "The title of the link",
+        },
+        url: {
+            type: "string",
+            description: "The url of the link",
+        },
+        upvotes: {
+            type: "number",
+            description: "The number of upvotes the link has received",
+        },
+    },
+    required: ["id", "postedBy", "timeStamp", "title", "url"],  
 };
-const upvoteSchema = {
-  $schema: "http://json-schema.org/draft-07/schema#",
+export const UpvoteSchema = {
+    $schema: "http://json-schema.org/draft-07/schema#",
+    description: "Upvotes given by the users of the application",
+    type: "object",
+    properties: {
+        id: {
+            type: "string",
+            description: "The unique identifier for the upvote",
+        },
+        upvoter: {
+            type: "string",
+            description: "The profile id of the user who upvoted the link",
+        },
+        timeStamp: {
+            type: "number",
+            description: "The date the upvote was given",
+        },
+        link: {
+            type: "string",
+            description: "The link id of the link that was upvoted",
+        },
+    },
+
 };
 
 export const setupThreadClient = async (auth: UserAuth) => {

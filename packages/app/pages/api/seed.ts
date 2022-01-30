@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "rss-to-json";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
+import { setupThreadClient, auth } from "@/lib/db
 
 // Initialize the cors middleware
 const cors = initMiddleware(
@@ -27,21 +28,9 @@ export default async function handler(
   await cors(req, res);
   if (req.method === "POST") {
     try {
-      // const { authorization } = req.headers;
-      // if (authorization === `Bearer ${process.env.API_SECRET_KEY}`) {
-      //   let rss = await parse(MirrorRSSFeedURLs[0], {
-      //     transformRequest: (data) => {
-      //       data.items = data.items.slice(0, 10);
-      //       return data;
-      //     }
-      //   });
-      //   res.status(200).json(rss);
-      // } else {
-      //   res
-      //     .status(401)
-      //     .json({ success: false, message: "Unauthorized access" });
-      // }
-
+          const { authorization } = req.headers;
+    if (authorization === `Bearer ${process.env.API_KEY}`) {
+        const userAuth = await auth({ key: process.env.API_KEY || "", secret: process.env.API_SECRET || "" });
       const fetchMirrorData = async (urlArray) => {
         let combinedData = [];
         for (const url of urlArray) {
