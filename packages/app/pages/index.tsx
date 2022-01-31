@@ -8,6 +8,8 @@ import { useWallet } from "@/components/WalletAuth";
 import { Select } from "@cabindao/topo";
 import { useStore } from "@/store/store";
 import AppState, { Sort } from "@/types";
+import { setupThreadClient, auth } from "@/lib/db";
+import { ThreadID } from "@textile/hub";
 
 const Title = styled("h2", {
   marginTop: "$12",
@@ -96,73 +98,103 @@ const Home: NextPage = () => {
   });
   return (
     <div>
+      {address && (
+        <>
+          <Title>Profile</Title>
+          <Card>
+            <UserCard address={address} ens={ens} />
+          </Card>
+        </>
+      )}
+      <Title>Today</Title>
+      <StickyTabBar position={scrolled ? "sticky" : "fixed"}>
+        {!address && (
+          <TabButton
+            active={activeTab == 0 ? true : false}
+            onClick={() => setActiveTab(0)}
+          >
+            Links
+          </TabButton>
+        )}
         {address && (
           <>
-            <Title>Profile</Title>
-            <Card>
-              <UserCard address={address} ens={ens} />
-            </Card>
-          </>
-        )}
-        <Title>Today</Title>
-        <StickyTabBar position={scrolled ? "sticky" : "fixed"}>
-          {!address && (
             <TabButton
               active={activeTab == 0 ? true : false}
               onClick={() => setActiveTab(0)}
             >
               Links
             </TabButton>
-          )}
-          {address && (
-            <>
-              <TabButton
-                active={activeTab == 0 ? true : false}
-                onClick={() => setActiveTab(0)}
-              >
-                Links
-              </TabButton>
-              <TabButton
-                active={activeTab == 1 ? true : false}
-                onClick={() => setActiveTab(1)}
-              >
-                Submissions
-              </TabButton>
-              <TabButton
-                active={activeTab == 2 ? true : false}
-                onClick={() => setActiveTab(2)}
-              >
-                Upvotes
-              </TabButton>
+            <TabButton
+              active={activeTab == 1 ? true : false}
+              onClick={() => setActiveTab(1)}
+            >
+              Submissions
+            </TabButton>
+            <TabButton
+              active={activeTab == 2 ? true : false}
+              onClick={() => setActiveTab(2)}
+            >
+              Upvotes
+            </TabButton>
             {/* <TabButton
                 active={activeTab == 3 ? true : false}
                 onClick={() => setActiveTab(3)}
               >
                 Comments
               </TabButton> */}
-            </>
-          )}
+          </>
+        )}
 
-          <div
-            style={{
-              marginLeft: "auto",
-            }}
-          >
-            <Select
-              disabled={false}
-              options={[
-                { key: "newest", label: "Newest" },
-                { key: "trending", label: "Trending" },
-                { key: "controversial", label: "Controversial" },
-              ]}
-              value={"newest"}
-              onChange={(key: Sort) => updateSort(key)}
-            />
-          </div>
-        </StickyTabBar>
+        <div
+          style={{
+            marginLeft: "auto",
+          }}
+        >
+          <Select
+            disabled={false}
+            options={[
+              { key: "newest", label: "Newest" },
+              { key: "trending", label: "Trending" },
+              { key: "controversial", label: "Controversial" },
+            ]}
+            value={"newest"}
+            onChange={(key: Sort) => updateSort(key)}
+          />
+        </div>
+      </StickyTabBar>
       <PostList posts={posts} sort={sort} />
     </div>
   );
 };
 
 export default Home;
+
+export async function getStaticProps() {
+  const userAuth = await auth({
+    key: process.env.API_KEY || "",
+    secret: process.env.API_SECRET || "",
+  });
+  const client = await setupThreadClient(userAuth);
+  const threadList = await client.listDBs();
+  const threadId = ThreadID.fromString(threadList[0].id);
+  const posts = await client.find(threadId, "links", {});
+  return {
+    props: {
+      initialZustandState: {
+        posts,
+        sort: "newest",
+        updateSort: (sort: Sort) => set({ sort }),
+        upvotePost: (postId: string) => {
+          set((state) => {
+            const post = state.posts.find((post) => post.id === postId);
+            if (post) {
+              post.numberOfUpvotes += 1;
+            }
+
+            return { posts: state.posts };
+          });
+        },
+      },
+    },
+  };
+}
