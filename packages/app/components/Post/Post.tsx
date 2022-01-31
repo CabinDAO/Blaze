@@ -73,7 +73,7 @@ const Post = ({ id, title, url, domainText, postedBy, timeStamp, numberOfComment
             via{" "}
             <Link href={`/address/${postedBy}`}>
               <a title={`View profile of ${postedBy}`}>
-                <postedBy address={postedBy} />
+                <WalletAddress address={postedBy} />
               </a>
             </Link>
           </MetaAddress>
