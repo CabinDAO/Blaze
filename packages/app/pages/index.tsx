@@ -183,18 +183,7 @@ export async function getStaticProps() {
       initialZustandState: {
         posts,
         sort: "newest",
-        updateSort: (sort: Sort) => set({ sort }),
-        upvotePost: (postId: string) => {
-          set((state) => {
-            const post = state.posts.find((post) => post.id === postId);
-            if (post) {
-              post.numberOfUpvotes += 1;
-            }
-
-            return { posts: state.posts };
-          });
-        },
-      },
+     }
     },
   };
 }

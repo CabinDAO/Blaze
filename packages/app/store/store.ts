@@ -7,7 +7,7 @@ let store;
 
 const initialState = {
   posts: [],
-  sort: "newest",
+  sort: "",
 }
 
 const zustandContext = createContext();
