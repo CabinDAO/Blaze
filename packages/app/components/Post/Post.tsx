@@ -48,18 +48,6 @@ const IconText = styled("span", {
   // }
 });
 
-const Post = ({
-  id,
-  title,
-  url,
-  domainText,
-  walletAddress,
-  submissionDate,
-  numberOfComments,
-  numberOfUpvotes,
-}: PostProps) => {
-  const {upvotePost} = useStore();
-
 const Post = ({ id, title, url, domainText, postedBy, timeStamp, numberOfComments, numberOfUpvotes }: PostProps) => {
   const { upvotePost } = useStore();
 
