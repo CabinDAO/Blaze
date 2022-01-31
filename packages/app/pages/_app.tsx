@@ -15,6 +15,7 @@ import WalletAuth, { useWallet } from "@/components/WalletAuth";
 import Router, { useRouter } from "next/router";
 import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
+import { useCreateStore, Provider as ZustandProvider } from "@/store/store";
 
 const globalStyles = globalCss({
   body: {
@@ -278,33 +279,36 @@ const ResponsiveNav = () => {
 };
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const createStore = useCreateStore(pageProps.initialZustandState);
   globalStyles();
   const { pathname } = useRouter();
   return (
     <WalletProvider autoConnect connectors={connectors}>
-      <MainContainer>
-        <Header>
-          <Link href="/">
-            <a>
-              <DaoCampLogo>#dao-camp</DaoCampLogo>
-            </a>
-          </Link>
-          <ResponsiveNav />
-        </Header>
-        <Wrapper>
-          <Component {...pageProps} />
-        </Wrapper>
-        <Footer>
-          {/* <Logo variant="logomark" color="sprout" /> */}
-          <div>cabin logo</div>
-          <FooterHeading>
-            Made with care by <a href="https://www.creatorcabins.com/">Cabin</a>
-          </FooterHeading>
-          <FooterSubtitle>
-            Special thanks to creators Xxxx, Xxxx, Xxxx, &amp; more.
-          </FooterSubtitle>
-        </Footer>
-      </MainContainer>
+      <ZustandProvider createStore={createStore}>
+        <MainContainer>
+          <Header>
+            <Link href="/">
+              <a>
+                <DaoCampLogo>#dao-camp</DaoCampLogo>
+              </a>
+            </Link>
+            <ResponsiveNav />
+          </Header>
+          <Wrapper>
+            <Component {...pageProps} />
+          </Wrapper>
+          <Footer>
+            {/* <Logo variant="logomark" color="sprout" /> */}
+            <div>cabin logo</div>
+            <FooterHeading>
+              Made with care by <a href="https://www.creatorcabins.com/">Cabin</a>
+            </FooterHeading>
+            <FooterSubtitle>
+              Special thanks to creators Xxxx, Xxxx, Xxxx, &amp; more.
+            </FooterSubtitle>
+          </Footer>
+        </MainContainer>
+      </ZustandProvider>
     </WalletProvider>
   );
 }
