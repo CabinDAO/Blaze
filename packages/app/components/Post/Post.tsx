@@ -42,10 +42,17 @@ const IconText = styled("span", {
   display: "flex",
   alignItems: "center",
   gap: "$1",
+<<<<<<< HEAD
   "&:last-of-type:hover": {
     cursor: "pointer",
     textDecoration: "underline",
   },
+=======
+  // "&:last-of-type:hover": {
+  //   cursor: "pointer",
+  //   textDecoration: "underline",
+  // }
+>>>>>>> feat/back-end
 });
 
 const Post = ({
@@ -60,9 +67,14 @@ const Post = ({
 }: PostProps) => {
   const {upvotePost} = useStore();
 
+<<<<<<< HEAD
   // const [{data: ensName}] = useEnsLookup({
   //   address: walletAddress,
   // });
+=======
+const Post = ({ id, title, url, domainText, postedBy, timeStamp, numberOfComments, numberOfUpvotes }: PostProps) => {
+  const { upvotePost } = useStore();
+>>>>>>> feat/back-end
 
   return (
     <PostRow>
@@ -81,12 +93,18 @@ const Post = ({
           <DomainText>{domainText}</DomainText>
           <MetaAddress>
             via{" "}
+<<<<<<< HEAD
             <Link href={`/address/${walletAddress}`}>
               <a title={`View profile of ${walletAddress}`}>
                 <WalletAddress
                   address={walletAddress}
                   // ens={ensName ? {name: ensName} : null}
                 />
+=======
+            <Link href={`/address/${postedBy}`}>
+              <a title={`View profile of ${postedBy}`}>
+                <WalletAddress address={postedBy} />
+>>>>>>> feat/back-end
               </a>
             </Link>
           </MetaAddress>
@@ -94,7 +112,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(fromUnixTime(submissionDate), {
+            {formatDistanceToNow(fromUnixTime(timeStamp), {
               addSuffix: true,
               includeSeconds: true,
             })}

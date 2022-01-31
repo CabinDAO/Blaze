@@ -1,10 +1,10 @@
 export interface PostProps {
-  id: string;
+  _id: string;
   title: string,
   domainText: string,
   url: string,
-  walletAddress: string,
-  submissionDate: number,
+  postedBy: string,
+  timeStamp: number,
   numberOfComments: number,
   numberOfUpvotes: number,
 }
