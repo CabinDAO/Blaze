@@ -36,6 +36,7 @@ export const TabButton = styled("button", {
     },
   },
 });
+export const TabButton = (props: any) => <TabLink {...props} />;
 
 const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => (
   <TabBarWrapper {...props}>

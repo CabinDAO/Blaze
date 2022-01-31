@@ -283,8 +283,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   globalStyles();
   const { pathname } = useRouter();
   return (
-    <WalletProvider autoConnect connectors={connectors}>
-      <ZustandProvider createStore={createStore}>
+    <ZustandProvider createStore={createStore}>
+      <WalletProvider autoConnect connectors={connectors}>
         <MainContainer>
           <Header>
             <Link href="/">
@@ -308,9 +308,11 @@ function MyApp({ Component, pageProps }: AppProps) {
             </FooterSubtitle>
           </Footer>
         </MainContainer>
-      </ZustandProvider>
-    </WalletProvider>
+      </WalletProvider>
+    </ZustandProvider>
   );
 }
 
 export default MyApp;
+
+

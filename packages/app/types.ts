@@ -4,7 +4,7 @@ export interface PostProps {
   domainText: string,
   url: string,
   walletAddress: string,
-  submissionDate: number,
+  timeStamp: number,
   numberOfComments: number,
   numberOfUpvotes: number,
 }

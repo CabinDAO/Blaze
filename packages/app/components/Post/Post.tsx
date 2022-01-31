@@ -51,7 +51,7 @@ const IconText = styled("span", {
 });
 
 
-const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numberOfComments, numberOfUpvotes }: PostProps) => {
+const Post = ({ id, title, url, domainText, walletAddress, timeStamp, numberOfComments, numberOfUpvotes }: PostProps) => {
   const { upvotePost } = useStore();
 
   return (
@@ -81,7 +81,7 @@ const Post = ({ id, title, url, domainText, walletAddress, submissionDate, numbe
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(fromUnixTime(submissionDate), {
+            {formatDistanceToNow(fromUnixTime(timeStamp), {
               addSuffix: true,
               includeSeconds: true,
             })}

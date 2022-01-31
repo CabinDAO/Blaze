@@ -3,13 +3,12 @@ import create from "zustand";
 import createContext from "zustand/context";
 import AppState, { Sort } from "@/types";
 
+
 let store;
 
 const initialState = {
-  posts: [],
-  sort: "",
+  sort: "newest",
 }
-
 const zustandContext = createContext();
 export const Provider = zustandContext.Provider;
 // An example of how to get types

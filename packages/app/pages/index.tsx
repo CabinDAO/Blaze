@@ -10,14 +10,8 @@ import { useStore } from "@/store/store";
 import AppState, { Sort } from "@/types";
 import { setupThreadClient, auth } from "@/lib/db";
 import { ThreadID } from "@textile/hub";
-
-const Title = styled("h2", {
-  marginTop: "$12",
-  marginBottom: "$5",
-  "&:last-of-type": {
-    marginTop: 0,
-  },
-});
+import ClientSide from "@/components/HOC/ClientSide";
+import Profile from "@/components/Profile";
 
 const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
@@ -97,15 +91,8 @@ const Home: NextPage = () => {
     window.addEventListener("scroll", handleScroll);
   });
   return (
-    <div>
-      {address && (
-        <>
-          <Title>Profile</Title>
-          <Card>
-            <UserCard address={address} ens={ens} />
-          </Card>
-        </>
-      )}
+    <ClientSide>
+      <Profile/>
       <Title>Today</Title>
       <StickyTabBar position={scrolled ? "sticky" : "fixed"}>
         {!address && (
@@ -163,11 +150,11 @@ const Home: NextPage = () => {
         </div>
       </StickyTabBar>
       <PostList posts={posts} sort={sort} />
-    </div>
+    </ClientSide>
   );
 };
 
-export default Home;
+export default Home;  
 
 export async function getStaticProps() {
   const userAuth = await auth({
@@ -182,7 +169,6 @@ export async function getStaticProps() {
     props: {
       initialZustandState: {
         posts,
-        sort: "newest",
      }
     },
   };
