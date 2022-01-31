@@ -44,14 +44,14 @@ const IconText = styled("span", {
   display: "flex",
   alignItems: "center",
   gap: "$1",
-  "&:last-of-type:hover": {
-    cursor: "pointer",
-    textDecoration: "underline",
-  }
+  // "&:last-of-type:hover": {
+  //   cursor: "pointer",
+  //   textDecoration: "underline",
+  // }
 });
 
 
-const Post = ({ id, title, url, domainText, walletAddress, timeStamp, numberOfComments, numberOfUpvotes }: PostProps) => {
+const Post = ({ id, title, url, domainText, postedBy, timeStamp, numberOfComments, numberOfUpvotes }: PostProps) => {
   const { upvotePost } = useStore();
 
   return (
@@ -71,9 +71,9 @@ const Post = ({ id, title, url, domainText, walletAddress, timeStamp, numberOfCo
           <DomainText>{domainText}</DomainText>
           <MetaAddress>
             via{" "}
-            <Link href={`/address/${walletAddress}`}>
-              <a title={`View profile of ${walletAddress}`}>
-                <WalletAddress address={walletAddress} />
+            <Link href={`/address/${postedBy}`}>
+              <a title={`View profile of ${postedBy}`}>
+                <postedBy address={postedBy} />
               </a>
             </Link>
           </MetaAddress>
