@@ -39,8 +39,6 @@ interface UserCardProps {
   linksUpvoted: number;
 }
 const UserCard = ({ address, ens, joinedDate, lastSeenDate, upvotesReceived, linksUpvoted }: UserCardProps) => {
-  const convertedJoinedDate = fromUnixTime(joinedDate);
-  const convertedLastSeenDate = fromUnixTime(lastSeenDate);
   return (
     <div>
       <AddressHeader>
@@ -54,11 +52,11 @@ const UserCard = ({ address, ens, joinedDate, lastSeenDate, upvotesReceived, lin
       <UserMeta>
         <div>
           <CalendarIcon /> Joined{" "}
-          {format(convertedJoinedDate, "MMM DD YYYY")}
+          {joinedDate}
         </div>
         <div>
           <ClockIcon /> Last seen{" "}
-          {format(convertedLastSeenDate, "MMM DD YYYY")}
+          {lastSeenDate}
         </div>
       </UserMeta>
       <UserMeta>
