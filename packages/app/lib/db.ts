@@ -147,7 +147,7 @@ export const createInstance = async (
   return created;
 };
 
-export const createQuery = (
+export const createQuery = async (
   client: Client,
   collectionName: string,
   threadID: ThreadID,

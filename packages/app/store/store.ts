@@ -1,9 +1,9 @@
 import { useLayoutEffect } from "react";
 import create from "zustand";
 import createContext from "zustand/context";
-import AppState, { Sort } from "@/types";
+import AppState, { Sort, PostProps } from "@/types";
 
-
+/* @type { import('zustand/index').UseStore<typeof initialState>} */
 let store;
 
 const initialState = {
@@ -11,8 +11,6 @@ const initialState = {
 }
 const zustandContext = createContext();
 export const Provider = zustandContext.Provider;
-// An example of how to get types
-/** @type {import('zustand/index').UseStore<typeof initialState>} */
 export const useStore = () => zustandContext.useStore();
 export const initializeStore = (preloadedState = {}) => {
   return create((set, get) => ({
@@ -20,8 +18,8 @@ export const initializeStore = (preloadedState = {}) => {
     ...preloadedState,
     updateSort: (sort: Sort) => set({ sort }),
     upvotePost: (postId: string) => {
-      set((state) => {
-        const post = state.posts.find((post) => post.id === postId);
+      set((state: AppState) => {
+        const post = state.posts.find((post: PostProps) => post._id === postId);
         if (post) {
           post.numberOfUpvotes += 1;
         }
@@ -32,7 +30,7 @@ export const initializeStore = (preloadedState = {}) => {
   }));
 }; 
 
-export function useCreateStore(initialState) {
+export function useCreateStore(initialState: {sort: string}) {
   // For SSR & SSG, always use a new store.
   if (typeof window === "undefined") {
     return () => initializeStore(initialState);
