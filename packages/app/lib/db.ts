@@ -10,6 +10,7 @@ import {
 } from "@textile/hub";
 
 import { getUnixTime } from "date-fns";
+import {v4 as uuidv4} from "uuid";
 
 export const ProfileSchema = {
   $id: "www.creatorcabins.com/profile.json",
@@ -184,9 +185,10 @@ export const upvotePostinDb = async (
   client: Client,
   threadID: ThreadID,
   postId: string,
+  walletAddress: string
 ) => {
     const query = new Where("_id").eq(postId);
-    const result = await client.find(threadID, "posts", query);
+    const result = await client.find(threadID, "links", query);
     let post = result[0];
 
     post = {
@@ -194,7 +196,13 @@ export const upvotePostinDb = async (
       upvotes: post.upvotes++,
     };
 
-    await client.save(threadID, "profiles", [post]);
+  await client.save(threadID, "profiles", [post]);
+  await createInstance(client, threadID, "upvotes", [{
+    _id: uuidv4(),
+    upvoter: walletAddress,
+    timeStamp: getUnixTime(new Date()),
+    link: postId,
+  }]);
 
     return post;
 }

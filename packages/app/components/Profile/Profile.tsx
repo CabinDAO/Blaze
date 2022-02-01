@@ -33,7 +33,7 @@ const Profile = () => {
       const threadList = await client.listDBs();
       const threadId = ThreadID.fromString(threadList[0].id);
       const query = new Where("walletAddress").eq(walletAddress);
-      const result = await createQuery(threadClient, "profiles", threadId, query);
+      const result = await createQuery(client, "profiles", threadId, query);
       if (result.length === 0) {
         const result = await createInstance(client, threadId, "profiles", [{
           _id: uuidv4(),
