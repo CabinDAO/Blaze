@@ -10,65 +10,71 @@ import {
   createQuery,
   updateLastSeenTime,
 } from "@/lib/db";
-import { ThreadID, Where } from "@textile/hub";
+import { ThreadID, Query, Where } from "@textile/hub";
 import { getUnixTime } from "date-fns";
 import { useStore } from "@/store/store";
-import { useEffect } from 'react';
-
-
-
-
+import { useEffect } from "react";
+import WalletAddress from "../WalletAddress";
 
 const Profile = () => {
-  const IdString = process.env.NEXT_PUBLIC_THREAD_ID || "";
   const { loadProfileIntoStore, currentProfile } = useStore();
-  const { joinedDate, lastSeenDate, upvotesReceived, linksUpvoted } = currentProfile;
+  const { joinedDate, lastSeenDate, upvotesReceived, linksUpvoted } =
+    currentProfile;
   const { address, ens } = useWallet({ fetchEns: true });
 
   useEffect(() => {
-        const checkProfileExistance = async (walletAddress) => {
-          const threadId = ThreadID.fromString(IdString);
-          const userAuth = await auth({
-            key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
-            secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
-          });
-          const client = await setupThreadClient(userAuth);
-          const query = new Where("walletAddress").eq(walletAddress);
-          const result = await createQuery(client, "profiles", threadId, query);
-          if (result.length === 0) {
-            const profile = await createInstance(client, threadId, "profiles", {
-              _id: uuidv4(),
-              walletAddress,
-              joinDate: getUnixTime(new Date()),
-              lastseen: getUnixTime(new Date()),
-              upvotesReceived: 0,
-              linksUpvoted: 0,
-            });
-            loadProfileIntoStore(profile);
-          } else {
-            const profile = await updateLastSeenTime(
-              client,
-              threadId,
-              walletAddress
-            );
-            loadProfileIntoStore(profile);
-          }
-        };
-        checkProfileExistance(address); 
-  }, [address]);
+    const checkProfileExistance = async (walletAddress: string) => {
+      const userAuth = await auth({
+        key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+        secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
+      });
+      const client = await setupThreadClient(userAuth);
+      const threadList = await client.listDBs();
+      const threadId = ThreadID.fromString(threadList[0].id);
+      const query = new Where("walletAddress").eq(walletAddress);
+      const result = await createQuery(client, "profiles", threadId, query);
+      if (result.length === 0) {
+        const profile = await createInstance(client, threadId, "profiles", {
+          _id: uuidv4(),
+          walletAddress,
+          joinDate: getUnixTime(new Date()),
+          lastseen: getUnixTime(new Date()),
+          upvotesReceived: 0,
+          linksUpvoted: 0,
+        });
+        loadProfileIntoStore(profile);
+      } else {
+        const profile = await updateLastSeenTime(
+          client,
+          threadId,
+          walletAddress
+        );
+        loadProfileIntoStore(profile);
+      }
+    };
+    if (address) {
+      checkProfileExistance(address);
+    }
+  }, [address, loadProfileIntoStore]);
   return (
     <>
       {address && (
         <>
           <Title>Profile</Title>
           <Card>
-            <UserCard address={address} ens={ens} joinedDate={joinedDate} lastSeenDate={lastSeenDate} upvotesReceived={upvotesReceived}linksUpvoted={linksUpvoted} />
+            <UserCard
+              address={address}
+              ens={ens}
+              joinedDate={joinedDate}
+              lastSeenDate={lastSeenDate}
+              upvotesReceived={upvotesReceived}
+              linksUpvoted={linksUpvoted}
+            />
           </Card>
         </>
       )}
     </>
   );
-  ;
 };
 
 export default Profile;
