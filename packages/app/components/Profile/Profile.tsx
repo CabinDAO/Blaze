@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import WalletAddress from "../WalletAddress";
 
 const Profile = () => {
-  const { loadProfileIntoStore, currentProfile, threadClient, threadId } =
+  const { loadProfileIntoStore, currentProfile } =
     useStore();
   const { joinDate, lastSeenDate, upvotesReceived, linksUpvoted } =
     currentProfile;
@@ -29,6 +29,9 @@ const Profile = () => {
         key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
         secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
       });
+      const client = await setupThreadClient(userAuth);
+      const threadList = await client.listDBs();
+      const threadId = ThreadID.fromString(threadList[0].id);
       const query = new Where("walletAddress").eq(walletAddress);
       const result = await createQuery(threadClient, "profiles", threadId, query);
       if (result.length === 0) {

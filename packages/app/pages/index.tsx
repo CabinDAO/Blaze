@@ -52,8 +52,6 @@ export async function getStaticProps() {
     props: {
       initialZustandState: {
         posts,
-        threadClient: client,
-        threadId
      }
     },
   };

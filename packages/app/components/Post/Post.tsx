@@ -6,7 +6,8 @@ import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
 import { PostProps } from "@/types";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
-import { upvotePostinDb } from "@/lib/db";
+import { upvotePostinDb, auth, setupThreadClient } from "@/lib/db";
+import { ThreadID } from "@textile/hub";
 // import {useEnsLookup} from "wagmi";
 
 const PostRow = styled("div", {
@@ -59,9 +60,16 @@ const Post = ({
   numberOfComments,
   numberOfUpvotes,
 }: PostProps) => {
-  const { upvotePostinStore, threadClient, threadId } = useStore();
+  const { upvotePostinStore } = useStore();
   const upvoteHandler = async () => {
-    await upvotePostinDb(threadClient, threadId, _id);
+    const userAuth = await auth({
+      key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+      secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
+    });
+    const client = await setupThreadClient(userAuth);
+    const threadList = await client.listDBs();
+    const threadId = ThreadID.fromString(threadList[0].id);
+    await upvotePostinDb(client, threadId, _id);
     upvotePostinStore(_id);
   };
   return (

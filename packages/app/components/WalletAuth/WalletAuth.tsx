@@ -38,6 +38,11 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
 const WalletAuth = () => {
   const router = useRouter();
   const [{data, error, loading}, connect] = useConnect();
+
+  const [
+    {data: accountData, error: accountError, loading: accountLoading},
+    disconnect,
+  ] = useAccount();
   if (data.connected) {
     return (
       <div>
