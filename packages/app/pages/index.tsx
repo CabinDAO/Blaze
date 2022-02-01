@@ -26,6 +26,10 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    }
   });
   return (
     <ClientSide>
