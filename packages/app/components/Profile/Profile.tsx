@@ -18,12 +18,12 @@ import WalletAddress from "../WalletAddress";
 
 const Profile = () => {
   const { loadProfileIntoStore, currentProfile } = useStore();
-  const { joinedDate, lastSeenDate, upvotesReceived, linksUpvoted } =
+  const { joinDate, lastSeenDate, upvotesReceived, linksUpvoted } =
     currentProfile;
   const { address, ens } = useWallet({ fetchEns: true });
 
   useEffect(() => {
-    const checkProfileExistance = async (walletAddress: string) => {
+    const checkProfileExistance = async (walletAddress) => {
       const userAuth = await auth({
         key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
         secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
@@ -34,15 +34,15 @@ const Profile = () => {
       const query = new Where("walletAddress").eq(walletAddress);
       const result = await createQuery(client, "profiles", threadId, query);
       if (result.length === 0) {
-        const profile = await createInstance(client, threadId, "profiles", {
+        const result = await createInstance(client, threadId, "profiles", [{
           _id: uuidv4(),
           walletAddress,
           joinDate: getUnixTime(new Date()),
-          lastseen: getUnixTime(new Date()),
+          lastSeenDate: getUnixTime(new Date()),
           upvotesReceived: 0,
           linksUpvoted: 0,
-        });
-        loadProfileIntoStore(profile);
+        }]);
+        loadProfileIntoStore(result[0]);
       } else {
         const profile = await updateLastSeenTime(
           client,
@@ -65,7 +65,7 @@ const Profile = () => {
             <UserCard
               address={address}
               ens={ens}
-              joinedDate={joinedDate}
+              joinDate={joinDate}
               lastSeenDate={lastSeenDate}
               upvotesReceived={upvotesReceived}
               linksUpvoted={linksUpvoted}

@@ -33,12 +33,14 @@ interface UserCardProps {
     name: string;
     avatar?: string | null;
   } | null;
-  joinedDate: number;
+  joinDate: number;
   lastSeenDate: number;
   upvotesReceived: number;
   linksUpvoted: number;
 }
-const UserCard = ({ address, ens, joinedDate, lastSeenDate, upvotesReceived, linksUpvoted }: UserCardProps) => {
+const UserCard = ({ address, ens, joinDate, lastSeenDate, upvotesReceived, linksUpvoted }: UserCardProps) => {
+  const convertedJoinDate = format(fromUnixTime(joinDate), "MMM d, yyyy");
+  const convertedLastSeenDate = format(fromUnixTime(lastSeenDate), "MMM d, yyyy");
   return (
     <div>
       <AddressHeader>
@@ -51,12 +53,10 @@ const UserCard = ({ address, ens, joinedDate, lastSeenDate, upvotesReceived, lin
       </AddressHeader>
       <UserMeta>
         <div>
-          <CalendarIcon /> Joined{" "}
-          {joinedDate}
+          <CalendarIcon /> Joined {convertedJoinDate}
         </div>
         <div>
-          <ClockIcon /> Last seen{" "}
-          {lastSeenDate}
+          <ClockIcon /> Last seen {convertedLastSeenDate}
         </div>
       </UserMeta>
       <UserMeta>
