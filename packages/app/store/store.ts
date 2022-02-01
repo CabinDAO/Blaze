@@ -8,6 +8,7 @@ let store;
 
 const initialState = {
   sort: "newest",
+  profile: {}
 }
 const zustandContext = createContext();
 export const Provider = zustandContext.Provider;

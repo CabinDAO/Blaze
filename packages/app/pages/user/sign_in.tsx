@@ -31,16 +31,19 @@ const SignIn = () => {
       const userAuth = await auth({ key: process.env.API_KEY || "", secret: process.env.API_SECRET || "" });
       const client = await setupThreadClient(userAuth);
       const query = new Where("walletAddress").eq(walletAddress);
-      const profileArray = await createQuery(client, "profiles", threadId, query);
-      if (profileArray.length === 0) {
-        const profile = await createInstance(client, threadId, "profiles", {
+      const result = await createQuery(client, "profiles", threadId, query);
+      if (result.length === 0) {
+        await createInstance(client, threadId, "profiles", {
           _id: uuidv4(),
           walletAddress,
           joinDate: getUnixTime(new Date()),
           lastseen: getUnixTime(new Date()),
           upvotesReceived: 0,
           linksUpvoted: 0,
-        });
+        })
+      } else {
+            
+        };
       }
     }
     if (connected) {
