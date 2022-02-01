@@ -1,6 +1,7 @@
 import { CalendarIcon, ClockIcon, ExternalLinkIcon } from "../Icons";
 import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
+import { fromUnixTime, format } from "date-fns";
 
 const AddressHeader = styled("div", {
   display: "flex",
@@ -32,8 +33,12 @@ interface UserCardProps {
     name: string;
     avatar?: string | null;
   } | null;
+  joinedDate: number;
+  lastSeenDate: number;
+  upvotesReceived: number;
+  linksUpvoted: number;
 }
-const UserCard = ({ address, ens }: UserCardProps) => {
+const UserCard = ({ address, ens, joinedDate, lastSeenDate, upvotesReceived, linksUpvoted }: UserCardProps) => {
   return (
     <div>
       <AddressHeader>
@@ -46,10 +51,12 @@ const UserCard = ({ address, ens }: UserCardProps) => {
       </AddressHeader>
       <UserMeta>
         <div>
-          <CalendarIcon /> Joined Jan 1, 2022
+          <CalendarIcon /> Joined{" "}
+          {format(fromUnixTime(joinedDate), "MMM DD YYYY")}
         </div>
         <div>
-          <ClockIcon /> Last seen Jan 1, 2022
+          <ClockIcon /> Last seen{" "}
+          {format(fromUnixTime(lastSeenDate), "MMM DD YYYY")}
         </div>
       </UserMeta>
       <UserMeta>
@@ -57,10 +64,10 @@ const UserCard = ({ address, ens }: UserCardProps) => {
           <UserStat>12</UserStat>submissions
         </div>
         <div>
-          <UserStat>345</UserStat>upvotes
+          <UserStat>{upvotesReceived}</UserStat>upvotes
         </div>
         <div>
-          <UserStat>6789</UserStat>upvoted
+          <UserStat>{linksUpvoted}</UserStat>upvoted
         </div>
       </UserMeta>
     </div>

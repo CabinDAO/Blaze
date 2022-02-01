@@ -28,9 +28,11 @@ export const initializeStore = (preloadedState = {}) => {
         return { posts: state.posts };
       });
     },
-    loadProfile: (profile: Profile) => {
+    loadProfileIntoStore: (profile: Profile) => {
       set({ currentProfile: profile });
     }
+})
+  );
 }; 
 
 export function useCreateStore(initialState: {sort: string}) {
