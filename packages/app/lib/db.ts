@@ -178,5 +178,24 @@ export const updateLastSeenTime = async (
 
   return profile;
   
-  
 };
+
+export const upvotePost = async (
+  client: Client,
+  threadID: ThreadID,
+  postId: string,
+) => {
+    const query = new Where("_id").eq(postId);
+    const result = await client.find(threadID, "posts", query);
+    let post = result[0];
+
+    post = {
+      ...post,
+      upvotes: post.upvotes++,
+    };
+
+    await client.save(threadID, "profiles", [post]);
+
+    return post;
+}
+    
