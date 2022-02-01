@@ -180,7 +180,7 @@ export const updateLastSeenTime = async (
   
 };
 
-export const upvotePost = async (
+export const upvotePostinDb = async (
   client: Client,
   threadID: ThreadID,
   postId: string,

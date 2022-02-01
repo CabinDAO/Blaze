@@ -1,11 +1,12 @@
-import {styled} from "@/stitches.config";
+import { styled } from "@/stitches.config";
 import Link from "next/link";
-import {ClockIcon, SpeechIcon} from "@/components/Icons";
+import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
-import {useStore} from "@/store/store";
-import {PostProps} from "@/types";
-import {formatDistanceToNow, fromUnixTime} from "date-fns";
+import { useStore } from "@/store/store";
+import { PostProps } from "@/types";
+import { formatDistanceToNow, fromUnixTime } from "date-fns";
+import { upvotePostinDb } from "@/lib/db";
 // import {useEnsLookup} from "wagmi";
 
 const PostRow = styled("div", {
@@ -48,16 +49,28 @@ const IconText = styled("span", {
   // }
 });
 
-const Post = ({ id, title, url, domainText, postedBy, timeStamp, numberOfComments, numberOfUpvotes }: PostProps) => {
-  const { upvotePost } = useStore();
-
+const Post = ({
+  _id,
+  title,
+  url,
+  domainText,
+  postedBy,
+  timeStamp,
+  numberOfComments,
+  numberOfUpvotes,
+}: PostProps) => {
+  const { upvotePostinStore, threadClient, threadId } = useStore();
+  const upvoteHandler = async () => {
+    await upvotePostinDb(threadClient, threadId, _id);
+    upvotePostinStore(_id);
+  };
   return (
     <PostRow>
       <div>
         <Upvote
           upvoted={numberOfUpvotes > 0 ? true : false}
           count={numberOfUpvotes}
-          onClick={() => upvotePost(id)}
+          onClick={upvoteHandler}
         />
       </div>
       <PostInfo>

@@ -19,7 +19,7 @@ export const initializeStore = (preloadedState = {}) => {
     ...initialState,
     ...preloadedState,
     updateSort: (sort: Sort) => set({ sort }),
-    upvotePost: (postId: string) => {
+    upvotePostinStore: (postId: string) => {
       set((state: AppState) => {
         const post = state.posts.find((post: PostProps) => post._id === postId);
         if (post) {
