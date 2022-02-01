@@ -1,14 +1,14 @@
 import { useLayoutEffect } from "react";
 import create from "zustand";
 import createContext from "zustand/context";
-import AppState, { Sort, PostProps } from "@/types";
+import AppState, { Sort, PostProps, Profile } from "@/types";
 
 /* @type { import('zustand/index').UseStore<typeof initialState>} */
 let store;
 
 const initialState = {
   sort: "newest",
-  profile: {}
+  currentProfile: {}
 }
 const zustandContext = createContext();
 export const Provider = zustandContext.Provider;
@@ -28,7 +28,9 @@ export const initializeStore = (preloadedState = {}) => {
         return { posts: state.posts };
       });
     },
-  }));
+    loadProfile: (profile: Profile) => {
+      set({ currentProfile: profile });
+    }
 }; 
 
 export function useCreateStore(initialState: {sort: string}) {

@@ -5,9 +5,10 @@ import { styled } from "@/stitches.config";
 import { useEffect } from "react";
 import {v4 as uuidv4} from 'uuid';
 
-import { auth, setupThreadClient, createInstance, createQuery } from "@/lib/db";
+import { auth, setupThreadClient, createInstance, createQuery, updateLastSeenTime} from "@/lib/db";
 import { ThreadID, Where } from "@textile/hub";
 import { getUnixTime } from "date-fns";
+import { useStore } from "@/store/store"
 
 const IdString = process.env.THREAD_ID || "";
 
@@ -20,6 +21,7 @@ const ConnectList = styled("div", {
 });
 
 const SignIn = () => {
+  const { loadProfile } = useStore();
   const router = useRouter();
   const [{data: accountData}, disconnect] = useAccount();
   const [{ data, error, loading }, connect] = useConnect();
@@ -33,7 +35,7 @@ const SignIn = () => {
       const query = new Where("walletAddress").eq(walletAddress);
       const result = await createQuery(client, "profiles", threadId, query);
       if (result.length === 0) {
-        await createInstance(client, threadId, "profiles", {
+        const profile = await createInstance(client, threadId, "profiles", {
           _id: uuidv4(),
           walletAddress,
           joinDate: getUnixTime(new Date()),
@@ -42,15 +44,15 @@ const SignIn = () => {
           linksUpvoted: 0,
         })
       } else {
-            
-        };
+       const profile = await updateLastSeenTime(client, threadId, walletAddress);
       }
+      loadProfile(profile);
     }
     if (connected) {
       checkProfileExistance(accountData.address);
       router.push("/");
     }
-  }, [connected, router]);
+  }, [connected, router, accountData.address]);
 
   return (
     <ConnectList>

@@ -164,7 +164,6 @@ export const updateLastSeenTime = async (
   client: Client,
   threadID: ThreadID,
   walletAddress: string,
-  data: any
 ) => {
   const query = new Where("walletAddress").eq(walletAddress);
   const result = await client.find(threadID, "profiles", query);
@@ -175,7 +174,9 @@ export const updateLastSeenTime = async (
     lastSeenDate: getUnixTime(new Date())
   }
 
-  return await client.save(threadID, "profiles", [profile]);
+  await client.save(threadID, "profiles", [profile]);
+
+  return profile;
   
   
 };
