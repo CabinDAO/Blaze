@@ -196,7 +196,7 @@ export const upvotePostinDb = async (
       upvotes: post.upvotes++,
     };
 
-  await client.save(threadID, "profiles", [post]);
+  await client.save(threadID, "links", [post]);
   await createInstance(client, threadID, "upvotes", [{
     _id: uuidv4(),
     upvoter: walletAddress,

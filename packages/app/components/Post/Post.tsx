@@ -8,7 +8,7 @@ import { PostProps } from "@/types";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 import { upvotePostinDb, auth, setupThreadClient } from "@/lib/db";
 import { ThreadID } from "@textile/hub";
-// import {useEnsLookup} from "wagmi";
+import {useAccount} from "wagmi";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -60,17 +60,22 @@ const Post = ({
   numberOfComments,
   numberOfUpvotes,
 }: PostProps) => {
-  const { upvotePostinStore } = useStore();
-  const upvoteHandler = async () => {
-    const userAuth = await auth({
-      key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
-      secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
-    });
-    const client = await setupThreadClient(userAuth);
-    const threadList = await client.listDBs();
-    const threadId = ThreadID.fromString(threadList[0].id);
-    await upvotePostinDb(client, threadId, _id);
-    upvotePostinStore(_id);
+  const { upvotePostinStore, currentProfile } = useStore();
+  
+  const upvoteHandler = async (_id: string) => {
+    if (currentProfile != {}) {
+      const userAuth = await auth({
+        key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+        secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
+      });
+      const client = await setupThreadClient(userAuth);
+      const threadList = await client.listDBs();
+      const threadId = ThreadID.fromString(threadList[0].id);
+      await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
+      upvotePostinStore(_id);
+  } else {
+    alert("Please login to upvote");
+    }
   };
   return (
     <PostRow>
@@ -78,7 +83,7 @@ const Post = ({
         <Upvote
           upvoted={numberOfUpvotes > 0 ? true : false}
           count={numberOfUpvotes}
-          onClick={upvoteHandler}
+          onClick={async () => await upvoteHandler(_id)}
         />
       </div>
       <PostInfo>
