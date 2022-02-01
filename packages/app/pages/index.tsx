@@ -41,8 +41,8 @@ export default Home;
 
 export async function getStaticProps() {
   const userAuth = await auth({
-    key: process.env.API_KEY || "",
-    secret: process.env.API_SECRET || "",
+    key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+    secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
   });
   const client = await setupThreadClient(userAuth);
   const threadList = await client.listDBs();

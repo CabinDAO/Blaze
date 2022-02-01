@@ -28,16 +28,18 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { authorization } = req.headers;
-      if (authorization === `Bearer ${process.env.API_KEY}`) {
+      if (
+        authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
+      ) {
         const userAuth = await auth({
-          key: process.env.API_KEY || "",
-          secret: process.env.API_SECRET || "",
+          key: process.env.NEXT_PUBLIC_TEXTILE_NEXT_PUBLIC_TEXTILE_API_KEY || "",
+          secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
         });
         const client = await setupThreadClient(userAuth);
         const threadList = await client.listDBs();
         const threadId = ThreadID.fromString(threadList[0].id);
-          const profiles = await client.find(threadId, "profiles", {});
-          res.status(200).json(profiles);
+        const profiles = await client.find(threadId, "profiles", {});
+        res.status(200).json(profiles);
       } else {
         res
           .status(401)

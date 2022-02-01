@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 
 
 const Profile = () => {
-  const IdString = process.env.THREAD_ID || "";
+  const IdString = process.env.NEXT_PUBLIC_THREAD_ID || "";
   const { loadProfileIntoStore, currentProfile } = useStore();
   const { joinedDate, lastSeenDate, upvotesReceived, linksUpvoted } = currentProfile;
   const { address, ens } = useWallet({ fetchEns: true });
@@ -29,8 +29,8 @@ const Profile = () => {
         const checkProfileExistance = async (walletAddress) => {
           const threadId = ThreadID.fromString(IdString);
           const userAuth = await auth({
-            key: process.env.API_KEY || "",
-            secret: process.env.API_SECRET || "",
+            key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+            secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
           });
           const client = await setupThreadClient(userAuth);
           const query = new Where("walletAddress").eq(walletAddress);
