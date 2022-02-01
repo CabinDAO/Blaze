@@ -33,8 +33,13 @@ export default async function handler(
   if (req.method === "POST") {
     try {
           const { authorization } = req.headers;
-      if (authorization === `Bearer ${process.env.API_KEY}`) {
-        const userAuth = await auth({ key: process.env.API_KEY || "", secret: process.env.API_SECRET || "" });
+      if (
+        authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
+      ) {
+        const userAuth = await auth({
+          key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+          secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
+        });
         const client = await setupThreadClient(userAuth);
         const threadList = await client.listDBs();
         const threadId = ThreadID.fromString(threadList[0].id);
@@ -52,7 +57,7 @@ export default async function handler(
                 domainText: domainText,
                 postedBy: "0x0000000000000000000000000000000000000000",
                 timeStamp: getUnixTime(new Date()),
-                upvotes: 0
+                upvotes: 0,
               };
             });
             combinedData.push(...linkData);
@@ -60,13 +65,24 @@ export default async function handler(
           return combinedData;
         };
         const fetchedData = await fetchMirrorData(MirrorRSSFeedURLs);
-        const links = await createInstance(client, threadId, "links", fetchedData);
-        res.status(200).json({ status: "success", message: "New Mirror links added to database", links: links });
+        const links = await createInstance(
+          client,
+          threadId,
+          "links",
+          fetchedData
+        );
+        res
+          .status(200)
+          .json({
+            status: "success",
+            message: "New Mirror links added to database",
+            links: links,
+          });
       } else {
-                res
-                    .status(401)
-                    .json({ success: false, message: "Unauthorized access" });
-            }
+        res
+          .status(401)
+          .json({ success: false, message: "Unauthorized access" });
+      }
     } catch (err) {
       console.log(err);
       res.status(500).json({ statusCode: 500, message: err.message });

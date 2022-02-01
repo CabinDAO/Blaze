@@ -28,16 +28,18 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { authorization } = req.headers;
-      if (authorization === `Bearer ${process.env.API_KEY}`) {
+      if (authorization === `Bearer ${process.env.TEXTILE_API_KEY}`) {
         const userAuth = await auth({
-          key: process.env.API_KEY || "",
-          secret: process.env.API_SECRET || "",
+          key: process.env.TEXTILE_API_KEY || "",
+          secret: process.env.TEXTILE_API_SECRET || "",
         });
         const client = await setupThreadClient(userAuth);
         const threadList = await client.listDBs();
         const threadId = ThreadID.fromString(threadList[0].id);
-          const posts = await client.find(threadId, "links", {});
-          res.status(200).json(posts);
+        await client.delete(threadId, "profiles", [
+          "09cc6a61-244c-4739-a081-b853b60a197e",
+        ]);
+        res.status(200).json({status: true, message: "Profile deleted"});
       } else {
         res
           .status(401)

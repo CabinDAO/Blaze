@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function ClientOnly({ children, ...delegated }) {
+function ClientOnly({ children, ...delegated }:{ children?: React.ReactNode }) {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);

@@ -6,7 +6,10 @@ import {
   KeyInfo,
   ThreadID,
   QueryJSON,
+  Where
 } from "@textile/hub";
+
+import { getUnixTime } from "date-fns";
 
 export const ProfileSchema = {
   $id: "www.creatorcabins.com/profile.json",
@@ -147,7 +150,7 @@ export const createInstance = async (
   return created;
 };
 
-export const createQuery = (
+export const createQuery = async (
   client: Client,
   collectionName: string,
   threadID: ThreadID,
@@ -155,4 +158,25 @@ export const createQuery = (
 ) => {
   const results = client.find(threadID, collectionName, query);
   return results;
+};
+
+export const updateLastSeenTime = async (
+  client: Client,
+  threadID: ThreadID,
+  walletAddress: string,
+) => {
+  const query = new Where("walletAddress").eq(walletAddress);
+  const result = await client.find(threadID, "profiles", query);
+  let profile = result[0];
+
+  profile = {
+    ...profile,
+    lastSeenDate: getUnixTime(new Date())
+  }
+
+  await client.save(threadID, "profiles", [profile]);
+
+  return profile;
+  
+  
 };

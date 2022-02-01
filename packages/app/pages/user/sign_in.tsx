@@ -1,4 +1,4 @@
-import { useConnect } from "wagmi";
+import { useConnect, useAccount } from "wagmi";
 import { useRouter } from "next/router";
 import { Button } from "@cabindao/topo";
 import { styled } from "@/stitches.config";

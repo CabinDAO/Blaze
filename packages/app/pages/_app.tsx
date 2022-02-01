@@ -97,7 +97,7 @@ const Nav = styled("nav", {
   columnGap: "$4",
 });
 
-const alchemyId = process.env.ALCHEMY_API_KEY;
+const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 const chains = defaultChains;
 
 const connectors = [
