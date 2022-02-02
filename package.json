@@ -15,6 +15,6 @@
     "app:build": "yarn workspace dao-camp-app next build",
     "app:start": "yarn workspace dao-camp-app next start",
     "app:lint": "yarn workspace dao-camp-app next lint",
-    "app:export": "yarn workspace dao-camp-app next export",
+    "app:export": "yarn workspace dao-camp-app next export"
   }
 }

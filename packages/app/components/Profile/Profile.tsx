@@ -43,7 +43,7 @@ const Profile = () => {
           upvotesReceived: 0,
           linksUpvoted: 0,
         };
-        await createInstance(client, threadId, "profiles", []);
+        await createInstance(client, threadId, "profiles", [profile]);
         loadProfileIntoStore(profile);
       } else {
         const profile = await updateLastSeenTime(
