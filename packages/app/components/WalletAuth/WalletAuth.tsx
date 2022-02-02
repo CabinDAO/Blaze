@@ -4,6 +4,7 @@ import WalletAddress from "../WalletAddress";
 import {useConnect, useAccount, Connector} from "wagmi";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useStore } from "@/store/store";
 
 // interface WalletContextState {
 //   address: string | null;
@@ -27,7 +28,7 @@ import { useRouter } from "next/router";
 // };
 
 export const useWallet = (options?: {fetchEns?: boolean}) => {
-  const [{data, error}] = useAccount(options);
+  const [{ data, error }] = useAccount(options);
   return {
     isConnected: !error && !!data?.address,
     address: data?.address ?? null,
@@ -38,25 +39,30 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
 const WalletAuth = () => {
   const router = useRouter();
   const [{ data, error, loading }, connect] = useConnect();
+  const { isLoggedIn, setIsLoggedIn } = useStore();
 
   const [
-    {data: accountData, error: accountError, loading: accountLoading},
+    { data: accountData, error: accountError, loading: accountLoading },
     disconnect,
   ] = useAccount();
+  const disconnectHandler = async () => {
+    await disconnect();
+    setIsLoggedIn(false);
+  };
   if (data.connected) {
+
     return (
       <div>
-        <Button onClick={disconnect} type="secondary" tone="forest">
+        <Button onClick={disconnectHandler} type="secondary" tone="forest">
           Disconnect
         </Button>
       </div>
     );
-  }
+  } 
 
   if (router.pathname === "/user/sign_in") {
     return null;
   }
-
   return (
     <Link href="/user/sign_in" passHref>
       <a>

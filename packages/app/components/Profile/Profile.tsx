@@ -18,10 +18,10 @@ import WalletAddress from "../WalletAddress";
 
 
 const Profile = () => {
-  const { loadProfileIntoStore, currentProfile, setIsLoggedIn } = useStore();
+  const { loadProfileIntoStore, currentProfile } = useStore();
   const { joinDate, lastSeenDate, upvotesReceived, linksUpvoted } =
     currentProfile;
-  const { address, ens, isConnected } = useWallet({ fetchEns: true });
+  const { address, ens } = useWallet({ fetchEns: true });
 
   useEffect(() => {
     const checkProfileExistance = async (walletAddress: string) => {
@@ -45,7 +45,6 @@ const Profile = () => {
         };
         await createInstance(client, threadId, "profiles", []);
         loadProfileIntoStore(profile);
-        setIsLoggedIn(true);
       } else {
         const profile = await updateLastSeenTime(
           client,
@@ -53,13 +52,12 @@ const Profile = () => {
           walletAddress
         );
         loadProfileIntoStore(profile);
-        setIsLoggedIn(true);
       }
     };
     if (address) {
       checkProfileExistance(address);
     }
-  }, [address, loadProfileIntoStore, setIsLoggedIn]);
+  }, [address, loadProfileIntoStore]);
   return (
     <>
       {address && (

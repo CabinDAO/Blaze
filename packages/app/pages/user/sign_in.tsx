@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Button } from "@cabindao/topo";
 import { styled } from "@/stitches.config";
 import { useEffect } from "react";
+import { useStore } from "@/store/store";
 
 const ConnectList = styled("div", {
   display: "flex",
@@ -14,14 +15,16 @@ const ConnectList = styled("div", {
 
 const SignIn = () => {
   const router = useRouter();
+  const { isLoggedIn, setIsLoggedIn } = useStore();
   const [{ data, error, loading }, connect] = useConnect();
   const { connected } = data;
 
   useEffect(() => {
     if (connected) {
+      setIsLoggedIn(true)
       router.push("/");
     }
-  }, [connected, router]);
+  }, [connected, router, setIsLoggedIn]);
 
   return (
     <ConnectList>
