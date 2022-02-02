@@ -20,7 +20,9 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { authorization } = req.headers;
-      if (authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`) {
+      if (
+        authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
+      ) {
         const userAuth = await auth({
           key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
           secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
@@ -32,12 +34,12 @@ export default async function handler(
           )
         );
         res.status(200).json({ status: "success" });
-        } else {
-            res
-                .status(401)
-                .json({ success: false, message: "Unauthorized access" });
+      } else {
+        res
+          .status(401)
+          .json({ success: false, message: "Unauthorized access" });
       }
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({ statusCode: 500, message: err.message });
     }
   } else {

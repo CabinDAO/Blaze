@@ -8,7 +8,7 @@ const StyledPostList = styled("div", {
   rowGap: "$4",
 });
 
-export interface PostProps {
+export interface Post {
   _id: string;
   title: string;
   domainText: string;
@@ -18,11 +18,15 @@ export interface PostProps {
   numberOfComments: number;
   numberOfUpvotes: number;
 }
-export type PostListProps = PostProps[];
 export type Sort = "newest" | "trending" | "controversial";
+export interface PostListProps{
+  posts: Post[];
+  sort: Sort;
+};
 
 
-const PostList = ({ posts }: {posts: PostListProps}, { sort }: { sort: Sort } ) => {
+
+const PostList = ({ posts, sort }: PostListProps ) => {
 
   return (
     <StyledPostList>

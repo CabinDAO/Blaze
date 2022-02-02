@@ -59,7 +59,7 @@ const Profile = () => {
     if (address) {
       checkProfileExistance(address);
     }
-  }, [address, loadProfileIntoStore]);
+  }, [address, loadProfileIntoStore, setIsLoggedIn]);
   return (
     <>
       {address && (

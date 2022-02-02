@@ -49,6 +49,17 @@ const IconText = styled("span", {
   // }
 });
 
+export interface PostProps {
+  _id: string;
+  title: string;
+  domainText: string;
+  url: string;
+  postedBy: string;
+  timeStamp: number;
+  numberOfComments: number;
+  numberOfUpvotes: number;
+}
+
 const Post = ({
   _id,
   title,

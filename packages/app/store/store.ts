@@ -4,7 +4,7 @@ import createContext from "zustand/context";
 
 
 /* @type { import('zustand/index').UseStore<typeof initialState>} */
-let store;
+let store: any;
 
 export interface Post {
   _id: string;
@@ -52,13 +52,13 @@ const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
 export const useStore = () => zustandContext.useStore();
 export const initializeStore = (preloadedState = {}) => {
-  return create((set, get) => ({
+  return create((set: any ) => ({
     ...initialState,
     ...preloadedState,
     updateSort: (sort: Sort) => set({ sort }),
     upvotePostinStore: (postId: string) => {
       set((state: AppState) => {
-        const post = state.posts.find((post: PostProps) => post._id === postId);
+        const post = state.posts.find((post: Post) => post._id === postId);
         if (post) {
           post.numberOfUpvotes += 1;
         }

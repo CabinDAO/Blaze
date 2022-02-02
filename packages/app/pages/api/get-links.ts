@@ -28,7 +28,9 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { authorization } = req.headers;
-      if (authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`) {
+      if (
+        authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
+      ) {
         const userAuth = await auth({
           key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
           secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
@@ -36,14 +38,14 @@ export default async function handler(
         const client = await setupThreadClient(userAuth);
         const threadList = await client.listDBs();
         const threadId = ThreadID.fromString(threadList[0].id);
-          const posts = await client.find(threadId, "links", {});
-          res.status(200).json(posts);
+        const posts = await client.find(threadId, "links", {});
+        res.status(200).json(posts);
       } else {
         res
           .status(401)
           .json({ success: false, message: "Unauthorized access" });
       }
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({ statusCode: 500, message: err.message });
     }
   } else {

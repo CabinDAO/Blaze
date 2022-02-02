@@ -21,6 +21,14 @@ export interface Profile {
   linksUpvoted: number;
 };
 
+export interface Link {
+  _id: string;
+  title: string;
+  url: string;
+  timeStamp: number;
+  upvotes: number;
+}
+
 export const ProfileSchema = {
   $id: "www.creatorcabins.com/profile.json",
   $schema: "http://json-schema.org/draft-07/schema#",
@@ -197,7 +205,7 @@ export const upvotePostinDb = async (
   walletAddress: string
 ) => {
     const query = new Where("_id").eq(postId);
-    const result = await client.find(threadID, "links", query);
+    const result:Link[] = await client.find(threadID, "links", query);
     let post = result[0];
 
     post = {
