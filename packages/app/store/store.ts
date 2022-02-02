@@ -1,7 +1,6 @@
 import { useLayoutEffect } from "react";
 import create from "zustand";
 import createContext from "zustand/context";
-import AppState, { Sort, PostProps, Profile } from "@/types";
 
 
 /* @type { import('zustand/index').UseStore<typeof initialState>} */

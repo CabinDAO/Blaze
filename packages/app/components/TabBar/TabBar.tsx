@@ -5,7 +5,6 @@ import { useState, useMemo } from "react";
 import { useStore } from "@/store/store";
 import DropdownMenu from "@/components/DropdownMenu";
 import { DoubleArrowUpIcon, SunIcon, TargetIcon } from "@radix-ui/react-icons";
-import AppState, { Sort } from "@/types";
 
 const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
@@ -41,6 +40,9 @@ const TabLink = styled("button", {
     },
   },
 });
+
+export type Sort = "newest" | "trending" | "controversial";
+
 export const TabButton = (props: any) => <TabLink {...props} />;
 const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => {
   const { sort, updateSort } = useStore();

@@ -4,7 +4,6 @@ import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
-import { PostProps } from "@/types";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 import { upvotePostinDb, auth, setupThreadClient } from "@/lib/db";
 import { ThreadID } from "@textile/hub";
