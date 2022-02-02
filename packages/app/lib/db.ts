@@ -10,7 +10,16 @@ import {
 } from "@textile/hub";
 
 import { getUnixTime } from "date-fns";
-import {v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
+
+export interface Profile {
+  _id: string;
+  walletAddress: string;
+  joinDate: number;
+  lastSeenDate: number;
+  upvotesReceived: number;
+  linksUpvoted: number;
+};
 
 export const ProfileSchema = {
   $id: "www.creatorcabins.com/profile.json",
@@ -167,7 +176,7 @@ export const updateLastSeenTime = async (
   walletAddress: string,
 ) => {
   const query = new Where("walletAddress").eq(walletAddress);
-  const result = await client.find(threadID, "profiles", query);
+  const result:Profile[] = await client.find(threadID, "profiles", query);
   let profile = result[0];
 
   profile = {

@@ -7,11 +7,49 @@ import AppState, { Sort, PostProps, Profile } from "@/types";
 /* @type { import('zustand/index').UseStore<typeof initialState>} */
 let store;
 
-const initialState = {
-  sort: "newest",
-  currentProfile: {}
+export interface Post {
+  _id: string;
+  title: string;
+  domainText: string;
+  url: string;
+  postedBy: string;
+  timeStamp: number;
+  numberOfComments: number;
+  numberOfUpvotes: number;
 }
-const zustandContext = createContext();
+export type PostList = Post[];
+export type Sort = "newest" | "trending" | "controversial";
+export type Profile = {
+  _id: string;
+  walletAddress: string;
+  joinDate: number;
+  lastSeenDate: number;
+  upvotesReceived: number;
+  linksUpvoted: number;
+};
+
+export interface InitialState {
+  sort: Sort;
+  currentProfile: object;
+  isLoggedIn: boolean;
+}
+const initialState: InitialState = {
+  sort: "newest",
+  currentProfile: {},
+  isLoggedIn: false,
+}
+
+export default interface AppState {
+  posts: PostList;
+  sort: Sort;
+  currentProfile: Profile;
+  isLoggedIn: boolean;
+  updateSort: (sort: Sort) => void;
+  upvotePostinStore: (postId: string) => PostList;
+  loadProfileIntoStore: (profile: Profile) => void;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+}
+const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
 export const useStore = () => zustandContext.useStore();
 export const initializeStore = (preloadedState = {}) => {
@@ -31,9 +69,11 @@ export const initializeStore = (preloadedState = {}) => {
     },
     loadProfileIntoStore: (profile: Profile) => {
       set({ currentProfile: profile });
-    }
-})
-  );
+    },
+    setIsLoggedIn: (isLoggedIn: boolean) => {
+      set({ isLoggedIn });
+    },
+  }));
 }; 
 
 export function useCreateStore(initialState: {sort: string}) {

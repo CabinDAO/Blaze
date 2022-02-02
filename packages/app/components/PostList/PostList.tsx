@@ -1,8 +1,5 @@
 import { styled } from "@/stitches.config";
-import { useState } from "react";
 import Post from "../Post";
-
-import {PostListProps, Sort} from "@/types";
 
 
 const StyledPostList = styled("div", {
@@ -11,9 +8,21 @@ const StyledPostList = styled("div", {
   rowGap: "$4",
 });
 
+export interface PostProps {
+  _id: string;
+  title: string;
+  domainText: string;
+  url: string;
+  postedBy: string;
+  timeStamp: number;
+  numberOfComments: number;
+  numberOfUpvotes: number;
+}
+export type PostListProps = PostProps[];
+export type Sort = "newest" | "trending" | "controversial";
 
 
-const PostList = ({ posts, sort }) => {
+const PostList = ({ posts }: {posts: PostListProps}, { sort }: { sort: Sort } ) => {
 
   return (
     <StyledPostList>

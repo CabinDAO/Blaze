@@ -60,10 +60,10 @@ const Post = ({
   numberOfComments,
   numberOfUpvotes,
 }: PostProps) => {
-  const { upvotePostinStore, currentProfile } = useStore();
+  const { upvotePostinStore, isLoggedIn } = useStore();
   
   const upvoteHandler = async (_id: string) => {
-    if (currentProfile != {}) {
+    if (isLoggedIn) {
       const userAuth = await auth({
         key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
         secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
@@ -71,7 +71,7 @@ const Post = ({
       const client = await setupThreadClient(userAuth);
       const threadList = await client.listDBs();
       const threadId = ThreadID.fromString(threadList[0].id);
-      await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
+      // await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
       upvotePostinStore(_id);
   } else {
     alert("Please login to upvote");
