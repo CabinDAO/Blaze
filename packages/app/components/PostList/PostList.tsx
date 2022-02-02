@@ -15,8 +15,7 @@ export interface Post {
   url: string;
   postedBy: string;
   timeStamp: number;
-  numberOfComments: number;
-  numberOfUpvotes: number;
+  upvotes: number;
 }
 export type Sort = "newest" | "trending" | "controversial";
 export interface PostListProps{
@@ -31,8 +30,8 @@ const PostList = ({ posts, sort }: PostListProps ) => {
   return (
     <StyledPostList>
       {sort === "newest" && posts.sort((a, b) => a.timeStamp - b.timeStamp).map((post) => <Post key={post._id} {...post} />)}
-      {sort === "trending" && posts.sort((a, b) => a.numberOfUpvotes - b.numberOfUpvotes).map((post) => <Post key={post._id} {...post} />)}
-      {sort === "controversial" && posts.sort((a, b) => b.numberOfComments - a.numberOfComments).map((post) => <Post key={post._id} {...post} />)}
+      {sort === "trending" && posts.sort((a, b) => a.upvotes - b.upvotes).map((post) => <Post key={post._id} {...post} />)}
+      {/* {sort === "controversial" && posts.sort((a, b) => b.comments - a.comments).map((post) => <Post key={post._id} {...post} />)} */}
     </StyledPostList>
   );
 };

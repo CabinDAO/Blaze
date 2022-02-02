@@ -21,7 +21,7 @@ const Profile = () => {
   const { loadProfileIntoStore, currentProfile, setIsLoggedIn } = useStore();
   const { joinDate, lastSeenDate, upvotesReceived, linksUpvoted } =
     currentProfile;
-  const { address, ens } = useWallet({ fetchEns: true });
+  const { address, ens, isConnected } = useWallet({ fetchEns: true });
 
   useEffect(() => {
     const checkProfileExistance = async (walletAddress: string) => {

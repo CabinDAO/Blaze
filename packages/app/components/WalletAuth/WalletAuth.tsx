@@ -3,7 +3,7 @@ import {Button} from "@cabindao/topo";
 import WalletAddress from "../WalletAddress";
 import {useConnect, useAccount, Connector} from "wagmi";
 import Link from "next/link";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 // interface WalletContextState {
 //   address: string | null;
@@ -37,7 +37,7 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
 
 const WalletAuth = () => {
   const router = useRouter();
-  const [{data, error, loading}, connect] = useConnect();
+  const [{ data, error, loading }, connect] = useConnect();
 
   const [
     {data: accountData, error: accountError, loading: accountLoading},

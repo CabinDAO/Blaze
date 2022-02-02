@@ -52,10 +52,12 @@ export async function getStaticProps() {
   const threadList = await client.listDBs();
   const threadId = ThreadID.fromString(threadList[0].id);
   const posts = await client.find(threadId, "links", {});
+  const upvotes = await client.find(threadId, "upvotes", {});
   return {
     props: {
       initialZustandState: {
         posts,
+        upvotes,
      }
     },
   };

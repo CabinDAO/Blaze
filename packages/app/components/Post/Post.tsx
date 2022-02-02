@@ -56,8 +56,7 @@ export interface PostProps {
   url: string;
   postedBy: string;
   timeStamp: number;
-  numberOfComments: number;
-  numberOfUpvotes: number;
+  upvotes: number;
 }
 
 const Post = ({
@@ -67,10 +66,9 @@ const Post = ({
   domainText,
   postedBy,
   timeStamp,
-  numberOfComments,
-  numberOfUpvotes,
+  upvotes,
 }: PostProps) => {
-  const { upvotePostinStore, isLoggedIn } = useStore();
+  const { upvotePostinStore, isLoggedIn, currentProfile } = useStore();
   
   const upvoteHandler = async (_id: string) => {
     if (isLoggedIn) {
@@ -81,7 +79,7 @@ const Post = ({
       const client = await setupThreadClient(userAuth);
       const threadList = await client.listDBs();
       const threadId = ThreadID.fromString(threadList[0].id);
-      // await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
+      await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
       upvotePostinStore(_id);
   } else {
     alert("Please login to upvote");
@@ -91,8 +89,8 @@ const Post = ({
     <PostRow>
       <div>
         <Upvote
-          upvoted={numberOfUpvotes > 0 ? true : false}
-          count={numberOfUpvotes}
+          upvoted={upvotes > 0 ? true : false}
+          count={upvotes}
           onClick={async () => await upvoteHandler(_id)}
         />
       </div>

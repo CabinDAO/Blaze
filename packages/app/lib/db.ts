@@ -29,6 +29,13 @@ export interface Link {
   upvotes: number;
 }
 
+export interface Upvote {
+  _id: string;
+  upvoter: string;
+  timeStamp: number;
+  link: string;
+}
+
 export const ProfileSchema = {
   $id: "www.creatorcabins.com/profile.json",
   $schema: "http://json-schema.org/draft-07/schema#",
@@ -208,10 +215,7 @@ export const upvotePostinDb = async (
     const result:Link[] = await client.find(threadID, "links", query);
     let post = result[0];
 
-    post = {
-      ...post,
-      upvotes: post.upvotes++,
-    };
+  post.upvotes+=1;
 
   await client.save(threadID, "links", [post]);
   await createInstance(client, threadID, "upvotes", [{

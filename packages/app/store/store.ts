@@ -13,8 +13,7 @@ export interface Post {
   url: string;
   postedBy: string;
   timeStamp: number;
-  numberOfComments: number;
-  numberOfUpvotes: number;
+  upvotes: number;
 }
 export type PostList = Post[];
 export type Sort = "newest" | "trending" | "controversial";
@@ -26,7 +25,12 @@ export type Profile = {
   upvotesReceived: number;
   linksUpvoted: number;
 };
-
+export interface Upvote {
+  _id: string;
+  upvoter: string;
+  timeStamp: number;
+  link: string;
+}
 export interface InitialState {
   sort: Sort;
   currentProfile: object;
@@ -41,6 +45,7 @@ const initialState: InitialState = {
 export default interface AppState {
   posts: PostList;
   sort: Sort;
+  upvotes: Upvote[];
   currentProfile: Profile;
   isLoggedIn: boolean;
   updateSort: (sort: Sort) => void;
@@ -60,7 +65,7 @@ export const initializeStore = (preloadedState = {}) => {
       set((state: AppState) => {
         const post = state.posts.find((post: Post) => post._id === postId);
         if (post) {
-          post.numberOfUpvotes += 1;
+          post.upvotes += 1;
         }
 
         return { posts: state.posts };
