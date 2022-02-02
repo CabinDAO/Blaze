@@ -1,29 +1,71 @@
 import { useLayoutEffect } from "react";
 import create from "zustand";
 import createContext from "zustand/context";
-import AppState, { Sort, PostProps, Profile } from "@/types";
 
 
 /* @type { import('zustand/index').UseStore<typeof initialState>} */
-let store;
+let store: any;
 
-const initialState = {
-  sort: "newest",
-  currentProfile: {}
+export interface Post {
+  _id: string;
+  title: string;
+  domainText: string;
+  url: string;
+  postedBy: string;
+  timeStamp: number;
+  upvotes: number;
 }
-const zustandContext = createContext();
+export type PostList = Post[];
+export type Sort = "newest" | "trending" | "controversial";
+export type Profile = {
+  _id: string;
+  walletAddress: string;
+  joinDate: number;
+  lastSeenDate: number;
+  upvotesReceived: number;
+  linksUpvoted: number;
+};
+export interface Upvote {
+  _id: string;
+  upvoter: string;
+  timeStamp: number;
+  link: string;
+}
+export interface InitialState {
+  sort: Sort;
+  currentProfile: object;
+  isLoggedIn: boolean;
+}
+const initialState: InitialState = {
+  sort: "newest",
+  currentProfile: {},
+  isLoggedIn: false,
+}
+
+export default interface AppState {
+  posts: PostList;
+  sort: Sort;
+  upvotes: Upvote[];
+  currentProfile: Profile;
+  isLoggedIn: boolean;
+  updateSort: (sort: Sort) => void;
+  upvotePostinStore: (postId: string) => PostList;
+  loadProfileIntoStore: (profile: Profile) => void;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+}
+const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
 export const useStore = () => zustandContext.useStore();
 export const initializeStore = (preloadedState = {}) => {
-  return create((set, get) => ({
+  return create((set: any ) => ({
     ...initialState,
     ...preloadedState,
     updateSort: (sort: Sort) => set({ sort }),
-    upvotePost: (postId: string) => {
+    upvotePostinStore: (postId: string) => {
       set((state: AppState) => {
-        const post = state.posts.find((post: PostProps) => post._id === postId);
+        const post = state.posts.find((post: Post) => post._id === postId);
         if (post) {
-          post.numberOfUpvotes += 1;
+          post.upvotes += 1;
         }
 
         return { posts: state.posts };
@@ -31,9 +73,11 @@ export const initializeStore = (preloadedState = {}) => {
     },
     loadProfileIntoStore: (profile: Profile) => {
       set({ currentProfile: profile });
-    }
-})
-  );
+    },
+    setIsLoggedIn: (isLoggedIn: boolean) => {
+      set({ isLoggedIn });
+    },
+  }));
 }; 
 
 export function useCreateStore(initialState: {sort: string}) {

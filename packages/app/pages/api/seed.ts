@@ -8,6 +8,15 @@ import { ThreadID } from "@textile/hub";
 import { getUnixTime } from "date-fns";
 import {v4 as uuidv4} from 'uuid';
 
+
+export interface Link {
+  _id: string;
+  title: string;
+  url: string;
+  timeStamp: number;
+  upvotes: number;
+}
+
 // Initialize the cors middleware
 const cors = initMiddleware(
   Cors({
@@ -32,7 +41,7 @@ export default async function handler(
   await cors(req, res);
   if (req.method === "POST") {
     try {
-          const { authorization } = req.headers;
+      const { authorization } = req.headers;
       if (
         authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
       ) {
@@ -44,7 +53,7 @@ export default async function handler(
         const threadList = await client.listDBs();
         const threadId = ThreadID.fromString(threadList[0].id);
 
-        const fetchMirrorData = async (urlArray) => {
+        const fetchMirrorData = async (urlArray:string[][]) => {
           let combinedData = [];
           for (const arr of urlArray) {
             const domainText = arr[0];
@@ -71,19 +80,17 @@ export default async function handler(
           "links",
           fetchedData
         );
-        res
-          .status(200)
-          .json({
-            status: "success",
-            message: "New Mirror links added to database",
-            links: links,
-          });
+        res.status(200).json({
+          status: "success",
+          message: "New Mirror links added to database",
+          links: links,
+        });
       } else {
         res
           .status(401)
           .json({ success: false, message: "Unauthorized access" });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
       res.status(500).json({ statusCode: 500, message: err.message });
     }

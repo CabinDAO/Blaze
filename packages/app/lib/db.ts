@@ -10,6 +10,31 @@ import {
 } from "@textile/hub";
 
 import { getUnixTime } from "date-fns";
+import { v4 as uuidv4 } from "uuid";
+
+export interface Profile {
+  _id: string;
+  walletAddress: string;
+  joinDate: number;
+  lastSeenDate: number;
+  upvotesReceived: number;
+  linksUpvoted: number;
+};
+
+export interface Link {
+  _id: string;
+  title: string;
+  url: string;
+  timeStamp: number;
+  upvotes: number;
+}
+
+export interface Upvote {
+  _id: string;
+  upvoter: string;
+  timeStamp: number;
+  link: string;
+}
 
 export const ProfileSchema = {
   $id: "www.creatorcabins.com/profile.json",
@@ -166,7 +191,7 @@ export const updateLastSeenTime = async (
   walletAddress: string,
 ) => {
   const query = new Where("walletAddress").eq(walletAddress);
-  const result = await client.find(threadID, "profiles", query);
+  const result:Profile[] = await client.find(threadID, "profiles", query);
   let profile = result[0];
 
   profile = {
@@ -178,5 +203,28 @@ export const updateLastSeenTime = async (
 
   return profile;
   
-  
 };
+
+export const upvotePostinDb = async (
+  client: Client,
+  threadID: ThreadID,
+  postId: string,
+  walletAddress: string
+) => {
+    const query = new Where("_id").eq(postId);
+    const result:Link[] = await client.find(threadID, "links", query);
+    let post = result[0];
+
+  post.upvotes+=1;
+
+  await client.save(threadID, "links", [post]);
+  await createInstance(client, threadID, "upvotes", [{
+    _id: uuidv4(),
+    upvoter: walletAddress,
+    timeStamp: getUnixTime(new Date()),
+    link: postId,
+  }]);
+
+    return post;
+}
+    

@@ -12,9 +12,10 @@ import {
 } from "@/lib/db";
 import { ThreadID, Query, Where } from "@textile/hub";
 import { getUnixTime } from "date-fns";
-import { useStore } from "@/store/store";
+import { useStore, Profile } from "@/store/store";
 import { useEffect } from "react";
 import WalletAddress from "../WalletAddress";
+
 
 const Profile = () => {
   const { loadProfileIntoStore, currentProfile } = useStore();
@@ -23,7 +24,7 @@ const Profile = () => {
   const { address, ens } = useWallet({ fetchEns: true });
 
   useEffect(() => {
-    const checkProfileExistance = async (walletAddress) => {
+    const checkProfileExistance = async (walletAddress: string) => {
       const userAuth = await auth({
         key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
         secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
@@ -34,15 +35,16 @@ const Profile = () => {
       const query = new Where("walletAddress").eq(walletAddress);
       const result = await createQuery(client, "profiles", threadId, query);
       if (result.length === 0) {
-        const result = await createInstance(client, threadId, "profiles", [{
+        const profile: Profile = {
           _id: uuidv4(),
           walletAddress,
           joinDate: getUnixTime(new Date()),
           lastSeenDate: getUnixTime(new Date()),
           upvotesReceived: 0,
           linksUpvoted: 0,
-        }]);
-        loadProfileIntoStore(result[0]);
+        };
+        await createInstance(client, threadId, "profiles", []);
+        loadProfileIntoStore(profile);
       } else {
         const profile = await updateLastSeenTime(
           client,

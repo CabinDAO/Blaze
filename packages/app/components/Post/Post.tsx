@@ -1,12 +1,13 @@
-import {styled} from "@/stitches.config";
+import { styled } from "@/stitches.config";
 import Link from "next/link";
-import {ClockIcon, SpeechIcon} from "@/components/Icons";
+import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
-import {useStore} from "@/store/store";
-import {PostProps} from "@/types";
-import {formatDistanceToNow, fromUnixTime} from "date-fns";
-// import {useEnsLookup} from "wagmi";
+import { useStore } from "@/store/store";
+import { formatDistanceToNow, fromUnixTime } from "date-fns";
+import { upvotePostinDb, auth, setupThreadClient } from "@/lib/db";
+import { ThreadID } from "@textile/hub";
+import {useAccount} from "wagmi";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -48,16 +49,49 @@ const IconText = styled("span", {
   // }
 });
 
-const Post = ({ id, title, url, domainText, postedBy, timeStamp, numberOfComments, numberOfUpvotes }: PostProps) => {
-  const { upvotePost } = useStore();
+export interface PostProps {
+  _id: string;
+  title: string;
+  domainText: string;
+  url: string;
+  postedBy: string;
+  timeStamp: number;
+  upvotes: number;
+}
 
+const Post = ({
+  _id,
+  title,
+  url,
+  domainText,
+  postedBy,
+  timeStamp,
+  upvotes,
+}: PostProps) => {
+  const { upvotePostinStore, isLoggedIn, currentProfile } = useStore();
+  
+  const upvoteHandler = async (_id: string) => {
+    if (isLoggedIn) {
+      const userAuth = await auth({
+        key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+        secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
+      });
+      const client = await setupThreadClient(userAuth);
+      const threadList = await client.listDBs();
+      const threadId = ThreadID.fromString(threadList[0].id);
+      await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
+      upvotePostinStore(_id);
+  } else {
+    alert("Please login to upvote");
+    }
+  };
   return (
     <PostRow>
       <div>
         <Upvote
-          upvoted={numberOfUpvotes > 0 ? true : false}
-          count={numberOfUpvotes}
-          onClick={() => upvotePost(id)}
+          upvoted={upvotes > 0 ? true : false}
+          count={upvotes}
+          onClick={async () => await upvoteHandler(_id)}
         />
       </div>
       <PostInfo>

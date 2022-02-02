@@ -28,24 +28,24 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { authorization } = req.headers;
-      if (authorization === `Bearer ${process.env.TEXTILE_API_KEY}`) {
+      if (
+        authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
+      ) {
         const userAuth = await auth({
-          key: process.env.TEXTILE_API_KEY || "",
-          secret: process.env.TEXTILE_API_SECRET || "",
+          key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
+          secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
         });
         const client = await setupThreadClient(userAuth);
         const threadList = await client.listDBs();
         const threadId = ThreadID.fromString(threadList[0].id);
-        await client.delete(threadId, "profiles", [
-          "09cc6a61-244c-4739-a081-b853b60a197e",
-        ]);
-        res.status(200).json({status: true, message: "Profile deleted"});
+        const upvotes = await client.find(threadId, "upvotes", {});
+        res.status(200).json(upvotes);
       } else {
         res
           .status(401)
           .json({ success: false, message: "Unauthorized access" });
       }
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({ statusCode: 500, message: err.message });
     }
   } else {
