@@ -6,13 +6,14 @@ import Cors from "cors";
 import { setupThreadClient, createInstance, auth } from "@/lib/db";
 import { ThreadID } from "@textile/hub";
 import { getUnixTime } from "date-fns";
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
-
-export interface Link {
+export interface Post {
   _id: string;
   title: string;
+  domainText: string;
   url: string;
+  postedBy: string;
   timeStamp: number;
   upvotes: number;
 }
@@ -31,7 +32,7 @@ const MirrorRSSFeedURLs = [
   ["creatorcabins.com", "https://creators.submirror.xyz"],
   ["krausehouse.club", "https://krausehouse.submirror.xyz/"],
   ["songcamp.band", "https://songcamp.submirror.xyz/"],
-  ["seedclub.xyz","https://club.submirror.xyz/"],
+  ["seedclub.xyz", "https://club.submirror.xyz/"],
 ];
 
 export default async function handler(
@@ -53,7 +54,7 @@ export default async function handler(
         const threadList = await client.listDBs();
         const threadId = ThreadID.fromString(threadList[0].id);
 
-        const fetchMirrorData = async (urlArray:string[][]) => {
+        const fetchMirrorData = async (urlArray: string[][]) => {
           let combinedData = [];
           for (const arr of urlArray) {
             const domainText = arr[0];
@@ -73,26 +74,37 @@ export default async function handler(
           }
           return combinedData;
         };
-        const fetchedData = await fetchMirrorData(MirrorRSSFeedURLs);
-        const links = await createInstance(
+        const fetchedLinks = await fetchMirrorData(MirrorRSSFeedURLs);
+        const currentPosts: Post[] = await client.find(threadId, "links", {});
+        const concat = fetchedLinks.concat(currentPosts);
+
+        //remove duplicates
+        const uniquePosts = new Set(concat);
+        //convert back to array
+        const uniquePostsArray = Array.from(uniquePosts);
+
+        const newPosts = await createInstance(
           client,
           threadId,
           "links",
-          fetchedData
+          uniquePostsArray
         );
-        res.status(200).json({
-          status: "success",
-          message: "New Mirror links added to database",
-          links: links,
-        });
+        if (newPosts.length > 0) {
+          res.status(200).json({
+            message: `${newPosts.length} new posts added to database`,
+            posts: newPosts,
+          });
+        } else {
+          res.status(200).json({
+            message: `No new posts added to database`,
+          });
+        }
       } else {
-        res
-          .status(401)
-          .json({ success: false, message: "Unauthorized access" });
+        res.status(401).json({ message: "Unauthorized access" });
       }
     } catch (err: any) {
       console.log(err);
-      res.status(500).json({ statusCode: 500, message: err.message });
+      res.status(500).json({ message: err.message });
     }
   } else {
     res.setHeader("Allow", "POST");
