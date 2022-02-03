@@ -83,13 +83,14 @@ export default async function handler(
         //convert back to array
         const uniquePostsArray = Array.from(uniquePosts);
 
-        const newPosts = await createInstance(
-          client,
-          threadId,
-          "links",
-          uniquePostsArray
-        );
-        if (newPosts.length > 0) {
+
+        if (uniquePostsArray.length > 0) {
+          const newPosts = await createInstance(
+            client,
+            threadId,
+            "links",
+            uniquePostsArray
+          );
           res.status(200).json({
             message: `${newPosts.length} new posts added to database`,
             posts: newPosts,
