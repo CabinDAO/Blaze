@@ -2,7 +2,6 @@ import { useLayoutEffect } from "react";
 import create from "zustand";
 import createContext from "zustand/context";
 
-
 /* @type { import('zustand/index').UseStore<typeof initialState>} */
 let store: any;
 
@@ -40,7 +39,7 @@ const initialState: InitialState = {
   sort: "newest",
   currentProfile: {},
   isLoggedIn: false,
-}
+};
 
 export default interface AppState {
   posts: PostList;
@@ -50,6 +49,7 @@ export default interface AppState {
   isLoggedIn: boolean;
   updateSort: (sort: Sort) => void;
   upvotePostinStore: (postId: string) => PostList;
+  undoUpvotePost: (postId: string) => PostList;
   loadProfileIntoStore: (profile: Profile) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
@@ -57,10 +57,19 @@ const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
 export const useStore = () => zustandContext.useStore();
 export const initializeStore = (preloadedState = {}) => {
-  return create((set: any ) => ({
+  return create((set: any) => ({
     ...initialState,
     ...preloadedState,
     updateSort: (sort: Sort) => set({ sort }),
+    undoUpvotePost: (postId: string) => {
+      set((state: AppState) => {
+        const post = state.posts.find((post: Post) => post._id === postId);
+        if (post) {
+          post.upvotes = Math.max(0, post.upvotes - 1);
+        }
+        return { posts: state.posts };
+      });
+    },
     upvotePostinStore: (postId: string) => {
       set((state: AppState) => {
         const post = state.posts.find((post: Post) => post._id === postId);
@@ -78,9 +87,9 @@ export const initializeStore = (preloadedState = {}) => {
       set({ isLoggedIn });
     },
   }));
-}; 
+};
 
-export function useCreateStore(initialState: {sort: string}) {
+export function useCreateStore(initialState: { sort: string }) {
   // For SSR & SSG, always use a new store.
   if (typeof window === "undefined") {
     return () => initializeStore(initialState);

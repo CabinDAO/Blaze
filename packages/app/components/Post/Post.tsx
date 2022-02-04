@@ -7,7 +7,7 @@ import { useStore } from "@/store/store";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 import { upvotePostinDb, auth, setupThreadClient } from "@/lib/db";
 import { ThreadID } from "@textile/hub";
-import {useAccount} from "wagmi";
+import { useAccount } from "wagmi";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -68,8 +68,9 @@ const Post = ({
   timeStamp,
   upvotes,
 }: PostProps) => {
-  const { upvotePostinStore, isLoggedIn, currentProfile } = useStore();
-  
+  const { undoUpvotePost, upvotePostinStore, isLoggedIn, currentProfile } =
+    useStore();
+
   const upvoteHandler = async (_id: string) => {
     if (isLoggedIn) {
       const userAuth = await auth({
@@ -79,10 +80,19 @@ const Post = ({
       const client = await setupThreadClient(userAuth);
       const threadList = await client.listDBs();
       const threadId = ThreadID.fromString(threadList[0].id);
-      await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
       upvotePostinStore(_id);
-  } else {
-    alert("Please login to upvote");
+      try {
+        await upvotePostinDb(
+          client,
+          threadId,
+          _id,
+          currentProfile.walletAddress
+        );
+      } catch {
+        undoUpvotePost(_id);
+      }
+    } else {
+      alert("Please login to upvote");
     }
   };
   return (
