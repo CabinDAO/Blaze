@@ -112,7 +112,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(fromUnixTime(timeStamp), {
+            {formatDistanceToNow(timeStamp), {
               addSuffix: true,
               includeSeconds: true,
             })}
