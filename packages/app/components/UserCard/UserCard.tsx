@@ -33,8 +33,8 @@ interface UserCardProps {
     name: string;
     avatar?: string | null;
   } | null;
-  joinDate: number;
-  lastSeenDate: number;
+  joinDate: Date;
+  lastSeenDate: Date;
   upvotesReceived: number;
   linksUpvoted: number;
 }
