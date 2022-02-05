@@ -8,3 +8,4 @@ const options = {
   detectSessionInUrl: true
 }
 const supabase = createClient("https://sragkqfrlnmzcunfyrqc.supabase.co", process.env.NEXT_PUBLIC_SUPABASE_KEY, options)
+export default supabase;
