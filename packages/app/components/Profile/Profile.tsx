@@ -29,8 +29,8 @@ const Profile = () => {
         await supabase.from("Profile").insert([profile]);
         loadProfileIntoStore(profile);
       } else {
-        const lastSeen = await supabase.from("Profile").select("lastSeenDate").eq("walletAddress", walletAddress);
-        const profile = await supabase.from("Profile").update({lastSeenDate: new Date()}).match({lastSeenDate: lastSeen});
+        const {data : lastSeen , error} = await supabase.from("Profile").select("lastSeenDate").eq("walletAddress", walletAddress).limit(1).single();
+        const {data : profile , error} = await supabase.from("Profile").update({lastSeenDate: new Date()}).match({lastSeenDate: lastSeen});
         loadProfileIntoStore(profile);
       }
     };

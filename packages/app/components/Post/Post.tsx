@@ -4,10 +4,8 @@ import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
-import { formatDistanceToNow, fromUnixTime } from "date-fns";
-import { upvotePostinDb, auth, setupThreadClient } from "@/lib/db";
-import { ThreadID } from "@textile/hub";
-import {useAccount} from "wagmi";
+import { formatDistanceToNow } from "date-fns";
+import supabase from "@/lib/supabaseClient";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -72,14 +70,8 @@ const Post = ({
   
   const upvoteHandler = async (_id: string) => {
     if (isLoggedIn) {
-      const userAuth = await auth({
-        key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
-        secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
-      });
-      const client = await setupThreadClient(userAuth);
-      const threadList = await client.listDBs();
-      const threadId = ThreadID.fromString(threadList[0].id);
-      await upvotePostinDb(client, threadId, _id, currentProfile.walletAddress);
+      let {data: upvotes, error} = await supabase.from("Post").select("upvotes").eq("_id", _id).limit(1).single();
+      await supabase.from("Post").update({upvotes: upvotes++}).match({ _id });
       upvotePostinStore(_id);
   } else {
     alert("Please login to upvote");
