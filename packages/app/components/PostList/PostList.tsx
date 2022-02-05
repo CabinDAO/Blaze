@@ -15,7 +15,7 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: Date;
+  timestamp: number;
   upvotes: number;
 }
 export type Sort = "newest" | "trending" | "controversial";
@@ -26,11 +26,12 @@ export interface PostListProps{
 
 
 
+
 const PostList = ({ posts, sort }: PostListProps ) => {
 
   return (
     <StyledPostList>
-      {sort === "newest" && posts.sort((a, b) => getUnixTime(a.timeStamp) - getUnixTime(b.timeStamp)).map((post) => <Post key={post._id} {...post} />)}
+      {sort === "newest" && posts.sort((a, b) => a.timestamp - b.timestamp).map((post) => <Post key={post._id} {...post} />)}
       {sort === "trending" && posts.sort((a, b) => a.upvotes - b.upvotes).map((post) => <Post key={post._id} {...post} />)}
       {/* {sort === "controversial" && posts.sort((a, b) => b.comments - a.comments).map((post) => <Post key={post._id} {...post} />)} */}
     </StyledPostList>

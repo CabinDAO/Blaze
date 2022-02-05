@@ -53,7 +53,7 @@ export interface PostProps {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: Date;
+  timestamp: number;
   upvotes: number;
 }
 
@@ -63,7 +63,7 @@ const Post = ({
   url,
   domainText,
   postedBy,
-  timeStamp,
+  timestamp,
   upvotes,
 }: PostProps) => {
   const { upvotePostinStore, isLoggedIn, currentProfile } = useStore();
@@ -104,7 +104,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(timeStamp, {
+            {formatDistanceToNow(timestamp, {
               addSuffix: true,
               includeSeconds: true,
             })}

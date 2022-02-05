@@ -7,7 +7,7 @@ import { v4 as uuidv4} from "uuid";
 
 
 import supabase from "@/lib/supabaseClient";
-import { format } from "date-fns";
+import { getUnixTime } from "date-fns";
 
 export interface Post {
   _id: string;
@@ -64,7 +64,7 @@ export default async function handler(
                 url: item.link,
                 domainText: domainText,
                 postedBy: "0x0000000000000000000000000000000000000000",
-                timestamp: format(new Date(),"yyyy-MM-dd hh:mm:ssx"),
+                timestamp: getUnixTime(new Date()),
                 upvotes: 0,
               };
             });
@@ -73,7 +73,7 @@ export default async function handler(
           return transformedData;
         };
         const fetchedPosts = await fetchMirrorData(MirrorRSSFeedURLs);
-        let { data } = await supabase.from("Post").select();
+        let { data } = await supabase.from("Posts").select('*');
         if (data === null) {
           data = []
         }
@@ -89,7 +89,7 @@ export default async function handler(
 
         if (uniquePostsArray.length > 0) {
           const { data, error } = await supabase
-            .from('Post')
+            .from('Posts')
             .insert(uniquePostsArray);
           res.status(200).json({
             message: `${data.length} new posts added to database`,

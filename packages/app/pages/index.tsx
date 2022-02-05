@@ -8,6 +8,8 @@ import ClientSide from "@/components/HOC/ClientSide";
 import Profile from "@/components/Profile";
 import StickyTabBar from "@/components/TabBar";
 import supabase from "@/lib/supabaseClient";
+import { getUnixTime, parseISO } from "date-fns";
+import { timeStamp } from "console";
 
 const Home: NextPage = () => {
   const { posts, sort } = useStore();
@@ -43,11 +45,11 @@ const Home: NextPage = () => {
 export default Home;
 
 export async function getStaticProps() {
-  let {data: posts} = await supabase.from("post").select();
+  let {data: posts} = await supabase.from("Posts").select('*');
   if (posts === null) {
     posts = [];
-  }
-  let {data: upvotes} = await supabase.from("upvotes").select();
+  } 
+  let {data: upvotes} = await supabase.from("Upvotes").select('*');
   if (upvotes === null) {
     upvotes = [];
   }

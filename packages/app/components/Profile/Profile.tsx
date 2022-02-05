@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useStore, Profile } from "@/store/store";
 import { useEffect } from "react";
 import supabase from "@/lib/supabaseClient";
+import { getUnixTime } from "date-fns";
 
 
 const Profile = () => {
@@ -16,13 +17,13 @@ const Profile = () => {
 
   useEffect(() => {
     const checkProfileExistance = async (walletAddress: string) => {
-      const result = supabase.from("Profile").select().eq("walletAddress", address).limit(1).single();
-      if (!result) {
+      const result = await supabase.from("Profile").select().eq("walletAddress", address).limit(1).single();
+      if (result === null) {
         const profile: Profile = {
           _id: uuidv4(),
           walletAddress,
-          joinDate: new Date(),
-          lastSeenDate: new Date(),
+          joinDate: getUnixTime(new Date()),
+          lastSeenDate: getUnixTime(new Date()),
           upvotesReceived: 0,
           linksUpvoted: 0,
         };
