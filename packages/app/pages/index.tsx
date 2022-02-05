@@ -43,8 +43,8 @@ const Home: NextPage = () => {
 export default Home;
 
 export async function getStaticProps() {
-  const posts = await supabase.from("post").select();
-  const upvotes = await supabase.from("upvotes").select();
+  const {data: posts} = await supabase.from("post").select();
+  const {data: upvotes} = await supabase.from("upvotes").select();
   return {
     props: {
       initialZustandState: {

@@ -16,7 +16,7 @@ const Profile = () => {
 
   useEffect(() => {
     const checkProfileExistance = async (walletAddress: string) => {
-      const result = supabase.from("Profile").select().eq("walletAddress", address);
+      const result = supabase.from("Profile").select().eq("walletAddress", address).limit(1).single();
       if (!result) {
         const profile: Profile = {
           _id: uuidv4(),
@@ -29,8 +29,9 @@ const Profile = () => {
         await supabase.from("Profile").insert([profile]);
         loadProfileIntoStore(profile);
       } else {
-        const {data : lastSeen , error} = await supabase.from("Profile").select("lastSeenDate").eq("walletAddress", walletAddress).limit(1).single();
-        const {data : profile , error} = await supabase.from("Profile").update({lastSeenDate: new Date()}).match({lastSeenDate: lastSeen});
+        const {data : lastSeen} = await supabase.from("Profile").select("lastSeenDate").eq("walletAddress", walletAddress).limit(1).single();
+        const {data : profile} = await supabase.from("Profile").update({lastSeenDate: new Date()}).match({lastSeenDate: lastSeen}).limit(1).single();
+
         loadProfileIntoStore(profile);
       }
     };

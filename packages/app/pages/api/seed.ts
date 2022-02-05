@@ -68,6 +68,9 @@ export default async function handler(
         };
         const fetchedPosts = await fetchMirrorData(MirrorRSSFeedURLs);
         const { data } = await supabase.from("Post").select();
+        if (data === null) {
+          throw new Error("Error fetching data from database");
+        }
         const concat = fetchedPosts.concat(data);
 
         //remove duplicates
@@ -78,6 +81,9 @@ export default async function handler(
 
         if (uniquePostsArray.length > 0) {
           const { data } = await supabase.from("Post").insert(uniquePostsArray);
+          if (data === null) {
+            throw new Error("Error inserting data into database");
+          }
           res.status(200).json({
             message: `${data.length} new posts added to database`,
             posts: data,
@@ -91,7 +97,6 @@ export default async function handler(
         res.status(401).json({ message: "Unauthorized access" });
       }
     } catch (err: any) {
-      console.log(err);
       res.status(500).json({ message: err.message });
     }
   } else {
