@@ -55,7 +55,7 @@ export interface PostProps {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: number;
+  timeStamp: Date;
   upvotes: number;
 }
 

@@ -1,5 +1,6 @@
 import { styled } from "@/stitches.config";
 import Post from "../Post";
+import { getUnixTime } from "date-fns";
 
 
 const StyledPostList = styled("div", {
@@ -14,7 +15,7 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: number;
+  timeStamp: Date;
   upvotes: number;
 }
 export type Sort = "newest" | "trending" | "controversial";
@@ -29,7 +30,7 @@ const PostList = ({ posts, sort }: PostListProps ) => {
 
   return (
     <StyledPostList>
-      {sort === "newest" && posts.sort((a, b) => a.timeStamp - b.timeStamp).map((post) => <Post key={post._id} {...post} />)}
+      {sort === "newest" && posts.sort((a, b) => getUnixTime(a.timeStamp) - getUnixTime(b.timeStamp)).map((post) => <Post key={post._id} {...post} />)}
       {sort === "trending" && posts.sort((a, b) => a.upvotes - b.upvotes).map((post) => <Post key={post._id} {...post} />)}
       {/* {sort === "controversial" && posts.sort((a, b) => b.comments - a.comments).map((post) => <Post key={post._id} {...post} />)} */}
     </StyledPostList>
