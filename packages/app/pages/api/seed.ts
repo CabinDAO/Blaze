@@ -4,9 +4,9 @@ import { parse } from "rss-to-json";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
 import { setupThreadClient, createInstance, auth } from "@/lib/db";
-import { ThreadID } from "@textile/hub";
 import { getUnixTime } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
+import supabase from "@/lib/supabaseClient";
 
 export interface Post {
   _id: string;
@@ -14,7 +14,7 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: number;
+  timeStamp: Date;
   upvotes: number;
 }
 
@@ -44,39 +44,31 @@ export default async function handler(
     try {
       const { authorization } = req.headers;
       if (
-        authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
+        authorization === `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`
       ) {
-        const userAuth = await auth({
-          key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
-          secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
-        });
-        const client = await setupThreadClient(userAuth);
-        const threadList = await client.listDBs();
-        const threadId = ThreadID.fromString(threadList[0].id);
-
         const fetchMirrorData = async (urlArray: string[][]) => {
           let combinedData = [];
           for (const arr of urlArray) {
             const domainText = arr[0];
             const rawData = await parse(arr[1], {});
-            const linkData = await rawData.items.slice(0, 10).map((item) => {
+            const postData = await rawData.items.slice(0, 10).map((item) => {
               return {
                 _id: uuidv4(),
                 title: item.title,
                 url: item.link,
                 domainText: domainText,
                 postedBy: "0x0000000000000000000000000000000000000000",
-                timeStamp: getUnixTime(new Date()),
+                timeStamp: new Date(),
                 upvotes: 0,
               };
             });
-            combinedData.push(...linkData);
+            combinedData.push(...postData);
           }
           return combinedData;
         };
-        const fetchedLinks = await fetchMirrorData(MirrorRSSFeedURLs);
-        const currentPosts: Post[] = await client.find(threadId, "links", {});
-        const concat = fetchedLinks.concat(currentPosts);
+        const fetchedPosts = await fetchMirrorData(MirrorRSSFeedURLs);
+        const { data } = await supabase.from("Post").select();
+        const concat = fetchedPosts.concat(data);
 
         //remove duplicates
         const uniquePosts = new Set(concat);
@@ -85,15 +77,10 @@ export default async function handler(
 
 
         if (uniquePostsArray.length > 0) {
-          const newPosts = await createInstance(
-            client,
-            threadId,
-            "links",
-            uniquePostsArray
-          );
+          const { data } = await supabase.from("Post").insert(uniquePostsArray);
           res.status(200).json({
-            message: `${newPosts.length} new posts added to database`,
-            posts: newPosts,
+            message: `${data.length} new posts added to database`,
+            posts: data,
           });
         } else {
           res.status(200).json({
