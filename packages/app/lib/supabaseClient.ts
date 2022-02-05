@@ -7,5 +7,7 @@ const options = {
   persistSession: true,
   detectSessionInUrl: true
 }
-const supabase = createClient("https://sragkqfrlnmzcunfyrqc.supabase.co", process.env.NEXT_PUBLIC_SUPABASE_KEY, options)
+const supabaseId = process.env.NEXT_PUBLIC_SUPABASE_KEY || "";
+
+const supabase = createClient("https://sragkqfrlnmzcunfyrqc.supabase.co", supabaseId, options)
 export default supabase;

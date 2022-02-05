@@ -3,10 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "rss-to-json";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import { setupThreadClient, createInstance, auth } from "@/lib/db";
-import { getUnixTime } from "date-fns";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4} from "uuid";
+
+
 import supabase from "@/lib/supabaseClient";
+import { format } from "date-fns";
 
 export interface Post {
   _id: string;
@@ -14,8 +15,13 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: Date;
+  timestamp: number;
   upvotes: number;
+}
+
+export interface Link {
+  title: string;
+  link: string
 }
 
 // Initialize the cors middleware
@@ -47,46 +53,47 @@ export default async function handler(
         authorization === `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`
       ) {
         const fetchMirrorData = async (urlArray: string[][]) => {
-          let combinedData = [];
+          let transformedData = [];
           for (const arr of urlArray) {
             const domainText = arr[0];
             const rawData = await parse(arr[1], {});
-            const postData = await rawData.items.slice(0, 10).map((item) => {
+            const postData: Post[] = await rawData.items.slice(0, 10).map((item: Link) => {
               return {
                 _id: uuidv4(),
                 title: item.title,
                 url: item.link,
                 domainText: domainText,
                 postedBy: "0x0000000000000000000000000000000000000000",
-                timeStamp: new Date(),
+                timestamp: format(new Date(),"yyyy-MM-dd hh:mm:ssx"),
                 upvotes: 0,
               };
             });
-            combinedData.push(...postData);
+            transformedData.push(...postData);
           }
-          return combinedData;
+          return transformedData;
         };
         const fetchedPosts = await fetchMirrorData(MirrorRSSFeedURLs);
-        const { data } = await supabase.from("Post").select();
+        let { data } = await supabase.from("Post").select();
         if (data === null) {
-          throw new Error("Error fetching data from database");
+          data = []
         }
         const concat = fetchedPosts.concat(data);
 
-        //remove duplicates
+        //remove duplicates by converting to set
         const uniquePosts = new Set(concat);
+
         //convert back to array
         const uniquePostsArray = Array.from(uniquePosts);
 
 
+
         if (uniquePostsArray.length > 0) {
-          const { data } = await supabase.from("Post").insert(uniquePostsArray);
-          if (data === null) {
-            throw new Error("Error inserting data into database");
-          }
+          const { data, error } = await supabase
+            .from('Post')
+            .insert(uniquePostsArray);
           res.status(200).json({
             message: `${data.length} new posts added to database`,
-            posts: data,
+            posts: uniquePostsArray,
           });
         } else {
           res.status(200).json({
