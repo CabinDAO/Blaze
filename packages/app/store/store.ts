@@ -12,7 +12,7 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: number;
+  timeStamp: Date;
   upvotes: number;
 }
 export type PostList = Post[];
@@ -20,15 +20,15 @@ export type Sort = "newest" | "trending" | "controversial";
 export type Profile = {
   _id: string;
   walletAddress: string;
-  joinDate: number;
-  lastSeenDate: number;
+  joinDate: Date;
+  lastSeenDate: Date;
   upvotesReceived: number;
   linksUpvoted: number;
 };
 export interface Upvote {
   _id: string;
   upvoter: string;
-  timeStamp: number;
+  timeStamp: Date;
   link: string;
 }
 export interface InitialState {
