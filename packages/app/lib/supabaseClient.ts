@@ -2,7 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 
 const options = {
   schema: 'public',
-  headers: { 'x-my-custom-header': 'dao-camp' },
   autoRefreshToken: true,
   persistSession: true,
   detectSessionInUrl: true
