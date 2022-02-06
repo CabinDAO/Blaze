@@ -6,7 +6,9 @@ import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 import supabase from "@/lib/supabaseClient";
-import { formatDistance } from "date-fns/esm";
+import { useWallet } from "../WalletAuth";
+import { v4 as uuidv4 } from "uuid";
+import { getUnixTime } from "date-fns";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -67,15 +69,25 @@ const Post = ({
   timestamp,
   upvotes,
 }: PostProps) => {
-  const { upvotePostinStore, isLoggedIn } = useStore();
-  
+  const { upvotePostinStore } = useStore();
+  const { isConnected } = useWallet();
+
   const upvoteHandler = async (_id: string) => {
-    if (isLoggedIn) {
+    if (isConnected) {
       upvotePostinStore(_id);
-      let {data: upvotes, error} = await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
-      await supabase.from("Posts").update({upvotes: upvotes++}).match({ _id });
-  } else {
-    alert("Please login to upvote");
+      let { data } = await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
+      await supabase
+        .from('Posts')
+        .update({ upvotes: data.upvotes + 1 })
+        .eq('_id', _id);
+      await supabase.from("Upvotes").insert([{
+        _id: uuidv4(),
+        upvoter: postedBy,
+        post: _id,
+        timestamp: getUnixTime(new Date()),
+      }]);
+    } else {
+      alert("Please login to upvote");
     }
   };
   return (
