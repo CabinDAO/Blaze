@@ -4,8 +4,9 @@ import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, fromUnixTime } from "date-fns";
 import supabase from "@/lib/supabaseClient";
+import { formatDistance } from "date-fns/esm";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -104,10 +105,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(timestamp, {
-              addSuffix: true,
-              includeSeconds: true,
-            })}
+            {formatDistanceToNow(timestamp * 1000)}
           </IconText>
           {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}
