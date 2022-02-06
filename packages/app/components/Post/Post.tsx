@@ -66,13 +66,13 @@ const Post = ({
   timestamp,
   upvotes,
 }: PostProps) => {
-  const { upvotePostinStore, isLoggedIn, currentProfile } = useStore();
+  const { upvotePostinStore, isLoggedIn } = useStore();
   
   const upvoteHandler = async (_id: string) => {
     if (isLoggedIn) {
       upvotePostinStore(_id);
-      let {data: upvotes, error} = await supabase.from("Post").select("upvotes").eq("_id", _id).limit(1).single();
-      await supabase.from("Post").update({upvotes: upvotes++}).match({ _id });
+      let {data: upvotes, error} = await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
+      await supabase.from("Posts").update({upvotes: upvotes++}).match({ _id });
   } else {
     alert("Please login to upvote");
     }
