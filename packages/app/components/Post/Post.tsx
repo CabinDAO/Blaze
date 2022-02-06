@@ -70,14 +70,14 @@ const Post = ({
   timestamp,
   upvotes,
 }: PostProps) => {
-  const { upvotePostinStore } = useStore();
+  const { upvotePostinStore, undoUpvotePost } = useStore();
   const { address, isConnected } = useWallet();
 
   const upvoteHandler = async (_id: string) => {
     if (isConnected) {
       upvotePostinStore(_id);
       try {
-      await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
+      const { data } = await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
       await supabase
         .from('Posts')
         .update({ upvotes: data.upvotes + 1 })
