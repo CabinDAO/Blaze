@@ -88,9 +88,13 @@ export default async function handler(
 
 
         if (uniquePostsArray.length > 0) {
-          const { data, error } = await supabase
+          try {
+            const { data } = await supabase
             .from('Posts')
             .insert(uniquePostsArray);
+          } catch (err: any) {
+            res.status(500).json({ message: err.message });
+          }
           res.status(200).json({
             message: `${data.length} new posts added to database`,
             posts: uniquePostsArray,

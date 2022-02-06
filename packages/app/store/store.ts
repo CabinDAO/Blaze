@@ -23,7 +23,7 @@ export type Profile =  {
   lastSeenDate: number ;
   upvotesReceived: number ;
   postsUpvoted: number ;
-} | null;
+};
 export interface Upvote {
   _id: string;
   upvoter: string;

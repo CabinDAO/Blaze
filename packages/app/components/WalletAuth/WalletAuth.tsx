@@ -46,10 +46,6 @@ const WalletAuth = () => {
   const router = useRouter();
   const [{ data, error, loading }, connect] = useConnect();
 
-  useEffect(() => {
-    setIsLoggedIn(!!data);
-  }, [data, setIsLoggedIn]);
-
   const [
     { data: accountData, error: accountError, loading: accountLoading },
     disconnect,
