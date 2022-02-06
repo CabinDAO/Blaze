@@ -5,6 +5,7 @@ import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
+
 import supabase from "@/lib/supabaseClient";
 import { useWallet } from "../WalletAuth";
 import { v4 as uuidv4 } from "uuid";
@@ -75,7 +76,8 @@ const Post = ({
   const upvoteHandler = async (_id: string) => {
     if (isConnected) {
       upvotePostinStore(_id);
-      let { data } = await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
+      try {
+      await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
       await supabase
         .from('Posts')
         .update({ upvotes: data.upvotes + 1 })
@@ -86,6 +88,9 @@ const Post = ({
         post: _id,
         timestamp: getUnixTime(new Date()),
       }]);
+      } catch {
+        undoUpvotePost(_id);
+      }
     } else {
       alert("Please login to upvote");
     }
