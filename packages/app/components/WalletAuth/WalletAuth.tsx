@@ -39,7 +39,6 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
 const WalletAuth = () => {
   const router = useRouter();
   const [{ data, error, loading }, connect] = useConnect();
-  const { isLoggedIn, setIsLoggedIn } = useStore();
 
   const [
     { data: accountData, error: accountError, loading: accountLoading },
@@ -47,7 +46,6 @@ const WalletAuth = () => {
   ] = useAccount();
   const disconnectHandler = async () => {
     await disconnect();
-    setIsLoggedIn(false);
   };
   if (data.connected) {
 

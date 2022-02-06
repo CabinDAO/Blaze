@@ -15,13 +15,11 @@ const ConnectList = styled("div", {
 
 const SignIn = () => {
   const router = useRouter();
-  const { isLoggedIn, setIsLoggedIn } = useStore();
   const [{ data, error, loading }, connect] = useConnect();
   const { connected } = data;
 
   useEffect(() => {
     if (connected) {
-      setIsLoggedIn(true)
       router.push("/");
     }
   }, [connected, router, setIsLoggedIn]);

@@ -34,12 +34,10 @@ export interface Upvote {
 export interface InitialState {
   sort: Sort;
   currentProfile: object;
-  isLoggedIn: boolean;
 }
 const initialState: InitialState = {
   sort: "newest",
   currentProfile: {},
-  isLoggedIn: false,
 }
 
 export default interface AppState {
@@ -47,7 +45,6 @@ export default interface AppState {
   sort: Sort;
   upvotes: Upvote[];
   currentProfile: Profile;
-  isLoggedIn: boolean;
   updateSort: (sort: Sort) => void;
   upvotePostinStore: (postId: string) => PostList;
   loadProfileIntoStore: (profile: Profile) => void;

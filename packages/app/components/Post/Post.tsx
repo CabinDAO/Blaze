@@ -9,6 +9,7 @@ import supabase from "@/lib/supabaseClient";
 import { useWallet } from "../WalletAuth";
 import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
+import { useEffect } from "react";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -90,6 +91,19 @@ const Post = ({
       alert("Please login to upvote");
     }
   };
+  useEffect(() => {
+    const Upvotes = supabase
+    .from('Upvotes')
+    .on('INSERT', payload => {
+      if (payload.new.post ===_id) {
+        
+      }
+    })
+    .subscribe();
+    return () => {
+      supabase.removeSubscription(Upvotes);
+    };
+  });
   return (
     <PostRow>
       <div>
