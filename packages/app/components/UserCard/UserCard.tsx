@@ -39,8 +39,8 @@ interface UserCardProps {
   linksUpvoted: number;
 }
 const UserCard = ({ address, ens, joinDate, lastSeenDate, upvotesReceived, linksUpvoted }: UserCardProps) => {
-  const joinDateString = fromUnixTime(joinDate).toDateString();
-  const lastSeenDateString = fromUnixTime(lastSeenDate).toDateString();
+  const joinDateString =  format(joinDate * 1000, "MMM dd, yyyy");
+  const lastSeenDateString = format(lastSeenDate * 1000, "MMM dd, yyyy");
   return (
     <div>
       <AddressHeader>
