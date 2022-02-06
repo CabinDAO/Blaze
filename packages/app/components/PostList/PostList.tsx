@@ -35,14 +35,11 @@ const PostList = ({ posts, sort }: PostListProps ) => {
   useEffect(() => {
     const Upvotes = supabase
     .from('Upvotes')
-    .on('INSERT', payload => {
-      const upvoteHandler  = async () => {
+    .on('INSERT', async (payload) => {
         if (currentProfile && payload.new.upvoter === currentProfile.walletAddress) {
           incrementProfilePostsUpvoted();
           await supabase.from('Profiles').update({ postsUpvoted: currentProfile.postsUpvoted + 1 }).eq('walletAddress', currentProfile.walletAddress);
-        }
       }
-      upvoteHandler();
     })
     .subscribe();
     return () => {

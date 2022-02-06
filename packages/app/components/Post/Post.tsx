@@ -96,7 +96,7 @@ const Post = ({
         <Upvote
           upvoted={upvotes > 0 ? true : false}
           count={upvotes}
-          onClick={async () => await upvoteHandler(_id)}
+          onClick={ () => upvoteHandler(_id)}
         />
       </div>
       <PostInfo>
