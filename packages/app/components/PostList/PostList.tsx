@@ -1,6 +1,8 @@
 import { styled } from "@/stitches.config";
 import Post from "../Post";
-import { getUnixTime } from "date-fns";
+import { useEffect } from "react";
+import { useStore } from "@/store/store";
+import supabase from "@/lib/supabaseClient";
 
 
 const StyledPostList = styled("div", {
@@ -28,6 +30,25 @@ export interface PostListProps{
 
 
 const PostList = ({ posts, sort }: PostListProps ) => {
+  const { currentProfile, incrementProfilePostsUpvoted } = useStore();
+
+  useEffect(() => {
+    const Upvotes = supabase
+    .from('Upvotes')
+    .on('INSERT', payload => {
+      const upvoteHandler  = async () => {
+        if (currentProfile && payload.new.upvoter === currentProfile.walletAddress) {
+          incrementProfilePostsUpvoted();
+          await supabase.from('Profiles').update({ postsUpvoted: currentProfile.postsUpvoted + 1 }).eq('walletAddress', currentProfile.walletAddress);
+        }
+      }
+      upvoteHandler();
+    })
+    .subscribe();
+    return () => {
+      supabase.removeSubscription(Upvotes);
+    };
+  });
 
   return (
     <StyledPostList>

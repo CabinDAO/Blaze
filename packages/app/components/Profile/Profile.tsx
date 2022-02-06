@@ -34,9 +34,6 @@ const Profile = () => {
     };
     if (address) {
       checkProfileExistance(address);
-    }
-    return () => {
-      supabase.removeSubscription(Upvotes);
     };
   }, [address, loadProfileIntoStore]);
   return (

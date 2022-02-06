@@ -22,7 +22,7 @@ const SignIn = () => {
     if (connected) {
       router.push("/");
     }
-  }, [connected, router, setIsLoggedIn]);
+  }, [connected, router]);
 
   return (
     <ConnectList>

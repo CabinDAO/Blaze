@@ -48,7 +48,7 @@ export default interface AppState {
   updateSort: (sort: Sort) => void;
   upvotePostinStore: (postId: string) => PostList;
   loadProfileIntoStore: (profile: Profile) => void;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  incrementProfilePostsUpvoted: () => void;
 }
 const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
@@ -71,9 +71,16 @@ export const initializeStore = (preloadedState = {}) => {
     loadProfileIntoStore: (profile: Profile) => {
       set({ currentProfile: profile });
     },
-    setIsLoggedIn: (isLoggedIn: boolean) => {
-      set({ isLoggedIn });
-    },
+    incrementProfilePostsUpvoted: () => {
+      set((state: AppState) => {
+        const profile = state.currentProfile;
+        if (profile) {
+          profile.postsUpvoted += 1;
+        }
+
+        return { currentProfile: profile };
+      });
+    }
   }));
 };
 
