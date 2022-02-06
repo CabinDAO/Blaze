@@ -17,14 +17,14 @@ export interface Post {
 }
 export type PostList = Post[];
 export type Sort = "newest" | "trending" | "controversial";
-export type Profile = {
-  _id: string;
-  walletAddress: string;
-  joinDate: number;
-  lastSeenDate: number;
-  upvotesReceived: number;
-  linksUpvoted: number;
-};
+export type Profile =  {
+  _id: string ;
+  walletAddress: string ;
+  joinDate: number ;
+  lastSeenDate: number ;
+  upvotesReceived: number ;
+  postsUpvoted: number ;
+} | null;
 export interface Upvote {
   _id: string;
   upvoter: string;
@@ -57,7 +57,7 @@ const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
 export const useStore = () => zustandContext.useStore();
 export const initializeStore = (preloadedState = {}) => {
-  return create((set: any ) => ({
+  return create((set: any) => ({
     ...initialState,
     ...preloadedState,
     updateSort: (sort: Sort) => set({ sort }),
@@ -78,9 +78,9 @@ export const initializeStore = (preloadedState = {}) => {
       set({ isLoggedIn });
     },
   }));
-}; 
+};
 
-export function useCreateStore(initialState: {sort: string}) {
+export function useCreateStore(initialState: { sort: string }) {
   // For SSR & SSG, always use a new store.
   if (typeof window === "undefined") {
     return () => initializeStore(initialState);

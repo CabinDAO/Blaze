@@ -8,8 +8,6 @@ import ClientSide from "@/components/HOC/ClientSide";
 import Profile from "@/components/Profile";
 import StickyTabBar from "@/components/TabBar";
 import supabase from "@/lib/supabaseClient";
-import { getUnixTime, parseISO } from "date-fns";
-import { timeStamp } from "console";
 
 const Home: NextPage = () => {
   const { posts, sort } = useStore();
