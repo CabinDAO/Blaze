@@ -3,10 +3,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "rss-to-json";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import { setupThreadClient, createInstance, auth } from "@/lib/db";
-import { ThreadID } from "@textile/hub";
+import { v4 as uuidv4} from "uuid";
+
+
+import supabase from "@/lib/supabaseClient";
 import { getUnixTime } from "date-fns";
-import { v4 as uuidv4 } from "uuid";
 
 export interface Post {
   _id: string;
@@ -14,8 +15,13 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: number;
+  timestamp: number;
   upvotes: number;
+}
+
+export interface Link {
+  title: string;
+  link: string
 }
 
 // Initialize the cors middleware
@@ -44,56 +50,50 @@ export default async function handler(
     try {
       const { authorization } = req.headers;
       if (
-        authorization === `Bearer ${process.env.NEXT_PUBLIC_TEXTILE_API_KEY}`
+        authorization === `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`
       ) {
-        const userAuth = await auth({
-          key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
-          secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
-        });
-        const client = await setupThreadClient(userAuth);
-        const threadList = await client.listDBs();
-        const threadId = ThreadID.fromString(threadList[0].id);
-
         const fetchMirrorData = async (urlArray: string[][]) => {
-          let combinedData = [];
+          let transformedData = [];
           for (const arr of urlArray) {
             const domainText = arr[0];
             const rawData = await parse(arr[1], {});
-            const linkData = await rawData.items.slice(0, 10).map((item) => {
+            const postData: Post[] = await rawData.items.slice(0, 10).map((item: Link) => {
               return {
                 _id: uuidv4(),
                 title: item.title,
                 url: item.link,
                 domainText: domainText,
                 postedBy: "0x0000000000000000000000000000000000000000",
-                timeStamp: getUnixTime(new Date()),
+                timestamp: getUnixTime(new Date()),
                 upvotes: 0,
               };
             });
-            combinedData.push(...linkData);
+            transformedData.push(...postData);
           }
-          return combinedData;
+          return transformedData;
         };
-        const fetchedLinks = await fetchMirrorData(MirrorRSSFeedURLs);
-        const currentPosts: Post[] = await client.find(threadId, "links", {});
-        const concat = fetchedLinks.concat(currentPosts);
+        const fetchedPosts = await fetchMirrorData(MirrorRSSFeedURLs);
+        let { data } = await supabase.from("Posts").select('*');
+        if (data === null) {
+          data = []
+        }
+        const concat = fetchedPosts.concat(data);
 
-        //remove duplicates
+        //remove duplicates by converting to set
         const uniquePosts = new Set(concat);
+
         //convert back to array
         const uniquePostsArray = Array.from(uniquePosts);
 
 
+
         if (uniquePostsArray.length > 0) {
-          const newPosts = await createInstance(
-            client,
-            threadId,
-            "links",
-            uniquePostsArray
-          );
+          const { data, error } = await supabase
+            .from('Posts')
+            .insert(uniquePostsArray);
           res.status(200).json({
-            message: `${newPosts.length} new posts added to database`,
-            posts: newPosts,
+            message: `${data.length} new posts added to database`,
+            posts: uniquePostsArray,
           });
         } else {
           res.status(200).json({
@@ -104,7 +104,6 @@ export default async function handler(
         res.status(401).json({ message: "Unauthorized access" });
       }
     } catch (err: any) {
-      console.log(err);
       res.status(500).json({ message: err.message });
     }
   } else {

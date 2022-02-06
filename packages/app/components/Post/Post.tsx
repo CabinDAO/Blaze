@@ -5,9 +5,11 @@ import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
-import { upvotePostinDb, auth, setupThreadClient } from "@/lib/db";
-import { ThreadID } from "@textile/hub";
-import { useAccount } from "wagmi";
+
+import supabase from "@/lib/supabaseClient";
+import { useWallet } from "../WalletAuth";
+import { v4 as uuidv4 } from "uuid";
+import { getUnixTime } from "date-fns";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -55,7 +57,7 @@ export interface PostProps {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: number;
+  timestamp: number;
   upvotes: number;
 }
 
@@ -65,29 +67,27 @@ const Post = ({
   url,
   domainText,
   postedBy,
-  timeStamp,
+  timestamp,
   upvotes,
 }: PostProps) => {
-  const { undoUpvotePost, upvotePostinStore, isLoggedIn, currentProfile } =
-    useStore();
+  const { upvotePostinStore } = useStore();
+  const { address, isConnected } = useWallet();
 
   const upvoteHandler = async (_id: string) => {
-    if (isLoggedIn) {
-      const userAuth = await auth({
-        key: process.env.NEXT_PUBLIC_TEXTILE_API_KEY || "",
-        secret: process.env.NEXT_PUBLIC_TEXTILE_API_SECRET || "",
-      });
-      const client = await setupThreadClient(userAuth);
-      const threadList = await client.listDBs();
-      const threadId = ThreadID.fromString(threadList[0].id);
+    if (isConnected) {
       upvotePostinStore(_id);
       try {
-        await upvotePostinDb(
-          client,
-          threadId,
-          _id,
-          currentProfile.walletAddress
-        );
+      await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
+      await supabase
+        .from('Posts')
+        .update({ upvotes: data.upvotes + 1 })
+        .eq('_id', _id);
+      await supabase.from("Upvotes").insert([{
+        _id: uuidv4(),
+        upvoter: address,
+        post: _id,
+        timestamp: getUnixTime(new Date()),
+      }]);
       } catch {
         undoUpvotePost(_id);
       }
@@ -101,7 +101,7 @@ const Post = ({
         <Upvote
           upvoted={upvotes > 0 ? true : false}
           count={upvotes}
-          onClick={async () => await upvoteHandler(_id)}
+          onClick={ () => upvoteHandler(_id)}
         />
       </div>
       <PostInfo>
@@ -122,10 +122,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(fromUnixTime(timeStamp), {
-              addSuffix: true,
-              includeSeconds: true,
-            })}
+            {formatDistanceToNow(timestamp * 1000)}
           </IconText>
           {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}

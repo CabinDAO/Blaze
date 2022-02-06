@@ -11,47 +11,44 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
-  timeStamp: number;
+  timestamp: number;
   upvotes: number;
 }
 export type PostList = Post[];
 export type Sort = "newest" | "trending" | "controversial";
-export type Profile = {
-  _id: string;
-  walletAddress: string;
-  joinDate: number;
-  lastSeenDate: number;
-  upvotesReceived: number;
-  linksUpvoted: number;
-};
+export type Profile =  {
+  _id: string ;
+  walletAddress: string ;
+  joinDate: number ;
+  lastSeenDate: number ;
+  upvotesReceived: number ;
+  postsUpvoted: number ;
+} | null;
 export interface Upvote {
   _id: string;
   upvoter: string;
-  timeStamp: number;
+  timestamp: number;
   link: string;
 }
 export interface InitialState {
   sort: Sort;
   currentProfile: object;
-  isLoggedIn: boolean;
 }
 const initialState: InitialState = {
   sort: "newest",
   currentProfile: {},
-  isLoggedIn: false,
-};
+}
 
 export default interface AppState {
   posts: PostList;
   sort: Sort;
   upvotes: Upvote[];
   currentProfile: Profile;
-  isLoggedIn: boolean;
   updateSort: (sort: Sort) => void;
   upvotePostinStore: (postId: string) => PostList;
   undoUpvotePost: (postId: string) => PostList;
   loadProfileIntoStore: (profile: Profile) => void;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  incrementProfilePostsUpvoted: () => void;
 }
 const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
@@ -83,9 +80,16 @@ export const initializeStore = (preloadedState = {}) => {
     loadProfileIntoStore: (profile: Profile) => {
       set({ currentProfile: profile });
     },
-    setIsLoggedIn: (isLoggedIn: boolean) => {
-      set({ isLoggedIn });
-    },
+    incrementProfilePostsUpvoted: () => {
+      set((state: AppState) => {
+        const profile = state.currentProfile;
+        if (profile) {
+          profile.postsUpvoted += 1;
+        }
+
+        return { currentProfile: profile };
+      });
+    }
   }));
 };
 

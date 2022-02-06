@@ -1,7 +1,8 @@
 import { CalendarIcon, ClockIcon, ExternalLinkIcon } from "../Icons";
 import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
-import { fromUnixTime, format } from "date-fns";
+import {  format, fromUnixTime } from "date-fns";
+import { Z_DEFLATED } from "zlib";
 
 const AddressHeader = styled("div", {
   display: "flex",
@@ -39,8 +40,8 @@ interface UserCardProps {
   linksUpvoted: number;
 }
 const UserCard = ({ address, ens, joinDate, lastSeenDate, upvotesReceived, linksUpvoted }: UserCardProps) => {
-  const joinDateString = fromUnixTime(joinDate).toLocaleDateString();
-  const lastSeenDateString = fromUnixTime(lastSeenDate).toLocaleDateString();
+  const joinDateString =  fromUnixTime(joinDate).toDateString();
+  const lastSeenDateString = fromUnixTime(lastSeenDate).toDateString();
   return (
     <div>
       <AddressHeader>
