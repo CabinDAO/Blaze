@@ -7,7 +7,6 @@ import Title from "@/components/Title";
 import ClientSide from "@/components/HOC/ClientSide";
 import Profile from "@/components/Profile";
 import StickyTabBar from "@/components/TabBar";
-import supabase from "@/lib/supabaseClient";
 
 const Home: NextPage = () => {
   const { posts, sort } = useStore();
@@ -42,8 +41,8 @@ const Home: NextPage = () => {
 
 export default Home;
 
-export async function getServerSideProps() {
-  console.log(supabase)
+export async function getStaticProps() {
+  const supabase = await import("@lib/supabaseClient");
   let {data: posts, error: postsError} = await supabase.from("Posts").select('*');
   if (posts === null) {
     console.log(postsError);
