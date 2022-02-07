@@ -9,5 +9,9 @@ const supabase = createClient(supabaseUrl, supabaseId, {
     autoRefreshToken: false,
     persistSession: false,
     detectSessionInUrl: false,
+    headers: {
+        apikey: supabaseId,
+        authorization: 'Bearer ' + process.env.NEXT_PUBLIC_SUPABASE_KEY,
+    }
 });
 export default supabase;
