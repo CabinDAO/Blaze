@@ -43,12 +43,14 @@ const Home: NextPage = () => {
 export default Home;
 
 export async function getStaticProps() {
-  let {data: posts} = await supabase.from("Posts").select('*');
+  let {data: posts, error: postsError} = await supabase.from("Posts").select('*');
   if (posts === null) {
+    console.log(postsError);
     posts = [];
   } 
-  let {data: upvotes} = await supabase.from("Upvotes").select('*');
+  let {data: upvotes, error: upvotesError} = await supabase.from("Upvotes").select('*');
   if (upvotes === null) {
+    console.log(upvotesError);
     upvotes = [];
   }
   return {
