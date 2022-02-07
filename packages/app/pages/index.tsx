@@ -42,7 +42,8 @@ const Home: NextPage = () => {
 
 export default Home;
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
+  console.log(supabase)
   let {data: posts, error: postsError} = await supabase.from("Posts").select('*');
   if (posts === null) {
     console.log(postsError);
