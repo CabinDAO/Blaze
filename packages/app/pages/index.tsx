@@ -42,7 +42,19 @@ const Home: NextPage = () => {
 export default Home;
 
 export async function getStaticProps() {
-  const supabase = await import("@lib/supabaseClient");
+  const initSupabaseClient = async () => {
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabaseId = process.env.NEXT_PUBLIC_SUPABASE_KEY || "";
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+    const supabase = createClient(supabaseUrl, supabaseId, {
+    schema: 'public',
+    autoRefreshToken: false,
+    persistSession: false,
+    detectSessionInUrl: false,
+    });
+    return supabase;
+  }
+  const supabase = await initSupabaseClient();
   let {data: posts, error: postsError} = await supabase.from("Posts").select('*');
   if (posts === null) {
     console.log(postsError);
