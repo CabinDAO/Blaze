@@ -122,7 +122,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(timestamp * 1000)}
+            {formatDistanceToNow(timestamp * 1000, {addSuffix: true})}
           </IconText>
           {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}
