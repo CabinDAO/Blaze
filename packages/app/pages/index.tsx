@@ -7,7 +7,6 @@ import Title from "@/components/Title";
 import ClientSide from "@/components/HOC/ClientSide";
 import Profile from "@/components/Profile";
 import StickyTabBar from "@/components/TabBar";
-import supabase from "@/lib/supabaseClient";
 
 const Home: NextPage = () => {
   const { posts, sort } = useStore();
@@ -43,12 +42,27 @@ const Home: NextPage = () => {
 export default Home;
 
 export async function getStaticProps() {
-  let {data: posts} = await supabase.from("Posts").select('*');
+  const initSupabaseClient = async () => {
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabaseId = process.env.NEXT_PUBLIC_SUPABASE_KEY || "";
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+    const supabase = createClient(supabaseUrl, supabaseId, {
+    schema: 'public',
+    autoRefreshToken: false,
+    persistSession: false,
+    detectSessionInUrl: false,
+    });
+    return supabase;
+  }
+  const supabase = await initSupabaseClient();
+  let {data: posts, error: postsError} = await supabase.from("Posts").select('*');
   if (posts === null) {
+    console.log(postsError);
     posts = [];
   } 
-  let {data: upvotes} = await supabase.from("Upvotes").select('*');
+  let {data: upvotes, error: upvotesError} = await supabase.from("Upvotes").select('*');
   if (upvotes === null) {
+    console.log(upvotesError);
     upvotes = [];
   }
   return {
@@ -58,5 +72,6 @@ export async function getStaticProps() {
         upvotes,
       }
     },
+    revalidate: 10,
   };
 }

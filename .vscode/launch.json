@@ -1,0 +1,39 @@
+
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+          "name": "Next: Launch",
+          "type": "firefox",
+          "request": "launch",
+          "reAttach": true,
+          "url": "http://localhost:3000",
+          "webRoot": "${workspaceFolder}/packages/app",
+          "profile": "dev-edition-default",
+          "pathMappings": [
+            {
+                "/home/pi/Dev/client-projects/dao-camp/packages/app": "${workspaceRoot}/packages/app",
+            }
+          ]
+        },
+        {
+          "type": "node",
+          "request": "launch",
+          "name": "Next: Node",
+          "runtimeExecutable": "${workspaceFolder}/node_modules/next/dist/bin/next",
+          "cwd": "${workspaceFolder}/packages/app",
+          "port": 9230,
+          "console": "integratedTerminal",
+          "env": {
+            "NODE_OPTIONS": "--inspect=9230"
+          }
+        }],
+      "compounds": [
+        {
+          "name": "Next: Debug",
+          "configurations": ["Next: Node", "Next: Launch"]
+        },
+      ]
+      }
+  

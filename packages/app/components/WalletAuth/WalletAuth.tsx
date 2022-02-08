@@ -1,7 +1,13 @@
-import React, {createContext, useContext, useMemo, useState} from "react";
-import {Button} from "@cabindao/topo";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { Button } from "@cabindao/topo";
 import WalletAddress from "../WalletAddress";
-import {useConnect, useAccount, Connector} from "wagmi";
+import { useConnect, useAccount, Connector } from "wagmi";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useStore } from "@/store/store";
@@ -27,7 +33,7 @@ import { useStore } from "@/store/store";
 //   );
 // };
 
-export const useWallet = (options?: {fetchEns?: boolean}) => {
+export const useWallet = (options?: { fetchEns?: boolean }) => {
   const [{ data, error }] = useAccount(options);
   return {
     isConnected: !error && !!data?.address,
@@ -48,7 +54,6 @@ const WalletAuth = () => {
     await disconnect();
   };
   if (data.connected) {
-
     return (
       <div>
         <Button onClick={disconnectHandler} type="secondary" tone="forest">
@@ -56,7 +61,7 @@ const WalletAuth = () => {
         </Button>
       </div>
     );
-  } 
+  }
 
   if (router.pathname === "/user/sign_in") {
     return null;
