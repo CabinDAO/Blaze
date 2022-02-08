@@ -18,19 +18,23 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "sourceMap": true,
     "paths": {
       "@/*": [
         "*"
       ]
     },
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "lib/db.ts"  ],
+    "**/*.tsx",
+    "lib/db.ts"
+  ],
   "exclude": [
     "node_modules"
   ]
