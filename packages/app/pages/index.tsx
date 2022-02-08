@@ -72,5 +72,6 @@ export async function getStaticProps() {
         upvotes,
       }
     },
+    revalidate: 10,
   };
 }
