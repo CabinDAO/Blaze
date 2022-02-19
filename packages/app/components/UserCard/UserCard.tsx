@@ -1,11 +1,9 @@
-import { CalendarIcon, ClockIcon, ExternalLinkIcon } from "../Icons";
-import { styled } from "@/stitches.config";
+import {CalendarIcon, ClockIcon, ExternalLinkIcon} from "../Icons";
+import {styled} from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
-import {  format, fromUnixTime } from "date-fns";
-import { Z_DEFLATED } from "zlib";
+import {format, fromUnixTime} from "date-fns";
 
 const AddressHeader = styled("div", {
-  display: "flex",
   fontWeight: "$bold",
   fontSize: 40,
   lineHeight: 1.3,
@@ -19,6 +17,7 @@ const UserMeta = styled("div", {
   marginBottom: "$4",
   "& > *": {
     flex: 1,
+    textAlign: "center",
   },
   fontSize: "$sm",
 });
@@ -39,17 +38,24 @@ interface UserCardProps {
   upvotesReceived: number;
   linksUpvoted: number;
 }
-const UserCard = ({ address, ens, joinDate, lastSeenDate, upvotesReceived, linksUpvoted }: UserCardProps) => {
-  const joinDateString =  fromUnixTime(joinDate).toDateString();
-  const lastSeenDateString = fromUnixTime(lastSeenDate).toDateString();
+const UserCard = ({
+  address,
+  ens,
+  joinDate,
+  lastSeenDate,
+  upvotesReceived,
+  linksUpvoted,
+}: UserCardProps) => {
+  const joinDateString = joinDate
+    ? format(fromUnixTime(joinDate), "MMM d, yyyy")
+    : null;
+  const lastSeenDateString = lastSeenDate
+    ? format(fromUnixTime(lastSeenDate), "MMM d, yyyy")
+    : null;
   return (
     <div>
       <AddressHeader>
-        <WalletAddress
-          address={address}
-          ens={ens}
-          css={{ marginRight: "$1" }}
-        />
+        <WalletAddress address={address} ens={ens} css={{marginRight: "$1"}} />
         <ExternalLinkIcon href={`https://etherscan.io/address/${address}`} />
       </AddressHeader>
       <UserMeta>
