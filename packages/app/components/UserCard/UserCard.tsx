@@ -30,7 +30,7 @@ const UserStat = styled("div", {
 interface UserCardProps {
   address: string;
   ens?: {
-    name: string;
+    name: string | null;
     avatar?: string | null;
   } | null;
   joinDate: number;

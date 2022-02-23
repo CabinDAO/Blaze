@@ -1,10 +1,10 @@
-import { styled } from "@/stitches.config";
-import { useWallet } from "@/components/WalletAuth";
-import { Select } from "@cabindao/topo"
-import { useState, useMemo } from "react";
-import { useStore } from "@/store/store";
+import {styled} from "@/stitches.config";
+import {useWallet} from "@/components/WalletAuth";
+import {Select} from "@cabindao/topo";
+import React, {useState, useMemo, useEffect} from "react";
+import {useStore} from "@/store/store";
 import DropdownMenu from "@/components/DropdownMenu";
-import { DoubleArrowUpIcon, SunIcon, TargetIcon } from "@radix-ui/react-icons";
+import {DoubleArrowUpIcon, SunIcon, TargetIcon} from "@radix-ui/react-icons";
 
 const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
@@ -15,7 +15,8 @@ const TabBarContent = styled("div", {
   marginBottom: -1,
   alignItems: "flex-end",
 });
-const TabLink = styled("button", {
+
+export const TabLink = styled("button", {
   boxSizing: "border-box",
   height: "$10",
   background: "none",
@@ -43,137 +44,21 @@ const TabLink = styled("button", {
 
 export type Sort = "newest" | "trending" | "controversial";
 
-export const TabButton = (props: any) => <TabLink {...props} />;
-const TabBar = ({ children, ...props }: { children?: React.ReactNode }) => {
-  const { sort, updateSort } = useStore();
-  const { address } = useWallet({ fetchEns: true });
-  const [activeTab, setActiveTab] = useState(0);
-    const leftNav = useMemo(() => {
-      if (address) {
-        return [
-          { label: "Links", value: "links" },
-          { label: "Submissions", value: "submissions" },
-          { label: "Upvotes", value: "upvotes" },
-        ];
-      }
-      return [
-        {
-          label: "Links",
-          value: "links",
-        },
-      ];
-    }, [address]);
+const TabsContainer = ({
+  className,
+  children,
+}: {
+  children?: React.ReactNode;
+  className?: string;
+}) => {
   return (
-    <TabBarWrapper {...props}>
-      <TabBarContent {...props}>
-        <MobileTabs>
-          {leftNav.length === 1 ? (
-            <TabButton active>{leftNav[0].label}</TabButton>
-          ) : (
-            <DropdownMenu
-              active
-              options={leftNav}
-              value={leftNav[activeTab]?.value}
-              onChange={(val) =>
-                setActiveTab(leftNav.findIndex((opt) => opt.value === val))
-              }
-            />
-          )}
-        </MobileTabs>
-        <DesktopTabs>
-          {!address && (
-            <TabButton
-              active={activeTab == 0 ? true : false}
-              onClick={() => setActiveTab(0)}
-            >
-              Links
-            </TabButton>
-          )}
-          {address && (
-            <>
-              <TabButton
-                active={activeTab == 0 ? true : false}
-                onClick={() => setActiveTab(0)}
-              >
-                Links
-              </TabButton>
-              <TabButton
-                active={activeTab == 1 ? true : false}
-                onClick={() => setActiveTab(1)}
-              >
-                Submissions
-              </TabButton>
-              <TabButton
-                active={activeTab == 2 ? true : false}
-                onClick={() => setActiveTab(2)}
-              >
-                Upvotes
-              </TabButton>
-              {/* <TabButton
-                active={activeTab == 3 ? true : false}
-                onClick={() => setActiveTab(3)}
-              >
-                Comments
-              </TabButton> */}
-            </>
-          )}
-        </DesktopTabs>
-        <div
-          style={{
-            marginLeft: "auto",
-            display: "flex",
-          }}
-        >
-          <DropdownMenu
-            options={[
-              {
-                value: "newest",
-                label: (
-                  <>
-                    <SunIcon /> Newest
-                  </>
-                ),
-              },
-              {
-                value: "trending",
-                label: (
-                  <>
-                    <DoubleArrowUpIcon /> Trending
-                  </>
-                ),
-              },
-              {
-                value: "controversial",
-                label: (
-                  <>
-                    <TargetIcon /> Controversial
-                  </>
-                ),
-              },
-            ]}
-            value={sort}
-            onChange={(key: Sort) => updateSort(key)}
-          />
-        </div>
-      </TabBarContent>
+    <TabBarWrapper className={className}>
+      <TabBarContent>{children}</TabBarContent>
     </TabBarWrapper>
   );
 };
 
-const MobileTabs = styled("div", {
-  display: "block",
-  "@sm": {
-    display: "none",
-  },
-});
-const DesktopTabs = styled("div", {
-  display: "none",
-  "@sm": {
-    display: "block",
-  },
-});
-
-const StickyTabBar = styled(TabBar, {
+const StickyContainer = styled(TabsContainer, {
   backgroundColor: "$sand",
   borderBottomWidth: 1,
   borderBottomStyle: "solid",
@@ -195,4 +80,162 @@ const StickyTabBar = styled(TabBar, {
   },
 });
 
-export default StickyTabBar;
+export const StickyTabBar = ({
+  className,
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) => {
+  const [scrolled, setScrolled] = useState(false);
+
+  const handleScroll = () => {
+    const offset = window.scrollY;
+    setScrolled(offset > 200);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
+
+  return (
+    <StickyContainer
+      className={className}
+      position={scrolled ? "sticky" : "fixed"}
+    >
+      {children}
+    </StickyContainer>
+  );
+};
+
+const TabBar = ({className}: {className?: string}) => {
+  const {sort, updateSort} = useStore();
+  const {address} = useWallet({fetchEns: true});
+  const [activeTab, setActiveTab] = useState(0);
+  const leftNav = useMemo(() => {
+    if (address) {
+      return [
+        {label: "Links", value: "links"},
+        {label: "Submissions", value: "submissions"},
+        {label: "Upvotes", value: "upvotes"},
+      ];
+    }
+    return [
+      {
+        label: "Links",
+        value: "links",
+      },
+    ];
+  }, [address]);
+  return (
+    <StickyTabBar className={className}>
+      <MobileTabs>
+        {leftNav.length === 1 ? (
+          <TabLink active>{leftNav[0].label}</TabLink>
+        ) : (
+          <DropdownMenu
+            active
+            options={leftNav}
+            value={leftNav[activeTab]?.value}
+            onChange={(val) =>
+              setActiveTab(leftNav.findIndex((opt) => opt.value === val))
+            }
+          />
+        )}
+      </MobileTabs>
+      <DesktopTabs>
+        {!address && (
+          <TabLink
+            active={activeTab == 0 ? true : false}
+            onClick={() => setActiveTab(0)}
+          >
+            Links
+          </TabLink>
+        )}
+        {address && (
+          <>
+            <TabLink
+              active={activeTab == 0 ? true : false}
+              onClick={() => setActiveTab(0)}
+            >
+              Links
+            </TabLink>
+            <TabLink
+              active={activeTab == 1 ? true : false}
+              onClick={() => setActiveTab(1)}
+            >
+              Submissions
+            </TabLink>
+            <TabLink
+              active={activeTab == 2 ? true : false}
+              onClick={() => setActiveTab(2)}
+            >
+              Upvotes
+            </TabLink>
+            {/* <TabButton
+                active={activeTab == 3 ? true : false}
+                onClick={() => setActiveTab(3)}
+              >
+                Comments
+              </TabButton> */}
+          </>
+        )}
+      </DesktopTabs>
+      <div
+        style={{
+          marginLeft: "auto",
+          display: "flex",
+        }}
+      >
+        <DropdownMenu
+          options={[
+            {
+              value: "newest",
+              label: (
+                <>
+                  <SunIcon /> Newest
+                </>
+              ),
+            },
+            {
+              value: "trending",
+              label: (
+                <>
+                  <DoubleArrowUpIcon /> Trending
+                </>
+              ),
+            },
+            {
+              value: "controversial",
+              label: (
+                <>
+                  <TargetIcon /> Controversial
+                </>
+              ),
+            },
+          ]}
+          value={sort}
+          onChange={(key: Sort) => updateSort(key)}
+        />
+      </div>
+    </StickyTabBar>
+  );
+};
+
+const MobileTabs = styled("div", {
+  display: "block",
+  "@sm": {
+    display: "none",
+  },
+});
+const DesktopTabs = styled("div", {
+  display: "none",
+  "@sm": {
+    display: "block",
+  },
+});
+
+export default TabBar;

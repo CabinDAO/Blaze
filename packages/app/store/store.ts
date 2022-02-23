@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import {useLayoutEffect} from "react";
 import create from "zustand";
 import createContext from "zustand/context";
 
@@ -16,13 +16,13 @@ export interface Post {
 }
 export type PostList = Post[];
 export type Sort = "newest" | "trending" | "controversial";
-export type Profile =  {
-  _id: string ;
-  walletAddress: string ;
-  joinDate: number ;
-  lastSeenDate: number ;
-  upvotesReceived: number ;
-  postsUpvoted: number ;
+export type Profile = {
+  _id: string;
+  walletAddress: string;
+  joinDate: number;
+  lastSeenDate: number;
+  upvotesReceived: number;
+  postsUpvoted: number;
 };
 export interface Upvote {
   _id: string;
@@ -31,13 +31,15 @@ export interface Upvote {
   link: string;
 }
 export interface InitialState {
+  posts: PostList;
   sort: Sort;
   currentProfile: object;
 }
 const initialState: InitialState = {
+  posts: [],
   sort: "newest",
   currentProfile: {},
-}
+};
 
 export default interface AppState {
   posts: PostList;
@@ -57,14 +59,14 @@ export const initializeStore = (preloadedState = {}) => {
   return create((set: any) => ({
     ...initialState,
     ...preloadedState,
-    updateSort: (sort: Sort) => set({ sort }),
+    updateSort: (sort: Sort) => set({sort}),
     undoUpvotePost: (postId: string) => {
       set((state: AppState) => {
         const post = state.posts.find((post: Post) => post._id === postId);
         if (post) {
           post.upvotes = Math.max(0, post.upvotes - 1);
         }
-        return { posts: state.posts };
+        return {posts: state.posts};
       });
     },
     upvotePostinStore: (postId: string) => {
@@ -74,11 +76,11 @@ export const initializeStore = (preloadedState = {}) => {
           post.upvotes += 1;
         }
 
-        return { posts: state.posts };
+        return {posts: state.posts};
       });
     },
     loadProfileIntoStore: (profile: Profile) => {
-      set({ currentProfile: profile });
+      set({currentProfile: profile});
     },
     incrementProfilePostsUpvoted: () => {
       set((state: AppState) => {
@@ -87,13 +89,13 @@ export const initializeStore = (preloadedState = {}) => {
           profile.postsUpvoted += 1;
         }
 
-        return { currentProfile: profile };
+        return {currentProfile: profile};
       });
-    }
+    },
   }));
 };
 
-export function useCreateStore(initialState: { sort: string }) {
+export function useCreateStore(initialState: {sort: string}) {
   // For SSR & SSG, always use a new store.
   if (typeof window === "undefined") {
     return () => initializeStore(initialState);

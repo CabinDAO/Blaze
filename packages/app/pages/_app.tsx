@@ -11,11 +11,11 @@ import type {AppProps} from "next/app";
 import {Button} from "@cabindao/topo";
 import WalletAddress from "@/components/WalletAddress";
 import Link from "next/link";
-import WalletAuth, { useWallet } from "@/components/WalletAuth";
-import Router, { useRouter } from "next/router";
-import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
-import { useCreateStore, Provider as ZustandProvider } from "@/store/store";
+import WalletAuth, {useWallet} from "@/components/WalletAuth";
+import Router, {useRouter} from "next/router";
+import {HamburgerMenuIcon, Cross1Icon} from "@radix-ui/react-icons";
+import {useEffect, useState} from "react";
+import {useCreateStore, Provider as ZustandProvider} from "@/store/store";
 
 const globalStyles = globalCss({
   body: {
@@ -113,7 +113,7 @@ const ProfileLink = () => {
   const {address, ens} = useWallet({fetchEns: true});
   if (!address) return null;
   return (
-    <Link href="/profile">
+    <Link href="/user/profile">
       <a>
         <WalletAddress address={address} ens={ens} />
       </a>
@@ -232,7 +232,7 @@ const MobileMenu = () => {
           </Link>
           {data?.address ? (
             <>
-              <Link href="/profile">
+              <Link href="/user/profile">
                 <a>Profile</a>
               </Link>
               <Link href="/submission/new">
@@ -265,7 +265,11 @@ const ResponsiveNav = () => {
     <>
       <DesktopWrapper>
         <Nav>
-          <Button type="link">LINKS</Button>
+          <Link href="/" passHref>
+            <a>
+              <Button type="link">Home</Button>
+            </a>
+          </Link>
           <ProfileLink />
         </Nav>
         <UserActions>
@@ -278,7 +282,7 @@ const ResponsiveNav = () => {
   );
 };
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({Component, pageProps}: AppProps) {
   const createStore = useCreateStore(pageProps.initialZustandState);
   globalStyles();
   const {pathname} = useRouter();
@@ -301,7 +305,8 @@ function MyApp({ Component, pageProps }: AppProps) {
             {/* <Logo variant="logomark" color="sprout" /> */}
             <div>cabin logo</div>
             <FooterHeading>
-              Made with care by <a href="https://www.creatorcabins.com/">Cabin</a>
+              Made with care by{" "}
+              <a href="https://www.creatorcabins.com/">Cabin</a>
             </FooterHeading>
             <FooterSubtitle>
               Special thanks to creators Xxxx, Xxxx, Xxxx, &amp; more.
@@ -314,5 +319,3 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
-
-
