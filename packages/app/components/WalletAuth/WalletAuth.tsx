@@ -25,10 +25,10 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
   });
 
   useEffect(() => {
-    if (options?.fetchEns && ensData) {
+    if (!ens && options?.fetchEns && ensData) {
       setEns(ensData);
     }
-  }, [options?.fetchEns, ensData, setEns]);
+  }, [ens, options?.fetchEns, ensData, setEns]);
 
   return {
     isConnected: !error && !!data?.address,
