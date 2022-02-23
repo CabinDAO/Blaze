@@ -1,53 +1,51 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { Button } from "@cabindao/topo";
-import WalletAddress from "../WalletAddress";
-import { useConnect, useAccount, Connector } from "wagmi";
+import React, {useEffect} from "react";
+import {Button} from "@cabindao/topo";
+import {useConnect, useAccount, Connector, useEnsLookup} from "wagmi";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useStore } from "@/store/store";
+import {useRouter} from "next/router";
+import {useStore} from "@/store/store";
+import create from "zustand";
 
-// interface WalletContextState {
-//   address: string | null;
-//   setAddress: (address: string | null) => void;
-// }
-// const WalletContext = createContext<WalletContextState>({
-//   address: null,
-//   setAddress: () => {},
-// });
+interface AccountStore {
+  ens: string | null;
+  setEns(ens: string | null): void;
+}
+const useAccountInfo = create<AccountStore>((set) => ({
+  ens: null,
+  setEns: (ens: string) => set({ens}),
+}));
 
-// export const WalletProvider = ({
-//   children,
-// }: {
-//   children?: React.ReactNode;
-// }) => {
-//   const [address, setAddress] = useState<string | null>(null);
-//   const value = useMemo(() => ({ address, setAddress }), [address, setAddress]);
-//   return (
-//     <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
-//   );
-// };
+export const useWallet = (options?: {fetchEns?: boolean}) => {
+  const {ens, setEns} = useAccountInfo();
+  const [{data, error}] = useAccount();
 
-export const useWallet = (options?: { fetchEns?: boolean }) => {
-  const [{ data, error }] = useAccount(options);
+  const [{data: ensData}] = useEnsLookup({
+    address: data?.address,
+    skip: !!ens || !data?.address || !options?.fetchEns,
+  });
+
+  useEffect(() => {
+    if (options?.fetchEns && ensData) {
+      setEns(ensData);
+    }
+  }, [options?.fetchEns, ensData, setEns]);
+
   return {
     isConnected: !error && !!data?.address,
     address: data?.address ?? null,
-    ens: data?.ens ?? null,
+    ens: {
+      name: ens,
+      avatar: null,
+    },
   };
 };
 
 const WalletAuth = () => {
   const router = useRouter();
-  const [{ data, error, loading }, connect] = useConnect();
+  const [{data, error, loading}, connect] = useConnect();
 
   const [
-    { data: accountData, error: accountError, loading: accountLoading },
+    {data: accountData, error: accountError, loading: accountLoading},
     disconnect,
   ] = useAccount();
   const disconnectHandler = async () => {
