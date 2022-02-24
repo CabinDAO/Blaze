@@ -1,3 +1,5 @@
+import {QueryClient, QueryClientProvider} from "react-query";
+
 import {
   Provider as WalletProvider,
   chain,
@@ -282,39 +284,43 @@ const ResponsiveNav = () => {
   );
 };
 
+const queryClient = new QueryClient();
+
 function MyApp({Component, pageProps}: AppProps) {
   const createStore = useCreateStore(pageProps.initialZustandState);
   globalStyles();
   const {pathname} = useRouter();
   return (
-    <ZustandProvider createStore={createStore}>
-      <WalletProvider autoConnect connectors={connectors}>
-        <MainContainer>
-          <Header>
-            <Link href="/">
-              <a>
-                <DaoCampLogo>#dao-camp</DaoCampLogo>
-              </a>
-            </Link>
-            <ResponsiveNav />
-          </Header>
-          <Wrapper>
-            <Component {...pageProps} />
-          </Wrapper>
-          <Footer>
-            {/* <Logo variant="logomark" color="sprout" /> */}
-            <div>cabin logo</div>
-            <FooterHeading>
-              Made with care by{" "}
-              <a href="https://www.creatorcabins.com/">Cabin</a>
-            </FooterHeading>
-            <FooterSubtitle>
-              Special thanks to creators Xxxx, Xxxx, Xxxx, &amp; more.
-            </FooterSubtitle>
-          </Footer>
-        </MainContainer>
-      </WalletProvider>
-    </ZustandProvider>
+    <QueryClientProvider client={queryClient}>
+      <ZustandProvider createStore={createStore}>
+        <WalletProvider autoConnect connectors={connectors}>
+          <MainContainer>
+            <Header>
+              <Link href="/">
+                <a>
+                  <DaoCampLogo>#dao-camp</DaoCampLogo>
+                </a>
+              </Link>
+              <ResponsiveNav />
+            </Header>
+            <Wrapper>
+              <Component {...pageProps} />
+            </Wrapper>
+            <Footer>
+              {/* <Logo variant="logomark" color="sprout" /> */}
+              <div>cabin logo</div>
+              <FooterHeading>
+                Made with care by{" "}
+                <a href="https://www.creatorcabins.com/">Cabin</a>
+              </FooterHeading>
+              <FooterSubtitle>
+                Special thanks to creators Xxxx, Xxxx, Xxxx, &amp; more.
+              </FooterSubtitle>
+            </Footer>
+          </MainContainer>
+        </WalletProvider>
+      </ZustandProvider>
+    </QueryClientProvider>
   );
 }
 

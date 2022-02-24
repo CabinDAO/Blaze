@@ -2,8 +2,9 @@ import {useRouter} from "next/router";
 
 import {StickyTabBar, TabLink} from "@/components/TabBar";
 import WalletAddress from "@/components/WalletAddress";
-import {useStore} from "@/store/store";
 import PostList from "@/components/PostList";
+import {useQuery} from "react-query";
+import supabase from "@/lib/supabaseClient";
 
 export const getServerSideProps = async ({
   params,
@@ -16,11 +17,25 @@ export const getServerSideProps = async ({
   return {props: {isValid}};
 };
 
+async function fetchProfilePosts(address: string) {
+  let {data: posts, error: postsError} = await supabase
+    .from("Posts")
+    .select("*")
+    .filter("postedBy", "eq", address)
+    .order("timestamp", {ascending: false})
+    .limit(25);
+  return posts;
+}
+
 export default function Address({isValid}: {isValid: boolean}) {
   const router = useRouter();
   const {address} = router.query;
 
-  const {posts, sort} = useStore();
+  const {data: posts} = useQuery({
+    queryKey: ["addressPosts", address],
+    queryFn: () => fetchProfilePosts(address as string),
+    enabled: !!address,
+  });
 
   if (!isValid) {
     return <div>Address not found.</div>;
@@ -36,7 +51,7 @@ export default function Address({isValid}: {isValid: boolean}) {
         <TabLink active>Submissions</TabLink>
       </StickyTabBar>
 
-      <PostList posts={posts} sort={sort} />
+      <PostList posts={posts ?? []} sort="newest" />
     </div>
   );
 }

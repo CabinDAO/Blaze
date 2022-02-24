@@ -1,10 +1,9 @@
 import {styled} from "@/stitches.config";
 import {useWallet} from "@/components/WalletAuth";
-import {Select} from "@cabindao/topo";
 import React, {useState, useMemo, useEffect} from "react";
 import {useStore} from "@/store/store";
 import DropdownMenu from "@/components/DropdownMenu";
-import {DoubleArrowUpIcon, SunIcon, TargetIcon} from "@radix-ui/react-icons";
+import {DoubleArrowUpIcon, SunIcon} from "@radix-ui/react-icons";
 
 const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
@@ -208,14 +207,14 @@ const TabBar = ({className}: {className?: string}) => {
                 </>
               ),
             },
-            {
-              value: "controversial",
-              label: (
-                <>
-                  <TargetIcon /> Controversial
-                </>
-              ),
-            },
+            // {
+            //   value: "controversial",
+            //   label: (
+            //     <>
+            //       <TargetIcon /> Controversial
+            //     </>
+            //   ),
+            // },
           ]}
           value={sort}
           onChange={(key: Sort) => updateSort(key)}

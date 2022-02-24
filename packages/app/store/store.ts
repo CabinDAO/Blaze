@@ -31,18 +31,15 @@ export interface Upvote {
   link: string;
 }
 export interface InitialState {
-  posts: PostList;
   sort: Sort;
   currentProfile: object;
 }
 const initialState: InitialState = {
-  posts: [],
   sort: "newest",
   currentProfile: {},
 };
 
 export default interface AppState {
-  posts: PostList;
   sort: Sort;
   upvotes: Upvote[];
   currentProfile: Profile;
@@ -61,23 +58,24 @@ export const initializeStore = (preloadedState = {}) => {
     ...preloadedState,
     updateSort: (sort: Sort) => set({sort}),
     undoUpvotePost: (postId: string) => {
-      set((state: AppState) => {
-        const post = state.posts.find((post: Post) => post._id === postId);
-        if (post) {
-          post.upvotes = Math.max(0, post.upvotes - 1);
-        }
-        return {posts: state.posts};
-      });
+      // TODO: implement this server-side with signed message verification
+      // set((state: AppState) => {
+      //   const post = state.posts.find((post: Post) => post._id === postId);
+      //   if (post) {
+      //     post.upvotes = Math.max(0, post.upvotes - 1);
+      //   }
+      //   return {posts: state.posts};
+      // });
     },
     upvotePostinStore: (postId: string) => {
-      set((state: AppState) => {
-        const post = state.posts.find((post: Post) => post._id === postId);
-        if (post) {
-          post.upvotes += 1;
-        }
-
-        return {posts: state.posts};
-      });
+      // TODO: implement this server-side with signed message verification
+      // set((state: AppState) => {
+      //   const post = state.posts.find((post: Post) => post._id === postId);
+      //   if (post) {
+      //     post.upvotes += 1;
+      //   }
+      //   return {posts: state.posts};
+      // });
     },
     loadProfileIntoStore: (profile: Profile) => {
       set({currentProfile: profile});

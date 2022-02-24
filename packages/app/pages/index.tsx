@@ -1,19 +1,43 @@
 import type {NextPage} from "next";
-import {useState, useEffect, useMemo} from "react";
 import PostList from "@/components/PostList";
 import {useStore} from "@/store/store";
 import Title from "@/components/Title";
 import StickyTabBar from "@/components/TabBar";
+import {useQuery} from "react-query";
+import supabase from "@/lib/supabaseClient";
+
+const sorting: Record<string, {column: string; ascending: boolean}> = {
+  newest: {
+    column: "timestamp",
+    ascending: false,
+  },
+  trending: {
+    column: "upvotes",
+    ascending: false,
+  },
+};
+
+async function loadPosts(sort: string) {
+  let query = supabase.from("Posts").select("*").limit(25);
+
+  if (sorting[sort]) {
+    query = query.order(sorting[sort].column, {
+      ascending: sorting[sort].ascending,
+    });
+  }
+  const {data: posts, error: postsError} = await query;
+  return posts;
+}
 
 const Home: NextPage = () => {
-  const {posts, sort} = useStore();
+  const {sort} = useStore();
+  const {data: posts} = useQuery(["posts", sort], () => loadPosts(sort));
 
   return (
     <div>
-      {/* <Profile /> */}
       <Title>Today</Title>
       <StickyTabBar />
-      <PostList posts={posts} sort={sort} />
+      <PostList posts={posts ?? []} sort={sort} />
     </div>
   );
 };
@@ -34,13 +58,6 @@ export async function getStaticProps() {
     return supabase;
   };
   const supabase = await initSupabaseClient();
-  let {data: posts, error: postsError} = await supabase
-    .from("Posts")
-    .select("*");
-  if (posts === null) {
-    console.log(postsError);
-    posts = [];
-  }
   let {data: upvotes, error: upvotesError} = await supabase
     .from("Upvotes")
     .select("*");
@@ -51,7 +68,6 @@ export async function getStaticProps() {
   return {
     props: {
       initialZustandState: {
-        posts,
         upvotes,
       },
     },
