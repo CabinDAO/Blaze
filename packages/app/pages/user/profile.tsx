@@ -22,7 +22,8 @@ async function fetchProfilePosts(address: string) {
     .from<Post>("Posts")
     .select("*")
     .filter("postedBy", "eq", address)
-    .order("timestamp", {ascending: false});
+    .order("timestamp", {ascending: false})
+    .limit(25);
   return posts;
 }
 
@@ -30,8 +31,9 @@ export default function Profile() {
   const {address} = useWallet();
   const [activeTab, setActiveTab] = useState(0);
   const {data: posts} = useQuery({
-    queryKey: ["profilePosts", address],
+    queryKey: ["addressPosts", address],
     queryFn: () => fetchProfilePosts(address as string),
+    cacheTime: 60_000, // cache for 1 minute
     enabled: !!address,
   });
 

@@ -59,15 +59,9 @@ const PostList = ({posts, sort}: PostListProps) => {
 
   return (
     <StyledPostList>
-      {sort === "newest" &&
-        posts
-          .sort((a, b) => a.timestamp - b.timestamp)
-          .map((post) => <Post key={post._id} {...post} />)}
-      {sort === "trending" &&
-        posts
-          .sort((a, b) => a.upvotes - b.upvotes)
-          .map((post) => <Post key={post._id} {...post} />)}
-      {/* {sort === "controversial" && posts.sort((a, b) => b.comments - a.comments).map((post) => <Post key={post._id} {...post} />)} */}
+      {posts.map((post) => (
+        <Post key={post._id} {...post} />
+      ))}
     </StyledPostList>
   );
 };
