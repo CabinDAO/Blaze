@@ -1,38 +1,39 @@
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
-import {StickyTabBar, TabLink} from "@/components/TabBar";
+import { StickyTabBar, TabLink } from "@/components/TabBar";
 import WalletAddress from "@/components/WalletAddress";
 import PostList from "@/components/PostList";
-import {useQuery} from "react-query";
+import { useQuery } from "react-query";
 import supabase from "@/lib/supabaseClient";
 
 export const getServerSideProps = async ({
   params,
 }: {
-  params: {address: string};
+  params: { address: string };
 }) => {
-  const {address} = params;
+  const { address } = params;
   const isValid = address && address.length === 42;
 
-  return {props: {isValid}};
+  return { props: { isValid } };
 };
 
 async function fetchProfilePosts(address: string) {
-  let {data: posts, error: postsError} = await supabase
+  let { data: posts, error: postsError } = await supabase
     .from("Posts")
     .select("*")
     .filter("postedBy", "eq", address)
-    .order("timestamp", {ascending: false})
+    .order("timestamp", { ascending: false })
+    .order("_id", { ascending: true })
     .limit(25);
   return posts;
 }
 
-export default function Address({isValid}: {isValid: boolean}) {
+export default function Address({ isValid }: { isValid: boolean }) {
   const router = useRouter();
-  const {address} = router.query;
+  const { address } = router.query;
 
-  const {data: posts} = useQuery({
-    queryKey: ["addressPosts", address],
+  const { data: posts } = useQuery({
+    queryKey: ["posts", "address", address],
     queryFn: () => fetchProfilePosts(address as string),
     enabled: !!address,
   });
