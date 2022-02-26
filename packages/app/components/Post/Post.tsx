@@ -6,10 +6,7 @@ import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 
-import supabase from "@/lib/supabaseClient";
 import { useWallet } from "../WalletAuth";
-import { v4 as uuidv4 } from "uuid";
-import { getUnixTime } from "date-fns";
 import { useMutation, useQueryClient } from "react-query";
 import { useCallback } from "react";
 
