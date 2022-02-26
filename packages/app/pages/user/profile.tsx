@@ -13,7 +13,7 @@ interface Post {
   url: string;
   postedBy: string;
   upvotes: number;
-  timestamp: number;
+  created_at: string;
   domainText: string;
 }
 
@@ -22,7 +22,7 @@ async function fetchProfilePosts(address: string) {
     .from<Post>("Posts")
     .select("*")
     .filter("postedBy", "eq", address)
-    .order("timestamp", { ascending: false })
+    .order("created_at", { ascending: false })
     .order("_id", { ascending: true })
     .limit(25);
   return posts;

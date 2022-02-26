@@ -8,7 +8,7 @@ import supabase from "@/lib/supabaseClient";
 
 const sorting: Record<string, { column: string; ascending: boolean }> = {
   newest: {
-    column: "timestamp",
+    column: "created_at",
     ascending: false,
   },
   trending: {

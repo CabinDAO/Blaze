@@ -22,7 +22,7 @@ async function fetchProfilePosts(address: string) {
     .from("Posts")
     .select("*")
     .filter("postedBy", "eq", address)
-    .order("timestamp", { ascending: false })
+    .order("created_at", { ascending: false })
     .order("_id", { ascending: true })
     .limit(25);
   return posts;

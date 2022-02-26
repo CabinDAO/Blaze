@@ -1,4 +1,4 @@
-import {useLayoutEffect} from "react";
+import { useLayoutEffect } from "react";
 import create from "zustand";
 import createContext from "zustand/context";
 
@@ -11,6 +11,7 @@ export interface Post {
   domainText: string;
   url: string;
   postedBy: string;
+  created_at: string;
   timestamp: number;
   upvotes: number;
 }
@@ -28,6 +29,7 @@ export interface Upvote {
   _id: string;
   upvoter: string;
   timestamp: number;
+  created_at: string;
   link: string;
 }
 export interface InitialState {
@@ -56,7 +58,7 @@ export const initializeStore = (preloadedState = {}) => {
   return create((set: any) => ({
     ...initialState,
     ...preloadedState,
-    updateSort: (sort: Sort) => set({sort}),
+    updateSort: (sort: Sort) => set({ sort }),
     undoUpvotePost: (postId: string) => {
       // TODO: implement this server-side with signed message verification
       // set((state: AppState) => {
@@ -78,7 +80,7 @@ export const initializeStore = (preloadedState = {}) => {
       // });
     },
     loadProfileIntoStore: (profile: Profile) => {
-      set({currentProfile: profile});
+      set({ currentProfile: profile });
     },
     incrementProfilePostsUpvoted: () => {
       set((state: AppState) => {
@@ -87,13 +89,13 @@ export const initializeStore = (preloadedState = {}) => {
           profile.postsUpvoted += 1;
         }
 
-        return {currentProfile: profile};
+        return { currentProfile: profile };
       });
     },
   }));
 };
 
-export function useCreateStore(initialState: {sort: string}) {
+export function useCreateStore(initialState: { sort: string }) {
   // For SSR & SSG, always use a new store.
   if (typeof window === "undefined") {
     return () => initializeStore(initialState);

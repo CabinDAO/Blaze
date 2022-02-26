@@ -1,7 +1,7 @@
-import {styled} from "@/stitches.config";
+import { styled } from "@/stitches.config";
 import Post from "../Post";
-import {useEffect} from "react";
-import {useStore} from "@/store/store";
+import { useEffect } from "react";
+import { useStore } from "@/store/store";
 import supabase from "@/lib/supabaseClient";
 
 const StyledPostList = styled("div", {
@@ -12,11 +12,11 @@ const StyledPostList = styled("div", {
 
 export interface Post {
   _id: string;
+  created_at: string;
   title: string;
   domainText: string;
   url: string;
   postedBy: string;
-  timestamp: number;
   upvotes: number;
 }
 export type Sort = "newest" | "trending" | "controversial";
@@ -25,8 +25,8 @@ export interface PostListProps {
   sort: Sort;
 }
 
-const PostList = ({posts, sort}: PostListProps) => {
-  const {currentProfile, incrementProfilePostsUpvoted} = useStore();
+const PostList = ({ posts, sort }: PostListProps) => {
+  const { currentProfile, incrementProfilePostsUpvoted } = useStore();
 
   useEffect(() => {
     const Upvotes = supabase
@@ -39,7 +39,7 @@ const PostList = ({posts, sort}: PostListProps) => {
           incrementProfilePostsUpvoted();
           await supabase
             .from("Profiles")
-            .update({postsUpvoted: currentProfile.postsUpvoted + 1})
+            .update({ postsUpvoted: currentProfile.postsUpvoted + 1 })
             .eq("walletAddress", currentProfile.walletAddress);
         }
       })
