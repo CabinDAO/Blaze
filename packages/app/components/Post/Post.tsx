@@ -6,10 +6,9 @@ import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
 import { formatDistanceToNow, fromUnixTime } from "date-fns";
 
-import supabase from "@/lib/supabaseClient";
 import { useWallet } from "../WalletAuth";
-import { v4 as uuidv4 } from "uuid";
-import { getUnixTime } from "date-fns";
+import { useMutation, useQueryClient } from "react-query";
+import { useCallback } from "react";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -57,7 +56,7 @@ export interface PostProps {
   domainText: string;
   url: string;
   postedBy: string;
-  timestamp: number;
+  created_at: string;
   upvotes: number;
 }
 
@@ -67,41 +66,50 @@ const Post = ({
   url,
   domainText,
   postedBy,
-  timestamp,
+  created_at,
   upvotes,
 }: PostProps) => {
   const { upvotePostinStore, undoUpvotePost } = useStore();
   const { address, isConnected } = useWallet();
+  const queryClient = useQueryClient();
 
-  const upvoteHandler = async (_id: string) => {
-    if (isConnected) {
-      upvotePostinStore(_id);
-      try {
-      const { data } = await supabase.from("Posts").select("upvotes").eq("_id", _id).limit(1).single();
-      await supabase
-        .from('Posts')
-        .update({ upvotes: data.upvotes + 1 })
-        .eq('_id', _id);
-      await supabase.from("Upvotes").insert([{
-        _id: uuidv4(),
-        upvoter: address,
-        post: _id,
-        timestamp: getUnixTime(new Date()),
-      }]);
-      } catch {
-        undoUpvotePost(_id);
-      }
-    } else {
-      alert("Please login to upvote");
+  const { mutate } = useMutation<any, Error, { postId: string }>(
+    async ({ postId }) => {
+      return await fetch(`/api/posts/${postId}/upvote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          upvoter: address,
+          postId,
+        }),
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("posts");
+      },
     }
-  };
+  );
+
+  const upvoteHandler = useCallback(
+    (_id: string) => {
+      if (isConnected) {
+        return mutate({ postId: _id });
+      } else {
+        alert("Please login to upvote");
+      }
+    },
+    [isConnected, mutate]
+  );
   return (
     <PostRow>
       <div>
         <Upvote
           upvoted={upvotes > 0 ? true : false}
           count={upvotes}
-          onClick={ () => upvoteHandler(_id)}
+          onClick={() => upvoteHandler(_id)}
         />
       </div>
       <PostInfo>
@@ -122,7 +130,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(timestamp * 1000, {addSuffix: true})}
+            {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
           </IconText>
           {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}

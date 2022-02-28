@@ -1,10 +1,10 @@
 import PostList from "@/components/PostList";
 import ProfileCard from "@/components/Profile";
-import {StickyTabBar, TabLink} from "@/components/TabBar";
-import {useWallet} from "@/components/WalletAuth";
+import { StickyTabBar, TabLink } from "@/components/TabBar";
+import { useWallet } from "@/components/WalletAuth";
 import supabase from "@/lib/supabaseClient";
-import {useState} from "react";
-import {useQuery} from "react-query";
+import { useState } from "react";
+import { useQuery } from "react-query";
 
 interface Post {
   _id: string;
@@ -13,27 +13,27 @@ interface Post {
   url: string;
   postedBy: string;
   upvotes: number;
-  timestamp: number;
+  created_at: string;
   domainText: string;
 }
 
 async function fetchProfilePosts(address: string) {
-  let {data: posts, error: postsError} = await supabase
+  let { data: posts, error: postsError } = await supabase
     .from<Post>("Posts")
     .select("*")
     .filter("postedBy", "eq", address)
-    .order("timestamp", {ascending: false})
+    .order("created_at", { ascending: false })
+    .order("_id", { ascending: true })
     .limit(25);
   return posts;
 }
 
 export default function Profile() {
-  const {address} = useWallet();
+  const { address } = useWallet();
   const [activeTab, setActiveTab] = useState(0);
-  const {data: posts} = useQuery({
-    queryKey: ["addressPosts", address],
+  const { data: posts } = useQuery({
+    queryKey: ["posts", "address", address],
     queryFn: () => fetchProfilePosts(address as string),
-    cacheTime: 60_000, // cache for 1 minute
     enabled: !!address,
   });
 
