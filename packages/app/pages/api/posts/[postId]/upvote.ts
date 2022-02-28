@@ -2,8 +2,9 @@ import supabase from "@/lib/supabaseClient";
 
 export default async function handler(req: any, res: any) {
   if (req.method === "POST") {
-    // TODO: verify upvoter address using signed message
-    const { error } = await supabase.rpc("upvote", {
+    // TODO: upvote if authed with ETH auth
+    // returns data as whether the user has just upvoted or downvoted
+    const { data: upvoted, error } = await supabase.rpc("upordownvote", {
       post_id: req.body.postId,
       address: req.body.upvoter,
     });
@@ -12,7 +13,7 @@ export default async function handler(req: any, res: any) {
       return res.status(409).json({ message: "Already upvoted" });
     }
 
-    return res.status(201).json({ postId: req.body.postId });
+    return res.status(201).json({ postId: req.body.postId, upvoted });
   } else {
     return res.setHeader("ALLOWED", "POST").status(405);
   }
