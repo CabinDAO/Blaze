@@ -32,19 +32,23 @@ export interface Upvote {
   created_at: string;
   link: string;
 }
+export type AuthStatus = boolean;
 export interface InitialState {
   sort: Sort;
   currentProfile: object;
+  authenticated: AuthStatus;
 }
 const initialState: InitialState = {
   sort: "newest",
   currentProfile: {},
+  authenticated: false,
 };
 
 export default interface AppState {
   sort: Sort;
   upvotes: Upvote[];
   currentProfile: Profile;
+  authenticated: AuthStatus;
   updateSort: (sort: Sort) => void;
   upvotePostinStore: (postId: string) => PostList;
   undoUpvotePost: (postId: string) => PostList;
