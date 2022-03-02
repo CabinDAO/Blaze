@@ -12,13 +12,18 @@ const sorting: Record<string, { column: string; ascending: boolean }> = {
     ascending: false,
   },
   trending: {
-    column: "upvotes",
+    column: "score",
     ascending: false,
   },
 };
 
+// TODO: if sort by newest
 async function loadPosts(sort: string) {
-  let query = supabase.from("Posts").select("*").limit(25);
+  // load posts by ranking if sort === 'trending'
+  let query =
+    sort === "trending"
+      ? supabase.from("post_rankings").select("*").limit(25)
+      : supabase.from("Posts").select("*").limit(25);
 
   if (sorting[sort]) {
     query = query
