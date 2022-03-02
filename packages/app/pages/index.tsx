@@ -19,11 +19,7 @@ const sorting: Record<string, { column: string; ascending: boolean }> = {
 
 // TODO: if sort by newest
 async function loadPosts(sort: string) {
-  // load posts by ranking if sort === 'trending'
-  let query =
-    sort === "trending"
-      ? supabase.from("post_rankings").select("*").limit(25)
-      : supabase.from("Posts").select("*").limit(25);
+  let query = supabase.from("Posts").select("*").limit(25);
 
   if (sorting[sort]) {
     query = query
