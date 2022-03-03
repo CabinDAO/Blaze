@@ -5,6 +5,7 @@ import Title from "@/components/Title";
 import StickyTabBar from "@/components/TabBar";
 import {useQuery} from "react-query";
 import supabase from "@/lib/supabaseClient";
+import {useWallet} from "@/components/WalletAuth";
 
 const sorting: Record<string, {column: string; ascending: boolean}> = {
   newest: {
@@ -18,11 +19,11 @@ const sorting: Record<string, {column: string; ascending: boolean}> = {
 };
 
 // TODO: if sort by newest
-async function loadPosts(sort: string) {
-  let query =
-    sort === "trending"
-      ? supabase.from("post_rankings").select("*").limit(25)
-      : supabase.from("Posts").select("*").limit(25);
+async function loadPosts(sort: string, address?: string | null) {
+  let limit = 25;
+  let query = address
+    ? supabase.rpc("user_posts_ranking", {address}).select("*").limit(limit)
+    : supabase.from("post_rankings").select("*").limit(limit);
 
   if (sorting[sort]) {
     query = query
@@ -37,7 +38,10 @@ async function loadPosts(sort: string) {
 
 const Home: NextPage = () => {
   const {sort} = useStore();
-  const {data: posts} = useQuery(["posts", sort], () => loadPosts(sort));
+  const {address} = useWallet();
+  const {data: posts} = useQuery(["posts", address, sort], () =>
+    loadPosts(sort, address)
+  );
 
   return (
     <div>
