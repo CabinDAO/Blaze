@@ -37,7 +37,7 @@ export interface InitialState {
   currentProfile: object;
 }
 const initialState: InitialState = {
-  sort: "newest",
+  sort: "trending",
   currentProfile: {},
 };
 
