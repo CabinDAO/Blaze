@@ -64,28 +64,34 @@ const SignIn = () => {
       setSiweError(error);
       setSiweLoading(false);
     }
-  }, [])
-
-  //To-Do: Figure out where this code should live
-
-
+  }, [accountData?.address, networkData?.chain?.id, setSiweAddress, setSiweError, setSiweLoading, signMessage]); 
+  
   useEffect(() => {
     if (siwe.address) {
       router.push("/");
     }
   }, [siwe.address, router]);
+
+  if (!connected){
+    return (
+      <ConnectList>
+        {data.connectors.map((x) => (
+          <Button disabled={!x.ready} key={x.id} onClick={() => connect(x)}>
+            {x.name}
+            {!x.ready && " (unsupported)"}
+          </Button>
+        ))}
+      </ConnectList>
+    );
+  } else {
+    return (
+      <ConnectList>
+        <Button disabled={siwe.loading} onClick={async () => signIn()}>Sign-In with Ethereum</Button>
+      </ConnectList>
+    );
+  }
+
   
-  return (
-    <ConnectList>
-      {data.connectors.map((x) => (
-        <Button disabled={!x.ready} key={x.id} onClick={() => connect(x)}>
-          {x.name}
-          {!x.ready && " (unsupported)"}
-        </Button>
-      ))}
-      {connected && <Button disabled={siwe.loading} onClick={() => signIn()}>Sign-In with Ethereum</Button>}
-    </ConnectList>
-  );
 };
 
 export default SignIn;

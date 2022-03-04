@@ -18,6 +18,7 @@ import Router, {useRouter} from "next/router";
 import {HamburgerMenuIcon, Cross1Icon} from "@radix-ui/react-icons";
 import {useEffect, useState} from "react";
 import {useCreateStore, Provider as ZustandProvider} from "@/store/store";
+import { useStore } from "@/store/store";
 
 const globalStyles = globalCss({
   body: {
@@ -205,6 +206,7 @@ const MobileMenu = () => {
   const router = useRouter();
   const [{data}, disconnect] = useAccount();
   const [isOpen, setIsOpen] = useState(false);
+  const { clearSiweSession } = useStore();
 
   useEffect(() => {
     function closeOnChange() {
@@ -240,16 +242,15 @@ const MobileMenu = () => {
               <Link href="/submission/new">
                 <a>Submit a Link</a>
               </Link>
-              <Button
-                type="link"
-                onClick={(e) => {
+              <Link href="/">
+              <a onClick={async (e) => {
                   e.preventDefault();
                   setIsOpen(false);
+                  await fetch('/api/logout');
+                  clearSiweSession();
                   disconnect();
-                }}
-              >
-                Disconnect
-              </Button>
+                }}>Sign Out</a>
+              </Link>
             </>
           ) : (
             <Link href="/user/sign_in">
