@@ -18,10 +18,11 @@ const useAccountInfo = create<AccountStore>((set) => ({
 export const useWallet = (options?: {fetchEns?: boolean}) => {
   const {ens, setEns} = useAccountInfo();
   const [{data, error}] = useAccount();
+  const { siwe } = useStore();
 
   const [{data: ensData}] = useEnsLookup({
-    address: data?.address,
-    skip: !!ens || !data?.address || !options?.fetchEns,
+    address: siwe?.address,
+    skip: !!ens || !siwe?.address || !options?.fetchEns,
   });
 
   useEffect(() => {
@@ -31,8 +32,8 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
   }, [ens, options?.fetchEns, ensData, setEns]);
 
   return {
-    isConnected: !error && !!data?.address,
-    address: data?.address ?? null,
+    isConnected: !siwe.error && !!siwe?.address,
+    address: siwe?.address ?? null,
     ens: {
       name: ens,
       avatar: null,
@@ -42,20 +43,19 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
 
 const WalletAuth = () => {
   const router = useRouter();
-  const [{data, error, loading}, connect] = useConnect();
-
-  const [
-    {data: accountData, error: accountError, loading: accountLoading},
-    disconnect,
-  ] = useAccount();
-  const disconnectHandler = async () => {
-    await disconnect();
-  };
-  if (data.connected) {
+  const [, disconnect] = useAccount();
+  const { siwe, clearSiweSession } = useStore();
+  const SignOutHandler = async () => {
+    await fetch('/api/logout');
+    clearSiweSession();
+    disconnect();
+    router.push('/');
+  }
+  if (siwe.address) {
     return (
       <div>
-        <Button onClick={disconnectHandler} type="secondary" tone="forest">
-          Disconnect
+        <Button onClick={async () => await SignOutHandler()} type="secondary" tone="forest">
+          Sign Out
         </Button>
       </div>
     );

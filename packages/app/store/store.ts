@@ -32,28 +32,36 @@ export interface Upvote {
   created_at: string;
   link: string;
 }
-export type AuthStatus = boolean;
+export interface SiweState {
+  address?: string;
+  error?: Error;
+  loading?: boolean;
+};
 export interface InitialState {
   sort: Sort;
   currentProfile: object;
-  authenticated: AuthStatus;
+  siwe: SiweState;
 }
 const initialState: InitialState = {
   sort: "newest",
   currentProfile: {},
-  authenticated: false,
+  siwe: {}
 };
 
 export default interface AppState {
   sort: Sort;
   upvotes: Upvote[];
   currentProfile: Profile;
-  authenticated: AuthStatus;
+  siwe: SiweState;
   updateSort: (sort: Sort) => void;
   upvotePostinStore: (postId: string) => PostList;
   undoUpvotePost: (postId: string) => PostList;
   loadProfileIntoStore: (profile: Profile) => void;
   incrementProfilePostsUpvoted: () => void;
+  setSiweAddress: (address: string) => void;
+  setSiweLoading: (status: boolean | undefined) => void;
+  setSiweError: (error: Error | undefined) => void;
+  clearSiweSession: () => void;
 }
 const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
@@ -96,6 +104,10 @@ export const initializeStore = (preloadedState = {}) => {
         return { currentProfile: profile };
       });
     },
+    setSiweAddress: (address: string) => set((state: AppState) => ({ siwe: { ...state.siwe, address } as SiweState})),
+    setSiweError: (error: Error | undefined) => set((state: AppState) => ({ siwe: { ...state.siwe, error } as SiweState})),
+    setSiweLoading: (loading: boolean | undefined) => set((state: AppState) => ({ siwe: { ...state.siwe, loading } as SiweState})),
+    clearSiweSession: () => set((state: AppState) => ({ siwe: {} })),
   }));
 };
 
