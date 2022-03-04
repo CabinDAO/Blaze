@@ -54,8 +54,6 @@ export default interface AppState {
   currentProfile: Profile;
   siwe: SiweState;
   updateSort: (sort: Sort) => void;
-  upvotePostinStore: (postId: string) => PostList;
-  undoUpvotePost: (postId: string) => PostList;
   loadProfileIntoStore: (profile: Profile) => void;
   incrementProfilePostsUpvoted: () => void;
   setSiweAddress: (address: string) => void;
@@ -71,26 +69,6 @@ export const initializeStore = (preloadedState = {}) => {
     ...initialState,
     ...preloadedState,
     updateSort: (sort: Sort) => set({ sort }),
-    undoUpvotePost: (postId: string) => {
-      // TODO: implement this server-side with signed message verification
-      // set((state: AppState) => {
-      //   const post = state.posts.find((post: Post) => post._id === postId);
-      //   if (post) {
-      //     post.upvotes = Math.max(0, post.upvotes - 1);
-      //   }
-      //   return {posts: state.posts};
-      // });
-    },
-    upvotePostinStore: (postId: string) => {
-      // TODO: implement this server-side with signed message verification
-      // set((state: AppState) => {
-      //   const post = state.posts.find((post: Post) => post._id === postId);
-      //   if (post) {
-      //     post.upvotes += 1;
-      //   }
-      //   return {posts: state.posts};
-      // });
-    },
     loadProfileIntoStore: (profile: Profile) => {
       set({ currentProfile: profile });
     },

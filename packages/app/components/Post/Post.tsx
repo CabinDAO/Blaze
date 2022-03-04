@@ -69,8 +69,7 @@ const Post = ({
   created_at,
   upvotes,
 }: PostProps) => {
-  const { upvotePostinStore, undoUpvotePost } = useStore();
-  const { address, isConnected } = useWallet();
+  const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation<any, Error, { postId: string }>(
@@ -95,13 +94,13 @@ const Post = ({
 
   const upvoteHandler = useCallback(
     (_id: string) => {
-      if (isConnected) {
+      if (isAuthenticated) {
         return mutate({ postId: _id });
       } else {
-        alert("Please login to upvote");
+        alert("Please sign-in to upvote");
       }
     },
-    [isConnected, mutate]
+    [isAuthenticated, mutate]
   );
   return (
     <PostRow>

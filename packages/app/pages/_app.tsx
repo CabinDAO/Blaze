@@ -124,8 +124,8 @@ const ProfileLink = () => {
 };
 
 const SubmitLinkAction = () => {
-  const {isConnected} = useWallet();
-  if (isConnected) {
+  const { isAuthenticated } = useWallet();
+  if (isAuthenticated) {
     return (
       <Link href="/submission/new" passHref>
         <Button tone="wheat">Submit a Link</Button>

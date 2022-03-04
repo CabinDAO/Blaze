@@ -17,8 +17,7 @@ const useAccountInfo = create<AccountStore>((set) => ({
 
 export const useWallet = (options?: {fetchEns?: boolean}) => {
   const {ens, setEns} = useAccountInfo();
-  const [{data, error}] = useAccount();
-  const { siwe } = useStore();
+  const { siwe, setSiweAddress, setSiweLoading } = useStore();
 
   const [{data: ensData}] = useEnsLookup({
     address: siwe?.address,
@@ -32,7 +31,7 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
   }, [ens, options?.fetchEns, ensData, setEns]);
 
   return {
-    isConnected: !siwe.error && !!siwe?.address,
+    isAuthenticated: !siwe.error && !!siwe?.address,
     address: siwe?.address ?? null,
     ens: {
       name: ens,
@@ -44,7 +43,7 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
 const WalletAuth = () => {
   const router = useRouter();
   const [, disconnect] = useAccount();
-  const { siwe, clearSiweSession } = useStore();
+  const { siwe, clearSiweSession, setSiweAddress, setSiweLoading } = useStore();
   const SignOutHandler = async () => {
     await fetch('/api/logout');
     clearSiweSession();
@@ -64,6 +63,7 @@ const WalletAuth = () => {
   if (router.pathname === "/user/sign_in") {
     return null;
   }
+
   return (
     <Link href="/user/sign_in" passHref>
       <a>
