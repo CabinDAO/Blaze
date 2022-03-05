@@ -5,7 +5,7 @@ import Title from "@/components/Title";
 import StickyTabBar from "@/components/TabBar";
 import {useQuery} from "react-query";
 import supabase from "@/lib/supabaseClient";
-import { useEffect } from "react";
+import {useEffect} from "react";
 
 const sorting: Record<string, {column: string; ascending: boolean}> = {
   newest: {
@@ -37,26 +37,33 @@ async function loadPosts(sort: string, address?: string | null) {
 }
 
 const Home: NextPage = () => {
-  const { sort, setSiweAddress, setSiweLoading } = useStore();
-  const { data: posts } = useQuery(["posts", sort], () => loadPosts(sort));
+  const {
+    sort,
+    setSiweAddress,
+    setSiweLoading,
+    siwe: {address},
+  } = useStore();
+  const {data: posts} = useQuery(["posts", sort, address], () =>
+    loadPosts(sort, address)
+  );
   // Fetch user when:
   useEffect(() => {
     const handler = async () => {
       try {
-        const res = await fetch('/api/me');
+        const res = await fetch("/api/me");
         const json = await res.json();
         setSiweAddress(json.address);
       } finally {
         setSiweLoading(false);
       }
-    }
-      // 1. page loads
-      ; (async () => await handler())()
+    };
+    // 1. page loads
+    (async () => await handler())();
 
     // 2. window is focused (in case user logs out of another window)
-    window.addEventListener('focus', handler)
-    return () => window.removeEventListener('focus', handler)
-  }, []);
+    window.addEventListener("focus", handler);
+    return () => window.removeEventListener("focus", handler);
+  }, [setSiweAddress, setSiweLoading]);
   return (
     <div>
       <Title>Today</Title>
