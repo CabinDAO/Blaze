@@ -1,29 +1,28 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import {NextApiRequest, NextApiResponse} from "next";
 import supabase from "@/lib/supabaseClient";
-import { withIronSessionApiRoute } from 'iron-session/next';
-import { ironOptions } from '@/constants';
+import {withIronSessionApiRoute} from "iron-session/next";
+import {ironOptions} from "@/constants";
 
 const handler = async (req: any, res: any) => {
-  const { method } = req;
+  const {method} = req;
   switch (method) {
-    case 'POST':
+    case "POST":
       try {
-        if (req.body.siwe){
-           await supabase.rpc("upordownvote", {
+        if (req.session.siwe) {
+          await supabase.rpc("upordownvote", {
             post_id: req.body.postId,
-            address: req.body.siwe.address,
+            address: req.session.siwe.address,
           });
-          return res.status(201).json({ postId: req.body.postId });
+          return res.status(201).json({postId: req.body.postId});
         } else {
-          return res.status(403).json({ message: "Action forbidden" });
+          return res.status(403).json({message: "Action forbidden"});
         }
       } catch (_error) {
-        return res.status(409).json({ message: "Already upvoted" });
+        return res.status(409).json({message: "Already upvoted"});
       }
-      break;
     default:
       return res.setHeader("ALLOWED", "POST").status(405);
   }
-}
+};
 
 export default withIronSessionApiRoute(handler, ironOptions);
