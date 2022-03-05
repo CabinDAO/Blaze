@@ -1,14 +1,14 @@
-import { styled } from "@/stitches.config";
+import {styled} from "@/stitches.config";
 import Link from "next/link";
-import { ClockIcon, SpeechIcon } from "@/components/Icons";
+import {ClockIcon, SpeechIcon} from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
-import { useStore } from "@/store/store";
-import { formatDistanceToNow, fromUnixTime } from "date-fns";
+import {useStore} from "@/store/store";
+import {formatDistanceToNow, fromUnixTime} from "date-fns";
 
-import { useWallet } from "../WalletAuth";
-import { useMutation, useQueryClient } from "react-query";
-import { useCallback } from "react";
+import {useWallet} from "../WalletAuth";
+import {useMutation, useQueryClient} from "react-query";
+import {useCallback} from "react";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -58,6 +58,7 @@ export interface PostProps {
   postedBy: string;
   created_at: string;
   upvotes: number;
+  upvoted?: boolean;
 }
 
 const Post = ({
@@ -68,12 +69,14 @@ const Post = ({
   postedBy,
   created_at,
   upvotes,
+  upvoted,
 }: PostProps) => {
+
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation<any, Error, { postId: string }>(
-    async ({ postId }) => {
+  const {mutate} = useMutation<any, Error, {postId: string}>(
+    async ({postId}) => {
       return await fetch(`/api/posts/${postId}/upvote`, {
         method: "POST",
         headers: {
@@ -94,6 +97,7 @@ const Post = ({
 
   const upvoteHandler = useCallback(
     (_id: string) => {
+
       if (isAuthenticated) {
         return mutate({ postId: _id });
       } else {
@@ -106,7 +110,7 @@ const Post = ({
     <PostRow>
       <div>
         <Upvote
-          upvoted={upvotes > 0 ? true : false}
+          upvoted={upvoted}
           count={upvotes}
           onClick={() => upvoteHandler(_id)}
         />
@@ -129,7 +133,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
+            {formatDistanceToNow(new Date(created_at), {addSuffix: true})}
           </IconText>
           {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}

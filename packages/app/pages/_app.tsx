@@ -10,7 +10,7 @@ import {InjectedConnector} from "wagmi/connectors/injected";
 import {WalletConnectConnector} from "wagmi/connectors/walletConnect";
 import {styled, globalCss} from "@/stitches.config";
 import type {AppProps} from "next/app";
-import {Button} from "@cabindao/topo";
+import {Button, Footer} from "@cabindao/topo";
 import WalletAddress from "@/components/WalletAddress";
 import Link from "next/link";
 import WalletAuth, {useWallet} from "@/components/WalletAuth";
@@ -43,6 +43,7 @@ const Wrapper = styled("div", {
   width: "100%",
   marginBottom: "$12",
   boxSizing: "border-box",
+  flex: 1,
 });
 
 const Header = styled("header", {
@@ -65,20 +66,14 @@ const MainContainer = styled("div", {
   justifyContent: "flex-start",
 });
 
-const Footer = styled("footer", {
-  marginTop: "auto",
-  paddingTop: "$8",
-  paddingBottom: "$40",
-  backgroundColor: "$forest",
-  color: "$sand",
+const FooterContent = styled("div", {
   textAlign: "center",
+});
+const FooterHeading = styled("p", {
+  fontWeight: "$regular",
   "& a": {
     color: "$sand",
   },
-});
-
-const FooterHeading = styled("p", {
-  fontWeight: "$regular",
 });
 const FooterSubtitle = styled("p", {
   fontWeight: "$light",
@@ -307,16 +302,17 @@ function MyApp({Component, pageProps}: AppProps) {
             <Wrapper>
               <Component {...pageProps} />
             </Wrapper>
-            <Footer>
+            <Footer links={[]}>
               {/* <Logo variant="logomark" color="sprout" /> */}
-              <div>cabin logo</div>
-              <FooterHeading>
-                Made with care by{" "}
-                <a href="https://www.creatorcabins.com/">Cabin</a>
-              </FooterHeading>
-              <FooterSubtitle>
-                Special thanks to creators Xxxx, Xxxx, Xxxx, &amp; more.
-              </FooterSubtitle>
+              <FooterContent>
+                <FooterHeading>
+                  Made with care by{" "}
+                  <a href="https://www.creatorcabins.com/">Cabin</a>
+                </FooterHeading>
+                {/* <FooterSubtitle>
+                  Special thanks to creators Xxxx, Xxxx, Xxxx, &amp; more.
+                </FooterSubtitle> */}
+              </FooterContent>
             </Footer>
           </MainContainer>
         </WalletProvider>

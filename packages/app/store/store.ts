@@ -43,7 +43,7 @@ export interface InitialState {
   siwe: SiweState;
 }
 const initialState: InitialState = {
-  sort: "newest",
+  sort: "trending",
   currentProfile: {},
   siwe: {}
 };
