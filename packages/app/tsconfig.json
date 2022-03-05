@@ -33,7 +33,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "lib/db.ts"
+    "lib/db.ts",
+    "additional.d.ts"
   ],
   "exclude": [
     "node_modules"
