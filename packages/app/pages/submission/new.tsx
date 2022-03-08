@@ -1,7 +1,7 @@
 import { styled } from "@/stitches.config";
 import debounce from "lodash.debounce";
-import { useState } from "react";
-import {useRouter} from "next/router";
+import { useState, useMemo } from "react";
+import { useRouter } from "next/router";
 import { 
   Button, 
   Input,
@@ -77,7 +77,7 @@ const NewSubmission = () => {
     }
   };
 
-  const onInputDebounce = debounce(fetchPostData, 300);
+  const onInputDebounce = useMemo(() => debounce(fetchPostData, 300), []);
 
   const submitPost = async () => {
     const res = await fetch(`/api/submission/new`, {
