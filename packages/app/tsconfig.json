@@ -34,7 +34,7 @@
     "**/*.ts",
     "**/*.tsx",
     "lib/db.ts"
-  ],
+, "components/Input/TextInput"  ],
   "exclude": [
     "node_modules"
   ]
