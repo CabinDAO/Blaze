@@ -1,4 +1,5 @@
 import { styled } from "@/stitches.config";
+import debounce from "lodash.debounce";
 import { useState } from "react";
 import {useRouter} from "next/router";
 import { 
@@ -76,6 +77,8 @@ const NewSubmission = () => {
     }
   };
 
+  const onInputDebounce = debounce(fetchPostData, 300);
+
   const submitPost = async () => {
     const res = await fetch(`/api/submission/new`, {
       method: "POST",
@@ -104,7 +107,7 @@ const NewSubmission = () => {
         label={"Paste a link to submit below"}
         placeholder={"https://"} 
         error={error}
-        onChange={(e) => fetchPostData(e)}
+        onChange={(e) => onInputDebounce(e)}
         />
         {postData.url && 
           <div>
