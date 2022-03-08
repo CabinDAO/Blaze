@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import {useLayoutEffect} from "react";
 import create from "zustand";
 import createContext from "zustand/context";
 
@@ -32,24 +32,34 @@ export interface Upvote {
   created_at: string;
   link: string;
 }
+export interface SiweState {
+  address?: string;
+  error?: Error;
+  loading?: boolean;
+}
 export interface InitialState {
   sort: Sort;
   currentProfile: object;
+  siwe: SiweState;
 }
 const initialState: InitialState = {
   sort: "trending",
   currentProfile: {},
+  siwe: {},
 };
 
 export default interface AppState {
   sort: Sort;
   upvotes: Upvote[];
   currentProfile: Profile;
+  siwe: SiweState;
   updateSort: (sort: Sort) => void;
-  upvotePostinStore: (postId: string) => PostList;
-  undoUpvotePost: (postId: string) => PostList;
   loadProfileIntoStore: (profile: Profile) => void;
   incrementProfilePostsUpvoted: () => void;
+  setSiweAddress: (address: string) => void;
+  setSiweLoading: (status: boolean | undefined) => void;
+  setSiweError: (error: Error | undefined) => void;
+  clearSiweSession: () => void;
 }
 const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
@@ -58,29 +68,9 @@ export const initializeStore = (preloadedState = {}) => {
   return create((set: any) => ({
     ...initialState,
     ...preloadedState,
-    updateSort: (sort: Sort) => set({ sort }),
-    undoUpvotePost: (postId: string) => {
-      // TODO: implement this server-side with signed message verification
-      // set((state: AppState) => {
-      //   const post = state.posts.find((post: Post) => post._id === postId);
-      //   if (post) {
-      //     post.upvotes = Math.max(0, post.upvotes - 1);
-      //   }
-      //   return {posts: state.posts};
-      // });
-    },
-    upvotePostinStore: (postId: string) => {
-      // TODO: implement this server-side with signed message verification
-      // set((state: AppState) => {
-      //   const post = state.posts.find((post: Post) => post._id === postId);
-      //   if (post) {
-      //     post.upvotes += 1;
-      //   }
-      //   return {posts: state.posts};
-      // });
-    },
+    updateSort: (sort: Sort) => set({sort}),
     loadProfileIntoStore: (profile: Profile) => {
-      set({ currentProfile: profile });
+      set({currentProfile: profile});
     },
     incrementProfilePostsUpvoted: () => {
       set((state: AppState) => {
@@ -89,13 +79,20 @@ export const initializeStore = (preloadedState = {}) => {
           profile.postsUpvoted += 1;
         }
 
-        return { currentProfile: profile };
+        return {currentProfile: profile};
       });
     },
+    setSiweAddress: (address: string) =>
+      set((state: AppState) => ({siwe: {...state.siwe, address} as SiweState})),
+    setSiweError: (error: Error | undefined) =>
+      set((state: AppState) => ({siwe: {...state.siwe, error} as SiweState})),
+    setSiweLoading: (loading: boolean | undefined) =>
+      set((state: AppState) => ({siwe: {...state.siwe, loading} as SiweState})),
+    clearSiweSession: () => set((state: AppState) => ({siwe: {}})),
   }));
 };
 
-export function useCreateStore(initialState: { sort: string }) {
+export function useCreateStore(initialState: {sort: string}) {
   // For SSR & SSG, always use a new store.
   if (typeof window === "undefined") {
     return () => initializeStore(initialState);

@@ -33,8 +33,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "lib/db.ts"
-, "components/Input/TextInput"  ],
+    "lib/db.ts",
+    "additional.d.ts"
+  ],
   "exclude": [
     "node_modules"
   ]
