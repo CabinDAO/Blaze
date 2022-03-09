@@ -60,7 +60,7 @@ export default function Profile() {
     }, [setSiweAddress, setSiweLoading]);
     
   useEffect(() => {
-    const checkProfileExistance = async (walletAddress: string) => {
+    const checkProfileExistence = async (walletAddress: string) => {
       const {data, error} = await supabase
         .from<ProfileType>("Profiles")
         .select("*")
@@ -93,7 +93,7 @@ export default function Profile() {
       }
     };
     if (address) {
-      checkProfileExistance(address);
+      checkProfileExistence(address);
     }
   }, [address, loadProfileIntoStore]);
 

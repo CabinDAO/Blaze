@@ -76,7 +76,7 @@ const SignIn = () => {
   }, [siwe.address, router]);
 
   useEffect(() => {
-    const checkProfileExistance = async (walletAddress: string) => {
+    const checkProfileExistence = async (walletAddress: string) => {
       const {data, error} = await supabase
         .from<Profile>("Profiles")
         .select("*")
@@ -109,7 +109,7 @@ const SignIn = () => {
       }
     };
     if (siwe.address) {
-      checkProfileExistance(siwe.address);
+      checkProfileExistence(siwe.address);
     }
   }, [siwe.address, loadProfileIntoStore]);
 
