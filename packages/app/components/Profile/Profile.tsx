@@ -2,11 +2,7 @@ import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
 import {useWallet} from "@/components/WalletAuth";
 import Title from "@/components/Title";
-import {v4 as uuidv4} from "uuid";
-import {useStore, Profile} from "@/store/store";
-import {useEffect, useState} from "react";
-import supabase from "@/lib/supabaseClient";
-import {getUnixTime} from "date-fns";
+
 
 const Profile = () => {
   const {loadProfileIntoStore, currentProfile} = useStore();

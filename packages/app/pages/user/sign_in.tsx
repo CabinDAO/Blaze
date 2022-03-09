@@ -3,9 +3,12 @@ import { useRouter } from "next/router";
 import { Button } from "@cabindao/topo";
 import { styled } from "@/stitches.config";
 import { useEffect } from "react";
-import { useStore } from "@/store/store";
 import { useCallback } from "react";
 import { SiweMessage } from 'siwe';
+import {v4 as uuidv4} from "uuid";
+import {useStore, Profile} from "@/store/store";
+import supabase from "@/lib/supabaseClient";
+import {getUnixTime} from "date-fns";
 
 const ConnectList = styled("div", {
   display: "flex",
@@ -19,7 +22,7 @@ const SignIn = () => {
   const router = useRouter();
   const [{ data, error, loading }, connect] = useConnect();
   const { connected, connector } = data;
-  const { siwe, setSiweLoading, setSiweError, setSiweAddress } = useStore();
+  const { siwe, setSiweLoading, setSiweError, setSiweAddress, loadProfileIntoStore } = useStore();
   
   const [{ data: accountData }] = useAccount();
   const [{ data: networkData }] = useNetwork();
@@ -71,6 +74,44 @@ const SignIn = () => {
       router.push("/");
     }
   }, [siwe.address, router]);
+
+  useEffect(() => {
+    const checkProfileExistance = async (walletAddress: string) => {
+      const {data, error} = await supabase
+        .from<Profile>("Profiles")
+        .select("*")
+        .eq("walletAddress", walletAddress)
+        .limit(1)
+        .single();
+      if (data === null) {
+        const profile: Profile = {
+          _id: uuidv4(),
+          walletAddress,
+          joinDate: getUnixTime(new Date()),
+          lastSeenDate: getUnixTime(new Date()),
+          upvotesReceived: 0,
+          postsUpvoted: 0,
+        };
+        await supabase.from("Profiles").insert(profile);
+        loadProfileIntoStore(profile);
+      } else {
+        const {data: profile} = await supabase
+          .from<Profile>("Profiles")
+          .update({lastSeenDate: getUnixTime(new Date())})
+          .eq("walletAddress", walletAddress)
+          .limit(1)
+          .single();
+        if (profile === null) {
+          console.log("Error: ", error);
+        } else {
+          loadProfileIntoStore(profile);
+        }
+      }
+    };
+    if (siwe.addressaddress) {
+      checkProfileExistance(siwe.address);
+    }
+  }, [siwe.address, loadProfileIntoStore]);
 
   if (!connected){
     return (
