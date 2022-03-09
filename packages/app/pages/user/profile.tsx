@@ -3,8 +3,11 @@ import ProfileCard from "@/components/Profile";
 import { StickyTabBar, TabLink } from "@/components/TabBar";
 import { useWallet } from "@/components/WalletAuth";
 import supabase from "@/lib/supabaseClient";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
+import { useStore, Profile as ProfileType } from "@/store/store";
+import {v4 as uuidv4} from "uuid";
+import {getUnixTime} from "date-fns";
 
 interface Post {
   _id: string;
@@ -29,6 +32,7 @@ async function fetchProfilePosts(address: string) {
 }
 
 export default function Profile() {
+  const { loadProfileIntoStore, setSiweAddress, setSiweLoading } = useStore();
   const { address } = useWallet();
   const [activeTab, setActiveTab] = useState(0);
   const { data: posts } = useQuery({
@@ -36,6 +40,62 @@ export default function Profile() {
     queryFn: () => fetchProfilePosts(address as string),
     enabled: !!address,
   });
+    // Fetch user when:
+    useEffect(() => {
+      const handler = async () => {
+        try {
+          const res = await fetch("/api/me");
+          const json = await res.json();
+          setSiweAddress(json.address);
+        } finally {
+          setSiweLoading(false);
+        }
+      };
+      // 1. page loads
+      (async () => await handler())();
+  
+      // 2. window is focused (in case user logs out of another window)
+      window.addEventListener("focus", handler);
+      return () => window.removeEventListener("focus", handler);
+    }, [setSiweAddress, setSiweLoading]);
+    
+  useEffect(() => {
+    const checkProfileExistance = async (walletAddress: string) => {
+      const {data, error} = await supabase
+        .from<ProfileType>("Profiles")
+        .select("*")
+        .eq("walletAddress", walletAddress)
+        .limit(1)
+        .single();
+      if (data === null) {
+        const profile: ProfileType = {
+          _id: uuidv4(),
+          walletAddress,
+          joinDate: getUnixTime(new Date()),
+          lastSeenDate: getUnixTime(new Date()),
+          upvotesReceived: 0,
+          postsUpvoted: 0,
+        };
+        await supabase.from("Profiles").insert(profile);
+        loadProfileIntoStore(profile);
+      } else {
+        const {data: profile} = await supabase
+          .from<ProfileType>("Profiles")
+          .update({lastSeenDate: getUnixTime(new Date())})
+          .eq("walletAddress", walletAddress)
+          .limit(1)
+          .single();
+        if (profile === null) {
+          console.log("Error: ", error);
+        } else {
+          loadProfileIntoStore(profile);
+        }
+      }
+    };
+    if (address) {
+      checkProfileExistance(address);
+    }
+  }, [address, loadProfileIntoStore]);
 
   return (
     <div>
