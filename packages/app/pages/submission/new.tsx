@@ -34,8 +34,7 @@ const NewSubmission = () => {
     title: '',
     domainText: '',
     url: '',
-    // postedBy: currentProfile.walletAddress,
-    postedBy: '0x00000',
+    postedBy: currentProfile.walletAddress,
     created_at: new Date().toISOString(),
     upvotes: 0
   });

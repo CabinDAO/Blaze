@@ -108,7 +108,7 @@ const SignIn = () => {
         }
       }
     };
-    if (siwe.addressaddress) {
+    if (siwe.address) {
       checkProfileExistance(siwe.address);
     }
   }, [siwe.address, loadProfileIntoStore]);
