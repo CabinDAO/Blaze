@@ -1,13 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack(config) {
+  webpack(config, {isServer, webpack}) {
     config.devtool = "eval-source-map";
-    return config;
-  }
-  
-}
 
-const withTM = require('next-transpile-modules')(["date-fns"]); // pass the modules you would like to see transpiled
+    if (isServer) {
+      config.plugins.push(new webpack.IgnorePlugin(/^wagmi$/));
+    }
+
+    return config;
+  },
+};
+
+const withTM = require("next-transpile-modules")(["date-fns"]); // pass the modules you would like to see transpiled
 
 module.exports = withTM(nextConfig);
