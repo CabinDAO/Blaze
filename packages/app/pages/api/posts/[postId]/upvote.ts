@@ -1,7 +1,17 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import supabase from "@/lib/supabase";
 import { withIronSessionApiRoute } from "iron-session/next";
+import { createClient } from "@supabase/supabase-js";
 import { ironOptions } from "@/constants";
+
+const supabaseId = process.env.NEXT_PUBLIC_SUPABASE_KEY || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+
+const supabase = createClient(supabaseUrl, supabaseId, {
+  schema: "public",
+  autoRefreshToken: true,
+  persistSession: false,
+  detectSessionInUrl: false,
+});
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
