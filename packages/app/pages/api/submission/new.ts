@@ -1,7 +1,7 @@
 (global as any).WebSocket = require("isomorphic-ws");
 import { NextApiRequest, NextApiResponse } from "next";
-import supabase from "@/lib/supabaseClient";
-import { v4 as uuidv4} from "uuid";
+import supabase from "@/lib/supabase";
+import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 
 export default async function handler(
@@ -9,16 +9,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const post = { 
+    const post = {
       ...req.body,
       _id: uuidv4(),
-      timestamp: getUnixTime(new Date())
+      timestamp: getUnixTime(new Date()),
     };
 
     try {
-      await supabase
-      .from('Posts')
-      .insert(post);
+      await supabase.from("Posts").insert(post);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

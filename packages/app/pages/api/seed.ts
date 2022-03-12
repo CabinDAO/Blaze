@@ -3,10 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "rss-to-json";
 import initMiddleware from "../../lib/init-middleware";
 import Cors from "cors";
-import { v4 as uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
-
-import supabase from "@/lib/supabaseClient";
+import supabase from "@/lib/supabase";
 import { getUnixTime } from "date-fns";
 
 export interface Post {
@@ -21,7 +20,7 @@ export interface Post {
 
 export interface Link {
   title: string;
-  link: string
+  link: string;
 }
 
 // Initialize the cors middleware
@@ -49,33 +48,33 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const { authorization } = req.headers;
-      if (
-        authorization === `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`
-      ) {
+      if (authorization === `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`) {
         const fetchMirrorData = async (urlArray: string[][]) => {
           let transformedData = [];
           for (const arr of urlArray) {
             const domainText = arr[0];
             const rawData = await parse(arr[1], {});
-            const postData: Post[] = await rawData.items.slice(0, 10).map((item: Link) => {
-              return {
-                _id: uuidv4(),
-                title: item.title,
-                url: item.link,
-                domainText: domainText,
-                postedBy: "0x0000000000000000000000000000000000000000",
-                timestamp: getUnixTime(new Date()),
-                upvotes: 0,
-              };
-            });
+            const postData: Post[] = await rawData.items
+              .slice(0, 10)
+              .map((item: Link) => {
+                return {
+                  _id: uuidv4(),
+                  title: item.title,
+                  url: item.link,
+                  domainText: domainText,
+                  postedBy: "0x0000000000000000000000000000000000000000",
+                  timestamp: getUnixTime(new Date()),
+                  upvotes: 0,
+                };
+              });
             transformedData.push(...postData);
           }
           return transformedData;
         };
         const fetchedPosts = await fetchMirrorData(MirrorRSSFeedURLs);
-        let { data } = await supabase.from("Posts").select('*');
+        let { data } = await supabase.from("Posts").select("*");
         if (data === null) {
-          data = []
+          data = [];
         }
         const concat = fetchedPosts.concat(data);
 
@@ -85,13 +84,11 @@ export default async function handler(
         //convert back to array
         const uniquePostsArray = Array.from(uniquePosts);
 
-
-
         if (uniquePostsArray.length > 0) {
           try {
             const { data } = await supabase
-            .from('Posts')
-            .insert(uniquePostsArray);
+              .from("Posts")
+              .insert(uniquePostsArray);
           } catch (err: any) {
             res.status(500).json({ message: err.message });
           }

@@ -4,7 +4,7 @@ import { StickyTabBar, TabLink } from "@/components/TabBar";
 import WalletAddress from "@/components/WalletAddress";
 import PostList from "@/components/PostList";
 import { useQuery } from "react-query";
-import supabase from "@/lib/supabaseClient";
+import supabase from "@/lib/supabase";
 
 export const getServerSideProps = async ({
   params,
