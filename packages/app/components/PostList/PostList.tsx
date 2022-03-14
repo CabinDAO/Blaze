@@ -2,7 +2,7 @@ import { styled } from "@/stitches.config";
 import Post from "../Post";
 import { useEffect } from "react";
 import { useStore } from "@/store/store";
-import supabase from "@/lib/supabaseClient";
+import supabase from "@/lib/supabase";
 
 const StyledPostList = styled("div", {
   display: "flex",

@@ -1,13 +1,13 @@
-import type {NextPage} from "next";
+import type { NextPage } from "next";
 import PostList from "@/components/PostList";
-import {useStore} from "@/store/store";
+import { useStore } from "@/store/store";
 import Title from "@/components/Title";
 import StickyTabBar from "@/components/TabBar";
-import {useQuery} from "react-query";
-import supabase from "@/lib/supabaseClient";
-import {useEffect} from "react";
+import { useQuery } from "react-query";
+import supabase from "@/lib/supabase";
+import { useEffect } from "react";
 
-const sorting: Record<string, {column: string; ascending: boolean}> = {
+const sorting: Record<string, { column: string; ascending: boolean }> = {
   newest: {
     column: "created_at",
     ascending: false,
@@ -22,7 +22,7 @@ const sorting: Record<string, {column: string; ascending: boolean}> = {
 async function loadPosts(sort: string, address?: string | null) {
   let limit = 25;
   let query = address
-    ? supabase.rpc("user_posts_ranking", {address}).select("*").limit(limit)
+    ? supabase.rpc("user_posts_ranking", { address }).select("*").limit(limit)
     : supabase.from("post_rankings").select("*").limit(limit);
 
   if (sorting[sort]) {
@@ -30,9 +30,9 @@ async function loadPosts(sort: string, address?: string | null) {
       .order(sorting[sort].column, {
         ascending: sorting[sort].ascending,
       })
-      .order("_id", {ascending: true});
+      .order("_id", { ascending: true });
   }
-  const {data: posts, error: postsError} = await query;
+  const { data: posts, error: postsError } = await query;
   return posts;
 }
 
@@ -41,9 +41,9 @@ const Home: NextPage = () => {
     sort,
     setSiweAddress,
     setSiweLoading,
-    siwe: {address},
+    siwe: { address },
   } = useStore();
-  const {data: posts} = useQuery(["posts", sort, address], () =>
+  const { data: posts } = useQuery(["posts", sort, address], () =>
     loadPosts(sort, address)
   );
   // Fetch user when:
@@ -77,7 +77,7 @@ export default Home;
 
 export async function getStaticProps() {
   const initSupabaseClient = async () => {
-    const {createClient} = await import("@supabase/supabase-js");
+    const { createClient } = await import("@supabase/supabase-js");
     const supabaseId = process.env.NEXT_PUBLIC_SUPABASE_KEY || "";
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
     const supabase = createClient(supabaseUrl, supabaseId, {
@@ -89,7 +89,7 @@ export async function getStaticProps() {
     return supabase;
   };
   const supabase = await initSupabaseClient();
-  let {data: upvotes, error: upvotesError} = await supabase
+  let { data: upvotes, error: upvotesError } = await supabase
     .from("Upvotes")
     .select("*");
   if (upvotes === null) {

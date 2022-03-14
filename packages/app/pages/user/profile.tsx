@@ -2,12 +2,12 @@ import PostList from "@/components/PostList";
 import ProfileCard from "@/components/Profile";
 import { StickyTabBar, TabLink } from "@/components/TabBar";
 import { useWallet } from "@/components/WalletAuth";
-import supabase from "@/lib/supabaseClient";
+import supabase from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { useStore, Profile as ProfileType } from "@/store/store";
-import {v4 as uuidv4} from "uuid";
-import {getUnixTime} from "date-fns";
+import { v4 as uuidv4 } from "uuid";
+import { getUnixTime } from "date-fns";
 
 interface Post {
   _id: string;
@@ -40,28 +40,28 @@ export default function Profile() {
     queryFn: () => fetchProfilePosts(address as string),
     enabled: !!address,
   });
-    // Fetch user when:
-    useEffect(() => {
-      const handler = async () => {
-        try {
-          const res = await fetch("/api/me");
-          const json = await res.json();
-          setSiweAddress(json.address);
-        } finally {
-          setSiweLoading(false);
-        }
-      };
-      // 1. page loads
-      (async () => await handler())();
-  
-      // 2. window is focused (in case user logs out of another window)
-      window.addEventListener("focus", handler);
-      return () => window.removeEventListener("focus", handler);
-    }, [setSiweAddress, setSiweLoading]);
-    
+  // Fetch user when:
+  useEffect(() => {
+    const handler = async () => {
+      try {
+        const res = await fetch("/api/me");
+        const json = await res.json();
+        setSiweAddress(json.address);
+      } finally {
+        setSiweLoading(false);
+      }
+    };
+    // 1. page loads
+    (async () => await handler())();
+
+    // 2. window is focused (in case user logs out of another window)
+    window.addEventListener("focus", handler);
+    return () => window.removeEventListener("focus", handler);
+  }, [setSiweAddress, setSiweLoading]);
+
   useEffect(() => {
     const checkProfileExistence = async (walletAddress: string) => {
-      const {data, error} = await supabase
+      const { data, error } = await supabase
         .from<ProfileType>("Profiles")
         .select("*")
         .eq("walletAddress", walletAddress)
@@ -79,9 +79,9 @@ export default function Profile() {
         await supabase.from("Profiles").insert(profile);
         loadProfileIntoStore(profile);
       } else {
-        const {data: profile} = await supabase
+        const { data: profile } = await supabase
           .from<ProfileType>("Profiles")
-          .update({lastSeenDate: getUnixTime(new Date())})
+          .update({ lastSeenDate: getUnixTime(new Date()) })
           .eq("walletAddress", walletAddress)
           .limit(1)
           .single();
