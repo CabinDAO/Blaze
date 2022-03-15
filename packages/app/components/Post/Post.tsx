@@ -1,14 +1,14 @@
-import {styled} from "@/stitches.config";
+import { styled } from "@/stitches.config";
 import Link from "next/link";
-import {ClockIcon, SpeechIcon} from "@/components/Icons";
+import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
-import {useStore} from "@/store/store";
-import {formatDistanceToNow, fromUnixTime} from "date-fns";
+import { useStore } from "@/store/store";
+import { formatDistanceToNow, fromUnixTime } from "date-fns";
 
-import {useWallet} from "../WalletAuth";
-import {useMutation, useQueryClient} from "react-query";
-import {useCallback} from "react";
+import { useWallet } from "../WalletAuth";
+import { useMutation, useQueryClient } from "react-query";
+import { useCallback } from "react";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -71,12 +71,16 @@ const Post = ({
   upvotes,
   upvoted,
 }: PostProps) => {
-
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
 
-  const {mutate} = useMutation<any, Error, {postId: string}>(
-    async ({postId}) => {
+  const {
+    sort,
+    siwe: { address: siweAddress },
+  } = useStore();
+
+  const { mutate } = useMutation<any, Error, { postId: string }>(
+    async ({ postId }) => {
       return await fetch(`/api/posts/${postId}/upvote`, {
         method: "POST",
         headers: {
@@ -89,15 +93,42 @@ const Post = ({
       });
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries("posts");
+      onMutate: async ({ postId }) => {
+        await queryClient.cancelQueries(["posts", sort, address]);
+        const previousPosts = queryClient.getQueryData<
+          {
+            _id: string;
+            upvotes: number;
+            upvoted: boolean;
+          }[]
+        >(["posts", sort, address]);
+
+        if (previousPosts) {
+          queryClient.setQueryData(
+            ["posts", sort, address],
+            previousPosts.map((post) =>
+              post._id === postId
+                ? {
+                    ...post,
+                    upvotes: post.upvoted
+                      ? Math.max(0, post.upvotes - 1)
+                      : post.upvotes + 1,
+                    upvoted: !post.upvoted,
+                  }
+                : post
+            )
+          );
+        }
+        return { previousPosts };
+      },
+      onError: (_err, _postUpvote, context: any) => {
+        queryClient.setQueryData(["posts"], context.previousPosts);
       },
     }
   );
 
   const upvoteHandler = useCallback(
     (_id: string) => {
-
       if (isAuthenticated) {
         return mutate({ postId: _id });
       } else {
@@ -133,7 +164,7 @@ const Post = ({
         <PostMeta>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(new Date(created_at), {addSuffix: true})}
+            {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
           </IconText>
           {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}

@@ -18,7 +18,6 @@ const sorting: Record<string, { column: string; ascending: boolean }> = {
   },
 };
 
-// TODO: if sort by newest
 async function loadPosts(sort: string, address?: string | null) {
   let limit = 25;
   let query = address
@@ -32,7 +31,7 @@ async function loadPosts(sort: string, address?: string | null) {
       })
       .order("_id", { ascending: true });
   }
-  const { data: posts, error: postsError } = await query;
+  const { data: posts } = await query;
   return posts;
 }
 
@@ -68,7 +67,7 @@ const Home: NextPage = () => {
     <div>
       <Title>Today</Title>
       <StickyTabBar />
-      <PostList posts={posts ?? []} sort={sort} />
+      <PostList posts={posts ?? []} />
     </div>
   );
 };

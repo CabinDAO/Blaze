@@ -109,7 +109,7 @@ export default function Profile() {
         </TabLink>
       </StickyTabBar>
 
-      <PostList posts={posts ?? []} sort="newest" />
+      <PostList posts={posts ?? []} />
     </div>
   );
 }
