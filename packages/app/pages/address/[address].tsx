@@ -52,7 +52,7 @@ export default function Address({ isValid }: { isValid: boolean }) {
         <TabLink active>Submissions</TabLink>
       </StickyTabBar>
 
-      <PostList posts={posts ?? []} sort="newest" />
+      <PostList posts={posts ?? []} />
     </div>
   );
 }

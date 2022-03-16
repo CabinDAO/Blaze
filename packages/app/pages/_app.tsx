@@ -1,4 +1,4 @@
-import {QueryClient, QueryClientProvider} from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import {
   Provider as WalletProvider,
@@ -6,18 +6,18 @@ import {
   defaultChains,
   useAccount,
 } from "wagmi";
-import {InjectedConnector} from "wagmi/connectors/injected";
-import {WalletConnectConnector} from "wagmi/connectors/walletConnect";
-import {styled, globalCss} from "@/stitches.config";
-import type {AppProps} from "next/app";
-import {Button, Footer} from "@cabindao/topo";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { styled, globalCss } from "@/stitches.config";
+import type { AppProps } from "next/app";
+import { Button, Footer } from "@cabindao/topo";
 import WalletAddress from "@/components/WalletAddress";
 import Link from "next/link";
-import WalletAuth, {useWallet} from "@/components/WalletAuth";
-import Router, {useRouter} from "next/router";
-import {HamburgerMenuIcon, Cross1Icon} from "@radix-ui/react-icons";
-import {useEffect, useState} from "react";
-import {useCreateStore, Provider as ZustandProvider} from "@/store/store";
+import WalletAuth, { useWallet } from "@/components/WalletAuth";
+import Router, { useRouter } from "next/router";
+import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
+import { useCreateStore, Provider as ZustandProvider } from "@/store/store";
 import { useStore } from "@/store/store";
 
 const globalStyles = globalCss({
@@ -99,16 +99,16 @@ const alchemyId = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 const chains = defaultChains;
 
 const connectors = [
-  new InjectedConnector({chains: defaultChains}),
+  new InjectedConnector({ chains: defaultChains }),
   new WalletConnectConnector({
     options: {
-      rpc: {1: `https://eth-goerli.alchemyapi.io/v2/${alchemyId}}`},
+      rpc: { 1: `https://eth-goerli.alchemyapi.io/v2/${alchemyId}}` },
     },
   }),
 ];
 
 const ProfileLink = () => {
-  const {address, ens} = useWallet({fetchEns: true});
+  const { address, ens } = useWallet({ fetchEns: true });
   if (!address) return null;
   return (
     <Link href="/user/profile">
@@ -199,7 +199,7 @@ const MenuBox = styled("div", {
 });
 const MobileMenu = () => {
   const router = useRouter();
-  const [{data}, disconnect] = useAccount();
+  const [{ data }, disconnect] = useAccount();
   const [isOpen, setIsOpen] = useState(false);
   const { clearSiweSession } = useStore();
 
@@ -238,13 +238,17 @@ const MobileMenu = () => {
                 <a>Submit a Link</a>
               </Link>
               <Link href="/">
-              <a onClick={async (e) => {
-                  e.preventDefault();
-                  setIsOpen(false);
-                  await fetch('/api/logout');
-                  clearSiweSession();
-                  disconnect();
-                }}>Sign Out</a>
+                <a
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    setIsOpen(false);
+                    await fetch("/api/logout");
+                    clearSiweSession();
+                    disconnect();
+                  }}
+                >
+                  Sign Out
+                </a>
               </Link>
             </>
           ) : (
@@ -280,12 +284,18 @@ const ResponsiveNav = () => {
   );
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+});
 
-function MyApp({Component, pageProps}: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   const createStore = useCreateStore(pageProps.initialZustandState);
   globalStyles();
-  const {pathname} = useRouter();
+  const { pathname } = useRouter();
   return (
     <QueryClientProvider client={queryClient}>
       <ZustandProvider createStore={createStore}>

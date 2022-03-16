@@ -19,13 +19,11 @@ export interface Post {
   postedBy: string;
   upvotes: number;
 }
-export type Sort = "newest" | "trending" | "controversial";
 export interface PostListProps {
   posts: Post[];
-  sort: Sort;
 }
 
-const PostList = ({ posts, sort }: PostListProps) => {
+const PostList = ({ posts }: PostListProps) => {
   const { currentProfile, incrementProfilePostsUpvoted } = useStore();
 
   useEffect(() => {
