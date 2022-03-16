@@ -10,8 +10,7 @@
   "workspaces": {
     "packages": [
       "packages/*"
-    ],
-    "nohoist": ["**/app", "**/contracts"]
+    ]
   },
   "scripts": {
     "app:dev": "yarn workspace dao-camp-app next dev",

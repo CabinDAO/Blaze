@@ -9,6 +9,9 @@
     "lint": "next lint",
     "export": "next export"
   },
+  "workspaces": {
+    "nohoist": ["**"]
+  },
   "dependencies": {
     "@cabindao/topo": "^0.4.0",
     "@cabindao/topo-theme": "^0.1.0",
