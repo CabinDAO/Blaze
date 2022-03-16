@@ -1,6 +1,7 @@
 {
   "name": "dao-camp-contracts",
   "version": "0.0.1",
+  "private": true,
   "workspaces": {
     "nohoist": ["**"]
   },
