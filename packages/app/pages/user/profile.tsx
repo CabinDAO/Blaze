@@ -1,6 +1,5 @@
 import PostList from "@/components/PostList";
 import ProfileCard from "@/components/Profile";
-import { StickyTabBar, TabLink } from "@/components/TabBar";
 import { useWallet } from "@/components/WalletAuth";
 import supabase from "@/lib/supabase";
 import { useState, useEffect } from "react";
@@ -100,16 +99,6 @@ export default function Profile() {
   return (
     <div>
       <ProfileCard />
-      <StickyTabBar>
-        <TabLink active={activeTab === 0} onClick={() => setActiveTab(0)}>
-          Submitted
-        </TabLink>
-        <TabLink active={activeTab === 1} onClick={() => setActiveTab(1)}>
-          Upvotes
-        </TabLink>
-      </StickyTabBar>
-
-      <PostList posts={posts ?? []} />
     </div>
   );
 }
