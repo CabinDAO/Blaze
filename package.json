@@ -11,9 +11,6 @@
     "packages": [
       "packages/*"
     ],
-    "nohoist": [
-      "packages/*"
-    ]
   },
   "scripts": {
     "app:dev": "yarn workspace dao-camp-app next dev",

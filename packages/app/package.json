@@ -12,11 +12,6 @@
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
   },
-  "workspaces": {
-    "nohoist": [
-      "**"
-    ]
-  },
   "dependencies": {
     "@cabindao/topo": "^0.4.0",
     "@cabindao/topo-theme": "^0.1.0",
