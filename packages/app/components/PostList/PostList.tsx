@@ -25,7 +25,6 @@ export interface PostListProps {
 
 const PostList = ({ posts }: PostListProps) => {
   const { currentProfile, incrementProfilePostsUpvoted } = useStore();
-
   useEffect(() => {
     const Upvotes = supabase
       .from("Upvotes")

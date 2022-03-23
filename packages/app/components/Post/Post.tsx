@@ -9,6 +9,8 @@ import { formatDistanceToNow, fromUnixTime } from "date-fns";
 import { useWallet } from "../WalletAuth";
 import { useMutation, useQueryClient } from "react-query";
 import { useCallback } from "react";
+import { useProvider } from "wagmi";
+import { useEnsLookup } from "@/helpers/ens";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -73,11 +75,9 @@ const Post = ({
 }: PostProps) => {
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
-
-  const {
-    sort,
-    siwe: { address: siweAddress },
-  } = useStore();
+  const { sort } = useStore();
+  const provider = useProvider();
+  const [resolvedName] = useEnsLookup([postedBy], provider);
 
   const { mutate } = useMutation<any, Error, { postId: string }>(
     async ({ postId }) => {
@@ -156,7 +156,10 @@ const Post = ({
             via{" "}
             <Link href={`/address/${postedBy}`}>
               <a title={`View profile of ${postedBy}`}>
-                <WalletAddress address={postedBy} />
+                <WalletAddress
+                  address={postedBy}
+                  ens={{ name: resolvedName }}
+                />
               </a>
             </Link>
           </MetaAddress>
