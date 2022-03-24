@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract Stamp is ERC721 {
     using Counters for Counters.Counter;
 
-    CountersUpgradeable.Counter private _nextTokenId;
+    Counters.Counter private _nextTokenId;
 
     constructor() {
         super("Blaze Access Stamp", "BLZ");
