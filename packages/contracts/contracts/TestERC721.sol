@@ -9,7 +9,7 @@ contract Stamp is ERC721 {
 
     CountersUpgradeable.Counter private _nextTokenId;
 
-    function constructor() {
+    constructor() {
         super("Blaze Access Stamp", "BLZ");
         _nextTokenId.increment();
     }
