@@ -4,8 +4,10 @@ import { useStore } from "@/store/store";
 import Title from "@/components/Title";
 import StickyTabBar from "@/components/TabBar";
 import { useQuery } from "react-query";
-import { useEffect } from "react";
 import { loadPosts } from "@/helpers/posts";
+import { useEffect, useMemo } from "react";
+import { useProvider } from "wagmi";
+import { useEnsLookup } from "@/helpers/ens";
 
 const sorting: Record<string, { column: string; ascending: boolean }> = {
   newest: {
@@ -46,6 +48,17 @@ const Home: NextPage = () => {
     window.addEventListener("focus", handler);
     return () => window.removeEventListener("focus", handler);
   }, [setSiweAddress, setSiweLoading]);
+
+  const provider = useProvider();
+
+  const addresses: string[] = useMemo(
+    () => posts?.map((p) => p.postedBy as string) ?? [],
+    [posts]
+  );
+
+  // prefetch ens names
+  useEnsLookup(addresses, provider);
+
   return (
     <div>
       <Title>Today</Title>
