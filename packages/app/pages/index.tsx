@@ -4,8 +4,8 @@ import { useStore } from "@/store/store";
 import Title from "@/components/Title";
 import StickyTabBar from "@/components/TabBar";
 import { useQuery } from "react-query";
-import supabase from "@/lib/supabase";
 import { useEffect } from "react";
+import { loadPosts } from "@/helpers/posts";
 
 const sorting: Record<string, { column: string; ascending: boolean }> = {
   newest: {
@@ -17,23 +17,6 @@ const sorting: Record<string, { column: string; ascending: boolean }> = {
     ascending: false,
   },
 };
-
-async function loadPosts(sort: string, address?: string | null) {
-  let limit = 25;
-  let query = address
-    ? supabase.rpc("user_posts_ranking", { address }).select("*").limit(limit)
-    : supabase.from("post_rankings").select("*").limit(limit);
-
-  if (sorting[sort]) {
-    query = query
-      .order(sorting[sort].column, {
-        ascending: sorting[sort].ascending,
-      })
-      .order("_id", { ascending: true });
-  }
-  const { data: posts } = await query;
-  return posts;
-}
 
 const Home: NextPage = () => {
   const {

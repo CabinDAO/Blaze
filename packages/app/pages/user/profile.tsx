@@ -9,25 +9,13 @@ import { useStore, Profile as ProfileType } from "@/store/store";
 import { v4 as uuidv4 } from "uuid";
 import { getUnixTime } from "date-fns";
 
-interface Post {
-  _id: string;
-  id: string;
-  title: string;
-  url: string;
-  postedBy: string;
-  upvotes: number;
-  created_at: string;
-  domainText: string;
-}
+import { queryPosts } from "@/helpers/posts";
 
 async function fetchProfilePosts(address: string) {
-  let { data: posts, error: postsError } = await supabase
-    .from<Post>("Posts")
-    .select("*")
-    .filter("postedBy", "eq", address)
-    .order("created_at", { ascending: false })
-    .order("_id", { ascending: true })
-    .limit(25);
+  const { data: posts, error: postsError } = await queryPosts(
+    "newest",
+    address
+  ).filter("postedBy", "eq", address);
   return posts;
 }
 

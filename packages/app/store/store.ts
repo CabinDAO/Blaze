@@ -1,4 +1,4 @@
-import {useLayoutEffect} from "react";
+import { useLayoutEffect } from "react";
 import create from "zustand";
 import createContext from "zustand/context";
 
@@ -16,7 +16,7 @@ export interface Post {
   upvotes: number;
 }
 export type PostList = Post[];
-export type Sort = "newest" | "trending" | "controversial";
+export type Sort = "newest" | "trending";
 export type Profile = {
   _id: string;
   walletAddress: string;
@@ -68,9 +68,9 @@ export const initializeStore = (preloadedState = {}) => {
   return create((set: any) => ({
     ...initialState,
     ...preloadedState,
-    updateSort: (sort: Sort) => set({sort}),
+    updateSort: (sort: Sort) => set({ sort }),
     loadProfileIntoStore: (profile: Profile) => {
-      set({currentProfile: profile});
+      set({ currentProfile: profile });
     },
     incrementProfilePostsUpvoted: () => {
       set((state: AppState) => {
@@ -79,20 +79,26 @@ export const initializeStore = (preloadedState = {}) => {
           profile.postsUpvoted += 1;
         }
 
-        return {currentProfile: profile};
+        return { currentProfile: profile };
       });
     },
     setSiweAddress: (address: string) =>
-      set((state: AppState) => ({siwe: {...state.siwe, address} as SiweState})),
+      set((state: AppState) => ({
+        siwe: { ...state.siwe, address } as SiweState,
+      })),
     setSiweError: (error: Error | undefined) =>
-      set((state: AppState) => ({siwe: {...state.siwe, error} as SiweState})),
+      set((state: AppState) => ({
+        siwe: { ...state.siwe, error } as SiweState,
+      })),
     setSiweLoading: (loading: boolean | undefined) =>
-      set((state: AppState) => ({siwe: {...state.siwe, loading} as SiweState})),
-    clearSiweSession: () => set((state: AppState) => ({siwe: {}})),
+      set((state: AppState) => ({
+        siwe: { ...state.siwe, loading } as SiweState,
+      })),
+    clearSiweSession: () => set((state: AppState) => ({ siwe: {} })),
   }));
 };
 
-export function useCreateStore(initialState: {sort: string}) {
+export function useCreateStore(initialState: { sort: string }) {
   // For SSR & SSG, always use a new store.
   if (typeof window === "undefined") {
     return () => initializeStore(initialState);
