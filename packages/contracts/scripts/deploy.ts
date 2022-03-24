@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import hre, { ethers } from "hardhat";
 
 async function main() {
 
@@ -8,6 +8,10 @@ async function main() {
   await stamp.deployed();
 
   console.log("Blaze passport deployed to:", stamp.address);
+  await hre.run("verify:verify", {
+    contract: stamp.address,
+  });
+  console.log("Blaze passport verified!");
 }
 
 main().catch((error) => {
