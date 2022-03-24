@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
-import {Button} from "@cabindao/topo";
-import {useConnect, useAccount, Connector, useEnsLookup} from "wagmi";
+import { useEffect } from "react";
+import { Button } from "@cabindao/topo";
+import { useAccount, useEnsLookup } from "wagmi";
 import Link from "next/link";
-import {useRouter} from "next/router";
-import {useStore} from "@/store/store";
+import { useRouter } from "next/router";
+import { useStore } from "@/store/store";
 import create from "zustand";
 
 interface AccountStore {
@@ -12,14 +12,14 @@ interface AccountStore {
 }
 const useAccountInfo = create<AccountStore>((set) => ({
   ens: null,
-  setEns: (ens: string) => set({ens}),
+  setEns: (ens: string) => set({ ens }),
 }));
 
-export const useWallet = (options?: {fetchEns?: boolean}) => {
-  const {ens, setEns} = useAccountInfo();
-  const { siwe, setSiweAddress, setSiweLoading } = useStore();
+export const useWallet = (options?: { fetchEns?: boolean }) => {
+  const { ens, setEns } = useAccountInfo();
+  const { siwe } = useStore();
 
-  const [{data: ensData}] = useEnsLookup({
+  const [{ data: ensData }] = useEnsLookup({
     address: siwe?.address,
     skip: !!ens || !siwe?.address || !options?.fetchEns,
   });
@@ -43,17 +43,21 @@ export const useWallet = (options?: {fetchEns?: boolean}) => {
 const WalletAuth = () => {
   const router = useRouter();
   const [, disconnect] = useAccount();
-  const { siwe, clearSiweSession, setSiweAddress, setSiweLoading } = useStore();
+  const { siwe, clearSiweSession } = useStore();
   const SignOutHandler = async () => {
-    await fetch('/api/logout');
+    await fetch("/api/logout");
     clearSiweSession();
     disconnect();
-    router.push('/');
-  }
+    router.push("/");
+  };
   if (siwe.address) {
     return (
       <div>
-        <Button onClick={async () => await SignOutHandler()} type="secondary" tone="forest">
+        <Button
+          onClick={async () => await SignOutHandler()}
+          type="secondary"
+          tone="forest"
+        >
           Sign Out
         </Button>
       </div>

@@ -42,7 +42,7 @@ export const TabLink = styled("button", {
   },
 });
 
-export type Sort = "newest" | "trending" | "controversial";
+export type Sort = "newest" | "trending";
 
 const TabsContainer = ({
   className,

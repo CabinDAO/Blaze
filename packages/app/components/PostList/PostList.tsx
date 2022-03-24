@@ -18,6 +18,7 @@ export interface Post {
   url: string;
   postedBy: string;
   upvotes: number;
+  upvoted?: boolean;
 }
 export interface PostListProps {
   posts: Post[];
