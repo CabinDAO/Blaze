@@ -59,6 +59,7 @@ export interface PostProps {
   created_at: string;
   upvotes: number;
   upvoted?: boolean;
+  upvoteDisabled?: boolean;
 }
 
 const Post = ({
@@ -70,6 +71,7 @@ const Post = ({
   created_at,
   upvotes,
   upvoted,
+  upvoteDisabled = false,
 }: PostProps) => {
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
@@ -144,6 +146,7 @@ const Post = ({
           upvoted={upvoted}
           count={upvotes}
           onClick={() => upvoteHandler(_id)}
+          disabled={upvoteDisabled}
         />
       </div>
       <PostInfo>
