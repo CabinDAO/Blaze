@@ -2,6 +2,9 @@
   "name": "dao-camp-contracts",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "deploy": "npx hardhat run scripts/deploy.ts"
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.4",
     "@nomiclabs/hardhat-etherscan": "^2.1.8",
