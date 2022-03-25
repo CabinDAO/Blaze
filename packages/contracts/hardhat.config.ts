@@ -25,9 +25,10 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const config: HardhatUserConfig = {
   networks: {
     rinkeby: {
-      url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: process.env.ALCHEMY_URL !== undefined ? process.env.ALCHEMY_URL : "http://localhost:8545",
+      accounts: process.env.MNEMONIC !== undefined ? {mnemonic: process.env.MNEMONIC} : undefined,
+      gas: 2100000,
+      gasPrice: 8000000000,
     },
   },
   solidity: {
@@ -44,7 +45,7 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.POLYGONSCAN_API_KEY,
+    apiKey: process.env.ETHERSCAN_API_KEY,
   },
 };
 

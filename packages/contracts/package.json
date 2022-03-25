@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "deploy": "npx hardhat run scripts/deploy.ts"
+    "deploy": "npx hardhat run scripts/deploy.ts",
+    "node" : "npx hardhat node",
+    "verify": "npx hardhat verify"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.4",

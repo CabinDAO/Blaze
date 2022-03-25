@@ -18,6 +18,8 @@
     "app:start": "yarn workspace dao-camp-app next start",
     "app:lint": "yarn workspace dao-camp-app next lint",
     "app:export": "yarn workspace dao-camp-app next export",
-    "contracts:deploy": "yarn workspace dao-camp-contracts deploy"
+    "contracts:deploy": "yarn workspace dao-camp-contracts deploy",
+    "contracts:node": "yarn workspace dao-camp-contracts node",
+    "contracts:verify": "yarn workspace dao-camp-contracts verify"
   }
 }

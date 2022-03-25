@@ -9,7 +9,7 @@ async function main() {
 
   console.log("Blaze passport deployed to:", stamp.address);
   await hre.run("verify:verify", {
-    contract: stamp.address,
+    address: stamp.address,
   });
   console.log("Blaze passport verified!");
 }
