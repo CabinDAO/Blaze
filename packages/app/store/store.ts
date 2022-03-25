@@ -41,11 +41,13 @@ export interface InitialState {
   sort: Sort;
   currentProfile: object;
   siwe: SiweState;
+  isPassportOwner: boolean;
 }
 const initialState: InitialState = {
   sort: "trending",
   currentProfile: {},
   siwe: {},
+  isPassportOwner: false
 };
 
 export default interface AppState {
@@ -53,6 +55,7 @@ export default interface AppState {
   upvotes: Upvote[];
   currentProfile: Profile;
   siwe: SiweState;
+  isPassportOwner: boolean;
   updateSort: (sort: Sort) => void;
   loadProfileIntoStore: (profile: Profile) => void;
   incrementProfilePostsUpvoted: () => void;
@@ -60,6 +63,7 @@ export default interface AppState {
   setSiweLoading: (status: boolean | undefined) => void;
   setSiweError: (error: Error | undefined) => void;
   clearSiweSession: () => void;
+  setIsPassportOwner: (isPassportOwner: boolean) => void;
 }
 const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
@@ -95,6 +99,7 @@ export const initializeStore = (preloadedState = {}) => {
         siwe: { ...state.siwe, loading } as SiweState,
       })),
     clearSiweSession: () => set((state: AppState) => ({ siwe: {} })),
+    setIsPassportOwner: (isPassportOwner: boolean) => set((state: AppState) => ({isPassportOwner})),
   }));
 };
 

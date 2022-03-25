@@ -2,6 +2,16 @@ import { withIronSessionApiRoute } from 'iron-session/next';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { SiweMessage } from 'siwe';
 import { ironOptions } from '@/constants';
+import { erc721ABI } from "wagmi";
+import ethers, { Contract } from "ethers";
+
+
+export const contract = new Contract(
+  "0xadC637aa19edf5e9ED8088785D5C367248962A5a",
+  erc721ABI,
+  new ethers.providers.AlchemyProvider("rinkeby", process.env.ALCHEMY_API_KEY)
+);
+
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
@@ -16,6 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           return res.status(422).json({ message: 'Invalid nonce.' })
 
         req.session.siwe = fields
+        req.session.isPassportOwner = await contract.balanceOf(fields.address) > 0;
         await req.session.save()
         res.json({ ok: true })
       } catch (_error) {

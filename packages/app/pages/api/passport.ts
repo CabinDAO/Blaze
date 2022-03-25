@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'GET':
       res.send({
-         address: req.session.siwe?.address,
+         isPassportOwner: req.session.isPassportOwner,
          })
       break
     default:

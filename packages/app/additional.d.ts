@@ -11,5 +11,6 @@ declare module "iron-session" {
           chainId?: number;
           nonce?: string;
       };
+      isPassportOwner?: boolean;
     }
   }

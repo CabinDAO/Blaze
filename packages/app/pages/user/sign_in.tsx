@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useStore, Profile } from "@/store/store";
 import supabase from "@/lib/supabase";
 import { getUnixTime } from "date-fns";
+import { erc721ABI } from "wagmi";
 
 const ConnectList = styled("div", {
   display: "flex",
@@ -34,6 +35,7 @@ const SignIn = () => {
     setSiweError,
     setSiweAddress,
     loadProfileIntoStore,
+    setIsPassportOwner
   } = useStore();
 
   const [{ data: accountData }] = useAccount();
@@ -49,7 +51,6 @@ const SignIn = () => {
 
       setSiweLoading(true);
       setSiweError(undefined);
-
       // Fetch random nonce, create SIWE message, and sign with wallet
       const nonceRes = await fetch("/api/nonce");
       const message = new SiweMessage({
@@ -59,12 +60,13 @@ const SignIn = () => {
         uri: window.location.origin,
         version: "1",
         chainId,
+        issuedAt: getUnixTime(new Date()).toString(),
         nonce: await nonceRes.text(),
       });
       const signRes = await signMessage({ message: message.prepareMessage() });
       if (signRes.error) throw signRes.error;
 
-      // Verify signature
+      // Verify signature and passport ownership
       const verifyRes = await fetch("/api/verify", {
         method: "POST",
         headers: {
@@ -73,8 +75,17 @@ const SignIn = () => {
         body: JSON.stringify({ message, signature: signRes.data }),
       });
       if (!verifyRes.ok) throw new Error("Error verifying message");
+      const passportRes = await fetch("/api/passport", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const passportData = await passportRes.json();
       setSiweAddress(address);
       setSiweLoading(false);
+      setIsPassportOwner(passportData.isPassportOwner);
+
     } catch (error: any) {
       setSiweError(error);
       setSiweLoading(false);
