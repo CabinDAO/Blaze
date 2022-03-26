@@ -13,14 +13,17 @@ const contract = new Contract(
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
-  const passport = await contract.balanceOf(req.session.siwe?.address);
+
   switch (method) {
     case 'GET':
-      req.session.isPassportOwner = passport.toNumber() > 0;
+      const passport = await contract.balanceOf(req.session.siwe?.address);
+      const isPassportOwner = passport.toNumber() > 0;
+      req.session.isPassportOwner = isPassportOwner;
+      await req.session.save();
       res.send({
-         address: req.session.siwe?.address,
-         isPassportOwner: req.session.isPassportOwner,
-         })
+        address: req.session.siwe?.address,
+        isPassportOwner: req.session.isPassportOwner,
+        });
       break
     default:
       res.setHeader('Allow', ['GET'])
