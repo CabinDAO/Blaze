@@ -4,7 +4,7 @@ import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
-import { formatDistanceToNow, fromUnixTime } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 import { useWallet } from "../WalletAuth";
 import { useMutation, useQueryClient } from "react-query";
@@ -50,6 +50,12 @@ const IconText = styled("span", {
   //   cursor: "pointer",
   //   textDecoration: "underline",
   // }
+});
+
+const IconLink = styled("a", {
+  display: "flex",
+  alignItems: "center",
+  gap: "$1",
 });
 
 export interface PostProps {
@@ -168,10 +174,12 @@ const Post = ({
           </MetaAddress>
         </PostMeta>
         <PostMeta>
-          <IconText>
-            <ClockIcon />{" "}
-            {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
-          </IconText>
+          <Link href={`/posts/${_id}`} passHref>
+            <IconLink>
+              <ClockIcon />
+              {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
+            </IconLink>
+          </Link>
           {/* <IconText>
             <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}
             {numberOfUpvotes > 0 ? numberOfComments.toString() + " comments": "Add a comment"} {}
