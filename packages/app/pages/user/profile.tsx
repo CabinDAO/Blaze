@@ -20,7 +20,7 @@ async function fetchProfilePosts(address: string) {
 }
 
 export default function Profile() {
-  const { loadProfileIntoStore, setSiweAddress, setSiweLoading } = useStore();
+  const { loadProfileIntoStore, setSiweAddress, setSiweLoading, setIsPassportOwner } = useStore();
   const { address } = useWallet();
   const [activeTab, setActiveTab] = useState(0);
   const { data: posts } = useQuery({
@@ -35,6 +35,7 @@ export default function Profile() {
         const res = await fetch("/api/me");
         const json = await res.json();
         setSiweAddress(json.address);
+        setIsPassportOwner(json.isPassportOwner);
       } finally {
         setSiweLoading(false);
       }

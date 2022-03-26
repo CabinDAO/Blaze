@@ -60,7 +60,6 @@ const SignIn = () => {
         uri: window.location.origin,
         version: "1",
         chainId,
-        issuedAt: getUnixTime(new Date()).toString(),
         nonce: await nonceRes.text(),
       });
       const signRes = await signMessage({ message: message.prepareMessage() });
@@ -82,6 +81,7 @@ const SignIn = () => {
         },
       });
       const passportData = await passportRes.json();
+      console.log(passportData);
       setSiweAddress(address);
       setSiweLoading(false);
       setIsPassportOwner(passportData.isPassportOwner);

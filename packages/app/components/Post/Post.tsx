@@ -77,7 +77,7 @@ const Post = ({
 }: PostProps) => {
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
-  const { sort } = useStore();
+  const { sort, isPassportOwner } = useStore();
   const provider = useProvider();
   const [resolvedName] = useEnsLookup([postedBy], provider);
 
@@ -132,12 +132,17 @@ const Post = ({
   const upvoteHandler = useCallback(
     (_id: string) => {
       if (isAuthenticated) {
-        return mutate({ postId: _id });
+        if(isPassportOwner){
+          return mutate({ postId: _id });
+        } else {
+          alert("You must own a Cabin passport to upvote");
+        }
+        
       } else {
         alert("Please sign-in to upvote");
       }
     },
-    [isAuthenticated, mutate]
+    [isAuthenticated, isPassportOwner, mutate]
   );
   return (
     <PostRow>

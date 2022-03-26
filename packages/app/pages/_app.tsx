@@ -121,14 +121,18 @@ const ProfileLink = () => {
 
 const SubmitLinkAction = () => {
   const { isAuthenticated } = useWallet();
-  if (isAuthenticated) {
+  const { isPassportOwner } = useStore();
+  if (isAuthenticated && isPassportOwner) {
     return (
       <Link href="/submission/new" passHref>
         <Button tone="wheat">Submit a Link</Button>
       </Link>
     );
+  } else if (isAuthenticated && !isPassportOwner) {
+    return <Button tone="wheat" onClick={() => alert("You must own a Cabin passport to submit links")}>Submit a Link</Button>
+  } else {
+    return null;
   }
-  return null;
 };
 
 const MobileWrapper = styled("div", {
@@ -199,9 +203,10 @@ const MenuBox = styled("div", {
 });
 const MobileMenu = () => {
   const router = useRouter();
-  const [{ data }, disconnect] = useAccount();
+  const [, disconnect] = useAccount();
+  const { isAuthenticated } = useWallet();
   const [isOpen, setIsOpen] = useState(false);
-  const { clearSiweSession } = useStore();
+  const { clearSiweSession, isPassportOwner, setIsPassportOwner } = useStore();
 
   useEffect(() => {
     function closeOnChange() {
@@ -229,36 +234,38 @@ const MobileMenu = () => {
           <Link href="/">
             <a>Home</a>
           </Link>
-          {data?.address ? (
+          {isAuthenticated ? (
             <>
               <Link href="/user/profile">
                 <a>Profile</a>
               </Link>
-              <Link href="/submission/new">
+              {isPassportOwner ? (<Link href="/submission/new">
                 <a>Submit a Link</a>
-              </Link>
-              <Link href="/">
-                <a
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    setIsOpen(false);
-                    await fetch("/api/logout");
-                    clearSiweSession();
-                    disconnect();
-                  }}
-                >
-                  Sign Out
-                </a>
-              </Link>
-            </>
-          ) : (
-            <Link href="/user/sign_in">
-              <a>Connect</a>
-            </Link>
+              </Link>) : <a onClick={() => alert("You must own a Cabin passport to submit links")}> Submit a Link</a>}
+          <Link href="/">
+            <a
+              onClick={async (e) => {
+                e.preventDefault();
+                setIsOpen(false);
+                await fetch("/api/logout");
+                clearSiweSession();
+                setIsPassportOwner(false);
+                disconnect();
+              }}
+            >
+              Sign Out
+            </a>
+          </Link>
+        </>
+      ) : (
+      <Link href="/user/sign_in">
+        <a>Connect</a>
+      </Link>
           )}
-        </MenuBox>
-      )}
-    </MobileWrapper>
+    </MenuBox>
+  )
+}
+    </MobileWrapper >
   );
 };
 

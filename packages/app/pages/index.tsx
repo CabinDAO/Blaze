@@ -26,6 +26,7 @@ const Home: NextPage = () => {
     setSiweAddress,
     setSiweLoading,
     siwe: { address },
+    setIsPassportOwner,
   } = useStore();
   const { data: posts } = useQuery(["posts", sort, address], () =>
     loadPosts(sort, address)
@@ -37,6 +38,7 @@ const Home: NextPage = () => {
         const res = await fetch("/api/me");
         const json = await res.json();
         setSiweAddress(json.address);
+        setIsPassportOwner(json.isPassportOwner);
       } finally {
         setSiweLoading(false);
       }

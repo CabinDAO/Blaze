@@ -43,10 +43,11 @@ export const useWallet = (options?: { fetchEns?: boolean }) => {
 const WalletAuth = () => {
   const router = useRouter();
   const [, disconnect] = useAccount();
-  const { siwe, clearSiweSession } = useStore();
+  const { siwe, clearSiweSession, setIsPassportOwner } = useStore();
   const SignOutHandler = async () => {
     await fetch("/api/logout");
     clearSiweSession();
+    setIsPassportOwner(false);
     disconnect();
     router.push("/");
   };
