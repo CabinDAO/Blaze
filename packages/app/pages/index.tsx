@@ -49,7 +49,7 @@ const Home: NextPage = () => {
     // 2. window is focused (in case user logs out of another window)
     window.addEventListener("focus", handler);
     return () => window.removeEventListener("focus", handler);
-  }, [setSiweAddress, setSiweLoading]);
+  }, [setSiweAddress, setSiweLoading, setIsPassportOwner]);
 
   const provider = useProvider();
 

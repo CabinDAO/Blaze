@@ -8,6 +8,7 @@ import { useStore } from "@/store/store";
 import Title from "@/components/Title";
 import Post from "@/components/Post";
 import { IPost } from "@/interfaces";
+import { useEffect } from "react";
 
 /** Styled components */
 const URLInput = styled(Input, {
@@ -50,6 +51,9 @@ const NewSubmission = () => {
   const router = useRouter();
   const {
     siwe: { address },
+    setSiweAddress,
+    setSiweLoading,
+    setIsPassportOwner
   } = useStore();
 
   const [error, setError] = useState<string>("");
@@ -119,6 +123,25 @@ const NewSubmission = () => {
     submitPost({ ...postData, postedBy: address });
   }, [submitPost, postData, address]);
 
+  // Fetch user when:
+  useEffect(() => {
+    const handler = async () => {
+      try {
+        const res = await fetch("/api/me");
+        const json = await res.json();
+        setSiweAddress(json.address);
+        setIsPassportOwner(json.isPassportOwner);
+      } finally {
+        setSiweLoading(false);
+      }
+    };
+    // 1. page loads
+    (async () => await handler())();
+
+    // 2. window is focused (in case user logs out of another window)
+    window.addEventListener("focus", handler);
+    return () => window.removeEventListener("focus", handler);
+  }, [setSiweAddress, setSiweLoading, setIsPassportOwner]);
   return (
     <div>
       <Title>Submit a link</Title>

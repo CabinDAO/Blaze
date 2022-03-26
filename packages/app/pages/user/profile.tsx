@@ -46,7 +46,7 @@ export default function Profile() {
     // 2. window is focused (in case user logs out of another window)
     window.addEventListener("focus", handler);
     return () => window.removeEventListener("focus", handler);
-  }, [setSiweAddress, setSiweLoading]);
+  }, [setSiweAddress, setSiweLoading, setIsPassportOwner]);
 
   useEffect(() => {
     const checkProfileExistence = async (walletAddress: string) => {
