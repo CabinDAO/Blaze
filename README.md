@@ -1,4 +1,4 @@
-# dao-camp
+# blaze
 
 ## QuickLinks
 
@@ -19,7 +19,7 @@ can focus on building and innovating --- *by creators, for creators*.
 ## Contribute
 
 *Cabin* operates under a bounty system for its products, including 
-`dao-camp`. Each bounty is specified as a task in the *Clarity* web app. 
+`blaze`. Each bounty is specified as a task in the *Clarity* web app. 
 You can view the full board of tasks with bounties [here][4]. On each 
 task, you are welcome to comment questions to gain more context on what 
 needs to be done. Once you understand a task well enough and are 
@@ -50,8 +50,8 @@ that directory, there are two packages that are under active development:
 1. Fork this repo to your Github account.
 2. Clone the repo that you just forked to your local machine.
 3. Navigate to desired package subdirectory. 
-   - *App*: `dao-camp/packages/app` 
-   - *Contracts*: `dao-camp/packages/contracts`
+   - *App*: `blaze/packages/app` 
+   - *Contracts*: `blaze/packages/contracts`
 5. Install dependencies.  `npm i`
 6. Run development app.  `npm run dev`
 
@@ -73,5 +73,5 @@ on how to work within our visual identity.
 [2]: https://discord.gg/4G6XjsCjM3 "Cabin | Discord Server"
 [3]: https://github.com/CabinDAO/topo "Topo Repo| Brand Guidelines"
 [4]: https://app.clarity.so/cabin/view/3039c279-2ee2-4da2-a604-dc1c23d5010c "Clarity | Bounties"
-[5]: https://github.com/CabinDAO/dao-camp/issues/new "dao-camp repo | Report a Bug"
-[6]: https://github.com/CabinDAO/Passports/discussions "dao-camp repo | Discussions"
+[5]: https://github.com/CabinDAO/blaze/issues/new "blaze repo | Report a Bug"
+[6]: https://github.com/CabinDAO/blaze/discussions "blaze repo | Discussions"
