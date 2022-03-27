@@ -3,7 +3,7 @@ export interface IPost {
   title: string;
   domainText: string;
   url: string;
-  // postedBy: string;
+  postedBy: string;
   created_at: string;
   upvotes: number;
 }
