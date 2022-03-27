@@ -55,7 +55,9 @@ const NewSubmission = () => {
     setSiweLoading,
     setIsPassportOwner
   } = useStore();
-
+  if(!address) {
+    router.push("/");
+  }
   const [error, setError] = useState<string>("");
   // TODO: Use real wallet address
   const [postData, setPostData] = useState<IPost>({
@@ -63,6 +65,7 @@ const NewSubmission = () => {
     title: "",
     domainText: "",
     url: "",
+    postedBy: "",
     created_at: new Date().toISOString(),
     upvotes: 0,
   });
