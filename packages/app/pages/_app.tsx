@@ -304,7 +304,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Header>
               <Link href="/">
                 <a>
-                  <DaoCampLogo>#dao-camp</DaoCampLogo>
+                  <DaoCampLogo>#blaze</DaoCampLogo>
                 </a>
               </Link>
               <ResponsiveNav />
