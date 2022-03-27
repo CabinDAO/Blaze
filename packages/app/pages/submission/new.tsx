@@ -34,7 +34,7 @@ async function fetchMetadata(url: string) {
   return res.json();
 }
 
-async function submitPostData(post) {
+async function submitPostData(post: any) {
   const res = await fetch(`/api/submission/new`, {
     method: "POST",
     headers: {
