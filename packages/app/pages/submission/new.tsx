@@ -62,7 +62,6 @@ const NewSubmission = () => {
     postedBy: "",
     created_at: new Date().toISOString(),
     upvotes: 0,
-    postedBy: "",
   });
 
   const { mutate } = useMutation(fetchMetadata, {
