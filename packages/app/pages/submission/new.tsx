@@ -34,7 +34,7 @@ async function fetchMetadata(url: string) {
   return res.json();
 }
 
-async function submitPostData(post: any) {
+async function submitPostData(post: IPost) {
   const res = await fetch(`/api/submission/new`, {
     method: "POST",
     headers: {
@@ -66,9 +66,10 @@ const NewSubmission = () => {
     postedBy: "",
     created_at: new Date().toISOString(),
     upvotes: 0,
+    postedBy: "",
   });
 
-  const { data, mutate } = useMutation(fetchMetadata, {
+  const { mutate } = useMutation(fetchMetadata, {
     onMutate() {
       setError("");
     },
@@ -80,7 +81,7 @@ const NewSubmission = () => {
         url: metadata.url,
       }));
     },
-    onError(err) {
+    onError() {
       setError("Invalid input, please check the URL and try again.");
       setPostData((state) => ({
         ...state,
@@ -121,7 +122,9 @@ const NewSubmission = () => {
   });
 
   const onSubmitForm = useCallback(() => {
-    submitPost({ ...postData, postedBy: address });
+    if (address) {
+      submitPost({ ...postData, postedBy: address });
+    }
   }, [submitPost, postData, address]);
 
   // Fetch user when:

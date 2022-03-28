@@ -59,6 +59,14 @@ export function queryPosts(
   return query;
 }
 
+export async function loadPost(id: string, address?: string | null) {
+  let query = address
+    ? supabase.rpc<Post>("user_posts_ranking", { address }).select("*")
+    : supabase.from<PostRanking>("post_rankings").select("*");
+  const { data, error } = await query.eq("_id", id).limit(1).single();
+  return data;
+}
+
 export async function loadPosts(
   sort: "newest" | "trending",
   address?: string | null
