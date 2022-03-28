@@ -5,6 +5,7 @@ import { useStore } from "@/store/store";
 import DropdownMenu from "@/components/DropdownMenu";
 import { DoubleArrowUpIcon, SunIcon } from "@radix-ui/react-icons";
 import { useQueryClient } from "react-query";
+import { useRouter } from "next/router";
 
 const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
@@ -112,6 +113,7 @@ export const StickyTabBar = ({
 };
 
 const TabBar = ({ className }: { className?: string }) => {
+  const router = useRouter();
   const { sort, updateSort } = useStore();
   const { address } = useWallet({ fetchEns: true });
   const [activeTab, setActiveTab] = useState(0);
@@ -166,7 +168,15 @@ const TabBar = ({ className }: { className?: string }) => {
             Links
           </TabLink>
         )}
-        {address && (
+        {address && router.pathname != "user/profile" && (
+            <TabLink
+            active={activeTab == 0 ? true : false}
+            onClick={() => setActiveTab(0)}
+          >
+            Links
+          </TabLink>
+        )}
+        {address && router.pathname === "/user/profile" && (
           <>
             <TabLink
               active={activeTab == 0 ? true : false}
