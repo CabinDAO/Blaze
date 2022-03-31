@@ -1,7 +1,7 @@
-import {CalendarIcon, ClockIcon, ExternalLinkIcon} from "../Icons";
-import {styled} from "@/stitches.config";
+import { CalendarIcon, ClockIcon, ExternalLinkIcon } from "../Icons";
+import { styled } from "@/stitches.config";
 import WalletAddress from "../WalletAddress";
-import {format, fromUnixTime} from "date-fns";
+import { format, fromUnixTime } from "date-fns";
 
 const AddressHeader = styled("div", {
   fontWeight: "$bold",
@@ -33,9 +33,9 @@ interface UserCardProps {
     name: string | null;
     avatar?: string | null;
   } | null;
-  joinDate: number;
-  lastSeenDate: number;
-  upvotesReceived: number;
+  joinDate?: number;
+  lastSeenDate?: number;
+  upvotesReceived?: number;
   linksUpvoted: number;
 }
 const UserCard = ({
@@ -43,7 +43,7 @@ const UserCard = ({
   ens,
   joinDate,
   lastSeenDate,
-  upvotesReceived,
+  upvotesReceived = 0,
   linksUpvoted,
 }: UserCardProps) => {
   const joinDateString = joinDate
@@ -55,7 +55,11 @@ const UserCard = ({
   return (
     <div>
       <AddressHeader>
-        <WalletAddress address={address} ens={ens} css={{marginRight: "$1"}} />
+        <WalletAddress
+          address={address}
+          ens={ens}
+          css={{ marginRight: "$1" }}
+        />
         <ExternalLinkIcon href={`https://etherscan.io/address/${address}`} />
       </AddressHeader>
       <UserMeta>

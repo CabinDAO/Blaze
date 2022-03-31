@@ -145,11 +145,9 @@ const Post = ({
   );
 
   // parse UTC time
-  const timestampMessage = useMemo(
-    () =>
-      formatDistanceToNow(new Date(`${created_at}+0000`), { addSuffix: true }),
-    [created_at]
-  );
+  const timestampMessage = useMemo(() => {
+    return formatDistanceToNow(new Date(created_at), { addSuffix: true });
+  }, [created_at]);
 
   return (
     <PostRow>

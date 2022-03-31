@@ -46,12 +46,16 @@ export async function lookupEns(addresses: string[], contract: any) {
 
 export const useEnsContract = () => {
   const signerOrProvider = useProvider();
-  const contract = useContract({
-    // mainnet ens contract for reverse lookup
-    addressOrName: "0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C",
-    contractInterface: abi,
-    signerOrProvider,
-  });
+  const contractConfig = useMemo(
+    () => ({
+      // mainnet ens contract for reverse lookup
+      addressOrName: "0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C",
+      contractInterface: abi,
+      signerOrProvider,
+    }),
+    [signerOrProvider]
+  );
+  const contract = useContract(contractConfig);
   const contractRef = useRef(contract);
   useEffect(() => {
     contractRef.current = contract;
