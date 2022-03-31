@@ -300,7 +300,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ZustandProvider createStore={createStore}>
-        <WalletProvider autoConnect={false} connectors={connectors}>
+        <WalletProvider autoConnect connectors={connectors}>
           <MainContainer>
             <Header>
               <Link href="/">
