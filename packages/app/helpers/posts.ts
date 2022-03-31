@@ -1,6 +1,6 @@
 import supabase from "@/lib/supabase";
 
-interface Post {
+export interface Post {
   _id: string;
   title: string;
   postedBy: string;
@@ -12,7 +12,7 @@ interface Post {
   upvoted: boolean;
 }
 
-interface PostRanking {
+export interface PostRanking {
   _id: string;
   title: string;
   postedBy: string;

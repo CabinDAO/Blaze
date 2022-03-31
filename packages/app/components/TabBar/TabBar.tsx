@@ -133,14 +133,11 @@ const TabBar = ({ className }: { className?: string }) => {
     ];
   }, [address]);
 
-  const queryClient = useQueryClient();
-
   const onChangeSort = useCallback(
     (sort: Sort) => {
       updateSort(sort);
-      queryClient.invalidateQueries("posts");
     },
-    [updateSort, queryClient]
+    [updateSort]
   );
 
   return (
@@ -169,7 +166,7 @@ const TabBar = ({ className }: { className?: string }) => {
           </TabLink>
         )}
         {address && router.pathname != "user/profile" && (
-            <TabLink
+          <TabLink
             active={activeTab == 0 ? true : false}
             onClick={() => setActiveTab(0)}
           >
