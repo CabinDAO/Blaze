@@ -1,7 +1,5 @@
 import { useMemo } from "react";
-
 import { styled } from "@/stitches.config";
-import { useEnsStore } from "@/helpers/ens";
 
 const AddressText = styled("span", {
   fontFamily: "$mono",

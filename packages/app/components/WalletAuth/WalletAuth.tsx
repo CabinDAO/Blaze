@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { Button } from "@cabindao/topo";
-import { useAccount, useEnsLookup } from "wagmi";
+import { useAccount } from "wagmi";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useStore } from "@/store/store";
@@ -16,27 +15,13 @@ const useAccountInfo = create<AccountStore>((set) => ({
 }));
 
 export const useWallet = (options?: { fetchEns?: boolean }) => {
-  const { ens, setEns } = useAccountInfo();
-  const { siwe } = useStore();
-
-  const [{ data: ensData }] = useEnsLookup({
-    address: siwe?.address,
-    skip: !!ens || !siwe?.address || !options?.fetchEns,
-  });
-
-  useEffect(() => {
-    if (!ens && options?.fetchEns && ensData) {
-      setEns(ensData);
-    }
-  }, [ens, options?.fetchEns, ensData, setEns]);
+  const {
+    siwe: { address, error },
+  } = useStore();
 
   return {
-    isAuthenticated: !siwe.error && !!siwe?.address,
-    address: siwe?.address ?? null,
-    ens: {
-      name: ens,
-      avatar: null,
-    },
+    isAuthenticated: !error && !!address,
+    address: address ?? null,
   };
 };
 

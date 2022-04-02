@@ -19,6 +19,7 @@ import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { useCreateStore, Provider as ZustandProvider } from "@/store/store";
 import { useStore } from "@/store/store";
+import { useEnsLookup } from "@/helpers/ens";
 
 const globalStyles = globalCss({
   body: {
@@ -108,12 +109,13 @@ const connectors = [
 ];
 
 const ProfileLink = () => {
-  const { address, ens } = useWallet({ fetchEns: true });
+  const { address } = useWallet();
+  const ensLookup = useEnsLookup(address);
   if (!address) return null;
   return (
     <Link href="/user/profile">
       <a>
-        <WalletAddress address={address} ens={ens} />
+        <WalletAddress address={address} ens={{ name: ensLookup[address] }} />
       </a>
     </Link>
   );
@@ -295,7 +297,6 @@ const queryClient = new QueryClient({
 function MyApp({ Component, pageProps }: AppProps) {
   const createStore = useCreateStore(pageProps.initialZustandState);
   globalStyles();
-  const { pathname } = useRouter();
   return (
     <QueryClientProvider client={queryClient}>
       <ZustandProvider createStore={createStore}>

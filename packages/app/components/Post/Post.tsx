@@ -1,6 +1,6 @@
 import { styled } from "@/stitches.config";
 import Link from "next/link";
-import { ClockIcon, SpeechIcon } from "@/components/Icons";
+import { ClockIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { useStore } from "@/store/store";
@@ -8,9 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 
 import { useWallet } from "../WalletAuth";
 import { useMutation, useQueryClient } from "react-query";
-import { useCallback } from "react";
-import { useProvider } from "wagmi";
-import { useEnsLookup } from "@/helpers/ens";
+import { useCallback, useMemo } from "react";
 
 const PostRow = styled("div", {
   display: "flex",
@@ -64,6 +62,7 @@ export interface PostProps {
   domainText: string;
   url: string;
   postedBy: string;
+  postedByEns?: string | null;
   created_at: string;
   upvotes: number;
   upvoted?: boolean;
@@ -76,6 +75,7 @@ const Post = ({
   url,
   domainText,
   postedBy,
+  postedByEns,
   created_at,
   upvotes,
   upvoted,
@@ -84,8 +84,6 @@ const Post = ({
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
   const { sort } = useStore();
-  const provider = useProvider();
-  const [resolvedName] = useEnsLookup([postedBy], provider);
 
   const { mutate } = useMutation<any, Error, { postId: string }>(
     async ({ postId }) => {
@@ -145,6 +143,12 @@ const Post = ({
     },
     [isAuthenticated, mutate]
   );
+
+  // parse UTC time
+  const timestampMessage = useMemo(() => {
+    return formatDistanceToNow(new Date(created_at), { addSuffix: true });
+  }, [created_at]);
+
   return (
     <PostRow>
       <div>
@@ -167,7 +171,7 @@ const Post = ({
               <a title={`View profile of ${postedBy}`}>
                 <WalletAddress
                   address={postedBy}
-                  ens={{ name: resolvedName }}
+                  ens={{ name: postedByEns ?? null }}
                 />
               </a>
             </Link>
@@ -177,7 +181,7 @@ const Post = ({
           <Link href={`/posts/${_id}`} passHref>
             <IconLink>
               <ClockIcon />
-              {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
+              {timestampMessage}
             </IconLink>
           </Link>
           {/* <IconText>

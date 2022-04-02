@@ -5,6 +5,7 @@ import WalletAddress from "@/components/WalletAddress";
 import PostList from "@/components/PostList";
 import { useQuery } from "react-query";
 import supabase from "@/lib/supabase";
+import { useEnsLookup } from "@/helpers/ens";
 
 export const getServerSideProps = async ({
   params,
@@ -38,6 +39,8 @@ export default function Address({ isValid }: { isValid: boolean }) {
     enabled: !!address,
   });
 
+  const ensLookup = useEnsLookup(address ?? null);
+
   if (!isValid) {
     return <div>Address not found.</div>;
   }
@@ -46,7 +49,10 @@ export default function Address({ isValid }: { isValid: boolean }) {
   return (
     <div>
       <div>
-        <WalletAddress address={address as string} />
+        <WalletAddress
+          address={address as string}
+          ens={{ name: address ? ensLookup[address as string] : null }}
+        />
       </div>
       <StickyTabBar>
         <TabLink active>Submissions</TabLink>

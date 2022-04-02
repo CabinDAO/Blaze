@@ -1,7 +1,7 @@
 import { styled } from "@/stitches.config";
 import debounce from "lodash.debounce";
 import { useCallback, useState, useMemo } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { Button, Input, Text } from "@cabindao/topo";
 import { useStore } from "@/store/store";
@@ -104,6 +104,8 @@ const NewSubmission = () => {
     [fetchPostData]
   );
 
+  const queryClient = useQueryClient();
+
   const { mutate: submitPost } = useMutation(submitPostData, {
     onMutate() {
       setError("");
@@ -112,6 +114,8 @@ const NewSubmission = () => {
       setError("Failed to submit post.");
     },
     onSuccess() {
+      // clear posts on successful post
+      queryClient.invalidateQueries("posts");
       router.push("/");
     },
   });

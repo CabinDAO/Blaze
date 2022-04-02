@@ -1,102 +1,65 @@
-import type { NextPage } from "next";
 import PostList from "@/components/PostList";
 import { useStore } from "@/store/store";
 import Title from "@/components/Title";
 import StickyTabBar from "@/components/TabBar";
-import { useQuery } from "react-query";
-import { loadPosts } from "@/helpers/posts";
-import { useEffect, useMemo } from "react";
-import { useProvider } from "wagmi";
-import { useEnsLookup } from "@/helpers/ens";
+import { useQuery, useQueryClient } from "react-query";
+import { loadPosts, Post, PostRanking } from "@/helpers/posts";
+import { GetServerSideProps } from "next";
+import { withIronSessionSsr } from "iron-session/next";
+import { ironOptions } from "@/constants";
+import { useSiweSession } from "@/helpers/siwe";
 
-const sorting: Record<string, { column: string; ascending: boolean }> = {
-  newest: {
-    column: "created_at",
-    ascending: false,
-  },
-  trending: {
-    column: "score",
-    ascending: false,
-  },
-};
+interface HomeProps {
+  initialAddress: string | null;
+  initialPosts: Post[] | PostRanking[] | null;
+  initialSort: string;
+}
+const Home = ({ initialPosts, initialAddress, initialSort }: HomeProps) => {
+  const { sort } = useStore();
+  const { address, loading } = useSiweSession();
 
-const Home: NextPage = () => {
-  const {
-    sort,
-    setSiweAddress,
-    setSiweLoading,
-    siwe: { address },
-  } = useStore();
-  const { data: posts } = useQuery(["posts", sort, address], () =>
-    loadPosts(sort, address)
+  const { data: posts, status } = useQuery(
+    ["posts", sort, address],
+    () => loadPosts(sort, address),
+    {
+      enabled: !loading,
+      initialData: () => {
+        if (sort === initialSort && (address ?? null) === initialAddress) {
+          return initialPosts;
+        }
+      },
+    }
   );
-  // Fetch user when:
-  useEffect(() => {
-    const handler = async () => {
-      try {
-        const res = await fetch("/api/me");
-        const json = await res.json();
-        setSiweAddress(json.address);
-      } finally {
-        setSiweLoading(false);
-      }
-    };
-    // 1. page loads
-    (async () => await handler())();
-
-    // 2. window is focused (in case user logs out of another window)
-    window.addEventListener("focus", handler);
-    return () => window.removeEventListener("focus", handler);
-  }, [setSiweAddress, setSiweLoading]);
-
-  const provider = useProvider();
-
-  const addresses: string[] = useMemo(
-    () => posts?.map((p) => p.postedBy as string) ?? [],
-    [posts]
-  );
-
-  // prefetch ens names
-  useEnsLookup(addresses, provider);
 
   return (
     <div>
       <Title>Today</Title>
       <StickyTabBar />
-      <PostList posts={posts ?? []} />
+      <PostList loading={status === "loading"} posts={posts ?? []} />
     </div>
   );
 };
 
 export default Home;
 
-export async function getStaticProps() {
-  const initSupabaseClient = async () => {
-    const { createClient } = await import("@supabase/supabase-js");
-    const supabaseId = process.env.NEXT_PUBLIC_SUPABASE_KEY || "";
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-    const supabase = createClient(supabaseUrl, supabaseId, {
-      schema: "public",
-      autoRefreshToken: false,
-      persistSession: false,
-      detectSessionInUrl: false,
-    });
-    return supabase;
-  };
-  const supabase = await initSupabaseClient();
-  let { data: upvotes, error: upvotesError } = await supabase
-    .from("Upvotes")
-    .select("*");
-  if (upvotes === null) {
-    console.log(upvotesError);
-    upvotes = [];
-  }
-  return {
-    props: {
-      initialZustandState: {
-        upvotes,
+export const getServerSideProps: GetServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    const sort = "trending";
+    const address = req.session.siwe?.address ?? null;
+    const posts = await loadPosts(sort, address);
+    return {
+      props: {
+        initialPosts: posts,
+        initialSort: sort,
+        initialAddress: address,
+        initialZustandState: {
+          siwe: {
+            address: address,
+          },
+          sort,
+        },
       },
-    },
-    revalidate: 10,
-  };
-}
+    };
+  },
+  ironOptions
+);
