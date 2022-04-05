@@ -8,17 +8,22 @@ import {formatDistanceToNow, fromUnixTime} from "date-fns";
 
 import {useWallet} from "../WalletAuth";
 import {useMutation, useQueryClient} from "react-query";
-import {useCallback} from "react";
+import {useCallback, useState} from "react";
+import CommentInput from "@/components/CommentInput";
+import Comment from "@/components/Comment";
 
 const PostRow = styled("div", {
   display: "flex",
   columnGap: "$2",
 });
+
 const PostInfo = styled("div", {
   flex: 1,
 });
+
 const Title = styled("div", {
   fontWeight: "$regular",
+  marginTop: "$2",
   "& a": {
     textDecoration: "none",
   },
@@ -44,10 +49,10 @@ const IconText = styled("span", {
   display: "flex",
   alignItems: "center",
   gap: "$1",
-  // "&:last-of-type:hover": {
-  //   cursor: "pointer",
-  //   textDecoration: "underline",
-  // }
+  "&:last-of-type:hover": {
+    cursor: "pointer",
+    textDecoration: "underline",
+  }
 });
 
 export interface PostProps {
@@ -71,9 +76,10 @@ const Post = ({
   upvotes,
   upvoted,
 }: PostProps) => {
-
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
+
+  const [showComments, setShowComments] = useState(false);
 
   const {mutate} = useMutation<any, Error, {postId: string}>(
     async ({postId}) => {
@@ -129,17 +135,29 @@ const Post = ({
               </a>
             </Link>
           </MetaAddress>
-        </PostMeta>
-        <PostMeta>
           <IconText>
             <ClockIcon />{" "}
             {formatDistanceToNow(new Date(created_at), {addSuffix: true})}
           </IconText>
-          {/* <IconText>
-            <SpeechIcon fill={numberOfUpvotes > 0 ? true : false} />{" "}
-            {numberOfUpvotes > 0 ? numberOfComments.toString() + " comments": "Add a comment"} {}
-          </IconText> */}
+          {/* TODO: Set comment count/toggle */}
+          <IconText onClick={() => setShowComments(!showComments)}>
+            <SpeechIcon fill={1 > 0 ? true : false} />{" "}
+            {1 > 0 ? "1" + " comment(s)": "Add a comment"} {}
+          </IconText>
         </PostMeta>
+        {showComments && 
+          <div>
+            <CommentInput />
+            {/* TODO: loop over comment to render */}
+            <Comment 
+              _id={""}
+              text={"This is a cool comment, wow!"}
+              postedBy={postedBy}
+              created_at={new Date().toISOString()}
+              upvotes={0}
+            />
+          </div>
+        }
       </PostInfo>
     </PostRow>
   );

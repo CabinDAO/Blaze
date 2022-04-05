@@ -28,7 +28,6 @@ const NewSubmission = () => {
   const { currentProfile } = useStore();
 
   const [error, setError] = useState<string>('');
-  // TODO: Use real wallet address
   const [postData, setPostData] = useState<IPost>({
     _id: '',
     title: '',
