@@ -161,7 +161,7 @@ const Post = ({
       </div>
       <PostInfo>
         <Title>
-          <a href={url}>{title}</a>
+          <a href={url} target="_blank" rel="noopener noreferrer">{title}</a>
         </Title>
         <PostMeta>
           <DomainText>{domainText}</DomainText>
