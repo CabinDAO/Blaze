@@ -83,7 +83,7 @@ async function loadComments(postId: string) {
   upvotes
   `).eq("_id", postId).order("created_at", {ascending: false});
 
-  error ? error.message : data;
+  return data;
 }
 
 const Post = ({
@@ -98,9 +98,10 @@ const Post = ({
 }: PostProps) => {
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
-  const { data: comments } = useQuery(["comments", _id], () =>
-    loadComments(_id)
+  const { data: comments } = useQuery(["comments", _id], async () =>
+    await loadComments(_id)
   );
+
 
   const [showComments, setShowComments] = useState(false);
 
@@ -171,14 +172,13 @@ const Post = ({
         {showComments &&
           <div>
             <CommentInput />
-            {/* TODO: loop over comment to render */}
-            <Comment
-              _id={""}
-              text={"This is a cool comment, wow!"}
-              postedBy={postedBy}
-              created_at={new Date().toISOString()}
-              upvotes={0}
-            />
+            {comments ? comments.map(comment => <Comment
+              _id={comment._id}
+              text={comment.text}
+              postedBy={comment.postedBy}
+              created_at={new Date(comment.created_at).toISOString()}
+              upvotes={comment.upvotes}
+            />) : null}
           </div>
         }
       </PostInfo>
