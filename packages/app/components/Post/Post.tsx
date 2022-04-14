@@ -1,14 +1,14 @@
-import {styled} from "@/stitches.config";
+import { styled } from "@/stitches.config";
 import Link from "next/link";
-import {ClockIcon, SpeechIcon} from "@/components/Icons";
+import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
-import {useStore} from "@/store/store";
-import {formatDistanceToNow, fromUnixTime} from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import supabase from "@/lib/supabase";
 
-import {useWallet} from "../WalletAuth";
-import {useMutation, useQueryClient} from "react-query";
-import {useCallback, useState} from "react";
+import { useWallet } from "../WalletAuth";
+import { useMutation, useQueryClient, useQuery } from "react-query";
+import { useCallback, useState } from "react";
 import CommentInput from "@/components/CommentInput";
 import Comment from "@/components/Comment";
 
@@ -66,6 +66,26 @@ export interface PostProps {
   upvoted?: boolean;
 }
 
+async function loadComments(postId: string) {
+  const { data, error} = await supabase.from("postComments").select(`
+  _id,
+  created_at,
+  postId,
+  postedBy,
+  comments(
+    _id,
+    created_at,
+    text,
+    postedBy,
+    upvotes
+  ),
+  text,
+  upvotes
+  `).eq("_id", postId).order("created_at", {ascending: false});
+
+  error ? error.message : data;
+}
+
 const Post = ({
   _id,
   title,
@@ -78,11 +98,14 @@ const Post = ({
 }: PostProps) => {
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
+  const { data: comments } = useQuery(["comments", _id], () =>
+    loadComments(_id)
+  );
 
   const [showComments, setShowComments] = useState(false);
 
-  const {mutate} = useMutation<any, Error, {postId: string}>(
-    async ({postId}) => {
+  const { mutate } = useMutation<any, Error, { postId: string }>(
+    async ({ postId }) => {
       return await fetch(`/api/posts/${postId}/upvote`, {
         method: "POST",
         headers: {
@@ -137,19 +160,19 @@ const Post = ({
           </MetaAddress>
           <IconText>
             <ClockIcon />{" "}
-            {formatDistanceToNow(new Date(created_at), {addSuffix: true})}
+            {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
           </IconText>
           {/* TODO: Set comment count/toggle */}
           <IconText onClick={() => setShowComments(!showComments)}>
             <SpeechIcon fill={1 > 0 ? true : false} />{" "}
-            {1 > 0 ? "1" + " comment(s)": "Add a comment"} {}
+            {1 > 0 ? "1" + " comment(s)" : "Add a comment"} { }
           </IconText>
         </PostMeta>
-        {showComments && 
+        {showComments &&
           <div>
             <CommentInput />
             {/* TODO: loop over comment to render */}
-            <Comment 
+            <Comment
               _id={""}
               text={"This is a cool comment, wow!"}
               postedBy={postedBy}
