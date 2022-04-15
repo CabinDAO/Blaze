@@ -73,7 +73,6 @@ async function loadComments(postId: string) {
   postId,
   postedBy,
   comments(
-    _id,
     created_at,
     text,
     postedBy,
