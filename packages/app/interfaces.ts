@@ -9,7 +9,6 @@ export interface IPost {
 }
 
 export interface IComment {
-  _id: string;
   postId?: string;
   parentCommentId?: string;
   text: string;

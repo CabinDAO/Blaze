@@ -173,7 +173,7 @@ const Post = ({
           <div>
             <CommentInput />
             {comments ? comments.map(comment => <Comment
-              _id={comment._id}
+              key={comment._id}
               text={comment.text}
               postedBy={comment.postedBy}
               created_at={new Date(comment.created_at).toISOString()}
