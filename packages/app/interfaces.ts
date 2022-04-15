@@ -11,17 +11,10 @@ export interface IPost {
 export interface IComment {
   _id: string;
   postId?: string;
+  parentCommentId?: string;
   text: string;
   postedBy: string;
   created_at: string;
-  comments?: {
-    _id: string;
-    text: string;
-    postedBy: string;
-    created_at: string;
-    upvotes: number;
-    upvoted?: boolean;
-  }[];
   upvotes: number;
   upvoted?: boolean;
 }
