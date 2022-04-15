@@ -8,22 +8,20 @@ export interface IPost {
   upvotes: number;
 }
 
-export interface IPostComment {
+export interface IComment {
   _id: string;
-  postId: string;
+  postId?: string;
   text: string;
   postedBy: string;
   created_at: string;
-  comments?: ICommentComment[];
-  upvotes: number;
-  upvoted?: boolean;
-}
-
-export interface ICommentComment {
-  _id: string;
-  text: string;
-  postedBy: string;
-  created_at: string;
+  comments?: {
+    _id: string;
+    text: string;
+    postedBy: string;
+    created_at: string;
+    upvotes: number;
+    upvoted?: boolean;
+  }[];
   upvotes: number;
   upvoted?: boolean;
 }
