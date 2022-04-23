@@ -5,15 +5,17 @@ export interface IPost {
   url: string;
   postedBy: string;
   created_at: string;
+  comments: IComment[] | null;
   upvotes: number;
+  upvoted?: boolean;
 }
 
 export interface IComment {
-  postId?: string;
-  parentCommentId?: string;
+  _id: string;
   text: string;
   postedBy: string;
   created_at: string;
+  subcomments: IComment[] | null;
   upvotes: number;
   upvoted?: boolean;
 }

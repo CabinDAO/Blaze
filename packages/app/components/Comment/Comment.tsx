@@ -69,8 +69,13 @@ const Comment = ({
   postedBy,
   created_at,
   upvotes,
-  upvoted
+  upvoted,
+  subcomments
 }: IComment) => {
+  const nestedComments = (subcomments || []).map(subcomment => {
+    return <Comment key={subcomment._id} {...subcomment}/>;
+  });
+
   const [toggled, setToggled] = useState(true);
   const [inputToggled, setInputToggled] = useState(false);
 
@@ -109,6 +114,7 @@ const Comment = ({
             <Text>
               { text }
             </Text>
+            { nestedComments }
             <AddComment>
               <IconText onClick={() => setInputToggled(!inputToggled)}>
                 <SpeechIcon fill={false} />

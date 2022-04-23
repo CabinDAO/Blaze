@@ -46,6 +46,7 @@ const Home: NextPage = () => {
   const { data: posts } = useQuery(["posts", sort, address], () =>
     loadPosts(sort, address)
   );
+
   // Fetch user when:
   useEffect(() => {
     const handler = async () => {

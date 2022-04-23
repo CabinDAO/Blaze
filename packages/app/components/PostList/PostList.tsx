@@ -3,6 +3,7 @@ import Post from "../Post";
 import { useEffect } from "react";
 import { useStore } from "@/store/store";
 import supabase from "@/lib/supabase";
+import { useQueryClient, useQuery } from "react-query";
 
 const StyledPostList = styled("div", {
   display: "flex",

@@ -7,10 +7,11 @@ import { formatDistanceToNow } from "date-fns";
 import supabase from "@/lib/supabase";
 
 import { useWallet } from "../WalletAuth";
-import { useMutation, useQueryClient, useQuery } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useCallback, useState } from "react";
 import CommentInput from "@/components/CommentInput";
 import Comment from "@/components/Comment";
+
 
 const PostRow = styled("div", {
   display: "flex",
@@ -62,27 +63,9 @@ export interface PostProps {
   url: string;
   postedBy: string;
   created_at: string;
+  comments: IComment[] | null;
   upvotes: number;
   upvoted?: boolean;
-}
-
-async function loadComments(postId: string) {
-  const { data, error} = await supabase.from("postComments").select(`
-  _id,
-  created_at,
-  postId,
-  postedBy,
-  comments(
-    created_at,
-    text,
-    postedBy,
-    upvotes
-  ),
-  text,
-  upvotes
-  `).eq("_id", postId).order("created_at", {ascending: false});
-
-  return data;
 }
 
 const Post = ({
@@ -92,15 +75,12 @@ const Post = ({
   domainText,
   postedBy,
   created_at,
+  comments,
   upvotes,
   upvoted,
 }: PostProps) => {
   const { address, isAuthenticated } = useWallet();
   const queryClient = useQueryClient();
-  const { data: comments } = useQuery(["comments", _id], async () =>
-    await loadComments(_id)
-  );
-
 
   const [showComments, setShowComments] = useState(false);
 
@@ -173,10 +153,13 @@ const Post = ({
             <CommentInput />
             {comments ? comments.map(comment => <Comment
               key={comment._id}
+              _id={comment._id}
               text={comment.text}
               postedBy={comment.postedBy}
               created_at={new Date(comment.created_at).toISOString()}
               upvotes={comment.upvotes}
+              upvoted={comment.upvoted}
+              subcomments={comment.subcomments}
             />) : null}
           </div>
         }
