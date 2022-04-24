@@ -62,6 +62,11 @@ const IconText = styled("span", {
   }
 });
 
+const SubCommentList = styled("div", {
+  marginTop: "$2",
+  marginLeft: "$4",
+});
+
 const StyledCommentInput = styled(CommentInput, {});
 
 const Comment = ({
@@ -114,7 +119,7 @@ const Comment = ({
             <Text>
               { text }
             </Text>
-            { nestedComments }
+            <div>{ nestedComments }</div>
             <AddComment>
               <IconText onClick={() => setInputToggled(!inputToggled)}>
                 <SpeechIcon fill={false} />

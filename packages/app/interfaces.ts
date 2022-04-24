@@ -5,7 +5,6 @@ export interface IPost {
   url: string;
   postedBy: string;
   created_at: string;
-  comments: IComment[] | null;
   upvotes: number;
   upvoted?: boolean;
 }

@@ -4,13 +4,13 @@ import { ClockIcon, SpeechIcon } from "@/components/Icons";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "../WalletAddress";
 import { formatDistanceToNow } from "date-fns";
-import supabase from "@/lib/supabase";
 
 import { useWallet } from "../WalletAuth";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient, useQuery } from "react-query";
 import { useCallback, useState } from "react";
 import CommentInput from "@/components/CommentInput";
 import Comment from "@/components/Comment";
+import supabase from "@/lib/supabase";
 
 
 const PostRow = styled("div", {
@@ -63,11 +63,39 @@ export interface PostProps {
   url: string;
   postedBy: string;
   created_at: string;
-  comments: IComment[] | null;
   upvotes: number;
   upvoted?: boolean;
 }
 
+async function loadComments (postId: string) {
+  const { data: comments, error: commentsError }= await supabase
+    .from("PostComments")
+    .select(`
+    _id,
+    text,
+    postedBy,
+    created_at,
+    subcomments:SubComments (
+      _id,
+      text,
+      postedBy,
+      created_at,
+      upvotes
+    )
+    upvotes
+    `)
+    .eq("postId", postId)
+    .order("created_at", { ascending: true })
+  return comments;
+}
+
+async function loadCommentCount (postId: string) {
+  const { data: commentCount, error: commentCountError }= await supabase
+    .from("PostComments")
+    .select("*", {count: "exact"})
+    .eq("postId", postId)
+  return commentCount;
+}
 const Post = ({
   _id,
   title,
@@ -75,14 +103,23 @@ const Post = ({
   domainText,
   postedBy,
   created_at,
-  comments,
   upvotes,
   upvoted,
 }: PostProps) => {
   const { address, isAuthenticated } = useWallet();
+  const [showComments, setShowComments] = useState(false);
   const queryClient = useQueryClient();
 
-  const [showComments, setShowComments] = useState(false);
+  const { data: comments } = useQuery(["comments", _id], () =>
+  loadComments(_id),
+  {
+    enabled: showComments,
+  }
+  );
+
+  const {data: commentCount} = useQuery(["comments", "commentCount", _id], () =>
+  loadCommentCount(_id),
+);
 
   const { mutate } = useMutation<any, Error, { postId: string }>(
     async ({ postId }) => {
@@ -145,7 +182,7 @@ const Post = ({
           {/* TODO: Set comment count/toggle */}
           <IconText onClick={() => setShowComments(!showComments)}>
             <SpeechIcon fill={1 > 0 ? true : false} />{" "}
-            {1 > 0 ? "1" + " comment(s)" : "Add a comment"} { }
+            {commentCount != null && commentCount != undefined && commentCount > 0 ? commentCount?.toString() + " comment(s)" : "Add a comment"} { }
           </IconText>
         </PostMeta>
         {showComments &&
