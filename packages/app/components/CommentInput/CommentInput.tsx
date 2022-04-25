@@ -33,7 +33,7 @@ const CommentInput = ({ postId }: { postId: string }) => {
   const router = useRouter();
   const { currentProfile } = useStore();
   const queryClient = useQueryClient();
-  const { address, isAuthenticated } = useWallet();
+  const { isAuthenticated } = useWallet();
 
   const [commentData, setCommentData] = useState<IComment>({
     _id: '',
