@@ -90,7 +90,7 @@ async function loadComments (postId: string) {
 }
 
 async function loadCommentCount (postId: string) {
-  const { data: commentCount, error: commentCountError }= await supabase
+  const { count: commentCount, error: commentCountError }= await supabase
     .from("PostComments")
     .select("*", {count: "exact"})
     .eq("postId", postId)
@@ -187,7 +187,7 @@ const Post = ({
         </PostMeta>
         {showComments &&
           <div>
-            <CommentInput />
+            <CommentInput postId={_id} />
             {comments ? comments.map(comment => <Comment
               key={comment._id}
               _id={comment._id}

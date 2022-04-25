@@ -1,12 +1,14 @@
 import {styled} from "@/stitches.config";
 import { useStore } from "@/store/store";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { 
   Button, 
   Input
 } from "@cabindao/topo";
 import { IComment } from "@/interfaces";
+import { useMutation, useQueryClient } from "react-query";
+import { useWallet } from "../WalletAuth";
 
 /** Styled components */
 const CommentInputWrapper = styled("div", {
@@ -27,31 +29,48 @@ const CancelButton = styled(Button, {
   marginLeft: "$2"
 });
 
-const CommentInput = () => {
+const CommentInput = ({ postId }: { postId: string }) => {
   const router = useRouter();
   const { currentProfile } = useStore();
+  const queryClient = useQueryClient();
+  const { address, isAuthenticated } = useWallet();
 
   const [commentData, setCommentData] = useState<IComment>({
     _id: '',
     text: '',
+    postId,
     postedBy: currentProfile.walletAddress,
     created_at: new Date().toISOString(),
-    upvotes: 0
+    subcomments: null,
+    upvotes: 0,
+    upvoted: false
   });
 
-  const submitComment = async () => {
-    const res = await fetch(`/api/comment/new`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+
+  const { mutate } = useMutation<any, Error, { postId: string }>(
+    async ({ postId }) => {
+      return await fetch(`/api/comment/new`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(commentData),
+      });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("comments");
       },
-      body: JSON.stringify(commentData)
-    });
-    
-    if (res.status === 200) {
-      router.push("/");
     }
-  };
+  );
+
+  const submitCommentHandler = useCallback(async () => {
+    if (isAuthenticated) {
+      return mutate({ postId });
+    } else {
+      alert("Please sign-in to comment");
+    }
+  }, [ isAuthenticated, mutate, postId ]);
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommentData({
@@ -67,7 +86,7 @@ const CommentInput = () => {
         onChange={(e) => onInput(e)}
         />
       <SubmitButton 
-        onClick={submitComment}
+        onClick={submitCommentHandler}
         tone="wheat"
       >
         Submit

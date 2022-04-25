@@ -13,6 +13,7 @@ export interface IComment {
   _id: string;
   text: string;
   postedBy: string;
+  postId: string;
   created_at: string;
   subcomments: IComment[] | null;
   upvotes: number;
