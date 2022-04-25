@@ -1,7 +1,7 @@
 import {styled} from "@/stitches.config";
 import { useStore } from "@/store/store";
 import { useRouter } from "next/router";
-import { useState, useCallback } from "react";
+import { useState, useCallback, Dispatch, SetStateAction } from "react";
 import { 
   Button, 
   Input
@@ -29,7 +29,7 @@ const CancelButton = styled(Button, {
   marginLeft: "$2"
 });
 
-const CommentInput = ({ postId }: { postId: string }) => {
+const CommentInput = ({ postId, setShowComments }: { postId: string,  setShowComments: Dispatch<SetStateAction<boolean>>}) => {
   const router = useRouter();
   const { currentProfile } = useStore();
   const queryClient = useQueryClient();
@@ -93,6 +93,7 @@ const CommentInput = ({ postId }: { postId: string }) => {
       </SubmitButton>
       <CancelButton 
         type="secondary"
+        onClick={() => setShowComments(false)}
       >
         Cancel
       </CancelButton>

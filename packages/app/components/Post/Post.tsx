@@ -187,7 +187,7 @@ const Post = ({
         </PostMeta>
         {showComments &&
           <div>
-            <CommentInput postId={_id} />
+            <CommentInput postId={_id} setShowComments={setShowComments}/>
             {comments ? comments.map(comment => <Comment
               key={comment._id}
               _id={comment._id}
