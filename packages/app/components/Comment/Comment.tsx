@@ -78,9 +78,6 @@ const Comment = ({
   upvoted,
   subcomments
 }: IComment) => {
-  const nestedComments = (subcomments || []).map(subcomment => {
-    return <Comment key={subcomment._id} {...subcomment}/>;
-  });
 
   const [toggled, setToggled] = useState(true);
   const [inputToggled, setInputToggled] = useState(false);
@@ -121,7 +118,7 @@ const Comment = ({
             <Text>
               { text }
             </Text>
-            <div>{ nestedComments }</div>
+            <SubCommentList>{ subcomments ? subcomments.map(subcomment => <Comment key={subcomment._id} {...subcomment}/>) : null}</SubCommentList>
             <AddComment>
               <IconText onClick={() => setInputToggled(!inputToggled)}>
                 <SpeechIcon fill={false} />
