@@ -14,6 +14,7 @@ export interface IComment {
   text: string;
   postedBy: string;
   postId?: string;
+  parentCommentId?: string;
   created_at: string;
   subcomments?: IComment[];
   upvotes: number;

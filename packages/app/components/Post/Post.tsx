@@ -181,7 +181,7 @@ const Post = ({
           </IconText>
           {/* TODO: Set comment count/toggle */}
           <IconText onClick={() => setShowComments(!showComments)}>
-            <SpeechIcon fill={1 > 0 ? true : false} />{" "}
+            <SpeechIcon fill={commentCount != null && commentCount != undefined && commentCount > 0 ? true : false} />{" "}
             {commentCount != null && commentCount != undefined && commentCount > 0 ? commentCount?.toString() + " comment(s)" : "Add a comment"} { }
           </IconText>
         </PostMeta>
