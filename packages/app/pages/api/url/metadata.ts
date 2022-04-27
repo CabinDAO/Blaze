@@ -26,7 +26,7 @@ export default async function handler(
           expansions: ["author_id"],
         });
         const author = tweet.includes?.users?.find(
-          (u) => u.id === (tweet as any).author_id
+          (u) => u.id === tweet.data.author_id
         );
         return res.status(200).json({
           title: tweet.data.text,
