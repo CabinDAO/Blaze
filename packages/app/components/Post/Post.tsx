@@ -195,7 +195,6 @@ const Post = ({
               postedBy={comment.postedBy}
               created_at={new Date(comment.created_at).toISOString()}
               upvotes={comment.upvotes}
-              upvoted={comment.upvoted}
               subcomments={comment.subcomments}
             />) : null}
           </div>

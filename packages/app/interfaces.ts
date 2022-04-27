@@ -13,9 +13,9 @@ export interface IComment {
   _id: string;
   text: string;
   postedBy: string;
-  postId: string;
+  postId?: string;
   created_at: string;
-  subcomments: IComment[] | null;
+  subcomments?: IComment[];
   upvotes: number;
   upvoted?: boolean;
 }

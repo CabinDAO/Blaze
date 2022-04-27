@@ -41,9 +41,7 @@ const CommentInput = ({ postId, setShowComments }: { postId: string,  setShowCom
     postId,
     postedBy: currentProfile.walletAddress,
     created_at: new Date().toISOString(),
-    subcomments: null,
     upvotes: 0,
-    upvoted: false
   });
 
 
@@ -59,7 +57,8 @@ const CommentInput = ({ postId, setShowComments }: { postId: string,  setShowCom
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("comments");
+        setShowComments(false);
+        queryClient.invalidateQueries(["comments", postId]);
       },
     }
   );
