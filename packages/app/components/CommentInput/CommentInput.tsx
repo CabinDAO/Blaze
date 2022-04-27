@@ -29,7 +29,7 @@ const CancelButton = styled(Button, {
   marginLeft: "$2"
 });
 
-const CommentInput = ({ postId, setShowComments }: { postId: string,  setShowComments: Dispatch<SetStateAction<boolean>>}) => {
+const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: string, parentCommentId?: string, setShowComments: Dispatch<SetStateAction<boolean>>}) => {
   const router = useRouter();
   const { currentProfile } = useStore();
   const queryClient = useQueryClient();
@@ -39,14 +39,15 @@ const CommentInput = ({ postId, setShowComments }: { postId: string,  setShowCom
     _id: '',
     text: '',
     postId,
+    parentCommentId,
     postedBy: currentProfile.walletAddress,
     created_at: new Date().toISOString(),
     upvotes: 0,
   });
 
 
-  const { mutate } = useMutation<any, Error, { postId: string }>(
-    async ({ postId }) => {
+  const { mutate } = useMutation<any, Error>(
+    async () => {
       return await fetch(`/api/comment/new`, {
         method: "POST",
         headers: {
@@ -65,11 +66,11 @@ const CommentInput = ({ postId, setShowComments }: { postId: string,  setShowCom
 
   const submitCommentHandler = useCallback(async () => {
     if (isAuthenticated) {
-      return mutate({ postId });
+      return mutate();
     } else {
       alert("Please sign-in to comment");
     }
-  }, [ isAuthenticated, mutate, postId ]);
+  }, [ isAuthenticated, mutate ]);
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommentData({

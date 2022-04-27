@@ -70,6 +70,7 @@ const SubCommentList = styled("div", {
 const StyledCommentInput = styled(CommentInput, {});
 
 const Comment = ({
+  _id,
   text,
   postedBy,
   created_at,
@@ -83,6 +84,7 @@ const Comment = ({
 
   const [toggled, setToggled] = useState(true);
   const [inputToggled, setInputToggled] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   return (
     <CommentWrapper>
@@ -127,7 +129,7 @@ const Comment = ({
               </IconText>
             </AddComment>
             { inputToggled &&
-              <StyledCommentInput />
+              <StyledCommentInput parentCommentId={_id} setShowComments={setInputToggled}/>
             }
           </div>
         }

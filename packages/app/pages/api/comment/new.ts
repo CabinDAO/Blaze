@@ -16,7 +16,7 @@ export default async function handler(
     };
 
     try {
-      await supabase.from("PostComments").insert(comment);
+      await supabase.from(comment.parentCommentId ? "SubComments" : "PostComments").insert(comment);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
