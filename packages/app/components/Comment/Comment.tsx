@@ -119,12 +119,12 @@ const Comment = ({
               { text }
             </Text>
             <SubCommentList>{ subcomments ? subcomments.map(subcomment => <Comment key={subcomment._id} {...subcomment}/>) : null}</SubCommentList>
-            <AddComment>
+            {subcomments && <AddComment>
               <IconText onClick={() => setInputToggled(!inputToggled)}>
                 <SpeechIcon fill={false} />
                 {"Add a comment"}
               </IconText>
-            </AddComment>
+            </AddComment>}
             { inputToggled &&
               <StyledCommentInput parentCommentId={_id} setShowComments={setInputToggled}/>
             }
