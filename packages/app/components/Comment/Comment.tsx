@@ -3,7 +3,7 @@ import Link from "next/link";
 import { IComment } from "@/interfaces";
 import Upvote from "@/components/Upvote";
 import WalletAddress from "@/components/WalletAddress";
-import {ClockIcon, SpeechIcon} from "@/components/Icons";
+import {ClockIcon, SpeechIcon, LargeDiamondIcon } from "@/components/Icons";
 import {formatDistanceToNow} from "date-fns";
 import {useState} from "react";
 import CommentInput from "@/components/CommentInput";
@@ -109,7 +109,8 @@ const Comment = ({
           </IconText>
           <IconText>
             <div onClick={() => setToggled(!toggled)}>
-              { toggled ? "Hide" : "Show"}
+              <LargeDiamondIcon/>
+              { toggled ? " Hide" : " Show"}
             </div>
           </IconText>
         </Meta>
