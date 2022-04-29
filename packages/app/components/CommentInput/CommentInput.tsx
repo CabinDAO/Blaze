@@ -31,16 +31,15 @@ const CancelButton = styled(Button, {
 
 const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: string, parentCommentId?: string, setShowComments: Dispatch<SetStateAction<boolean>>}) => {
   const router = useRouter();
-  const { currentProfile } = useStore();
   const queryClient = useQueryClient();
-  const { isAuthenticated } = useWallet();
+  const { isAuthenticated, address } = useWallet();
 
   const [commentData, setCommentData] = useState<IComment>({
     _id: '',
     text: '',
     postId,
     parentCommentId,
-    postedBy: currentProfile.walletAddress,
+    postedBy: address || '',
     created_at: new Date().toISOString(),
     upvotes: 0,
   });

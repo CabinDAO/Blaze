@@ -117,7 +117,7 @@ const Post = ({
   }
   );
 
-  const {data: commentCount} = useQuery(["comments", "commentCount", _id], () =>
+  const {data: commentCount} = useQuery(["comments", _id, { count: true }], () =>
   loadCommentCount(_id),
 );
 
