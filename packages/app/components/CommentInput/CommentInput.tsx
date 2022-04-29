@@ -57,7 +57,7 @@ const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: s
     },
     {
       onSuccess: () => {
-        setShowComments(false);
+        setCommentData({...commentData, text: ''});;
         queryClient.invalidateQueries(["comments", postId]);
       },
     }
@@ -83,6 +83,7 @@ const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: s
       <InputField
         placeholder={"Your comment"}
         onChange={(e) => onInput(e)}
+        value={commentData.text}
         />
       <SubmitButton 
         onClick={submitCommentHandler}
