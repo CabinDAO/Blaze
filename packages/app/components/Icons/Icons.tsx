@@ -76,3 +76,9 @@ export const ExternalLinkIcon = ({
       </svg>
     </a>
 );
+
+export const DiamondIcon = ({ className }: { className?: string }) => (
+  <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fillRule="evenodd" clipRule="evenodd" d="M2 0.5L4 2L2 3.5L0 2L2 0.5Z" fill="#324841"/>
+</svg>
+);
