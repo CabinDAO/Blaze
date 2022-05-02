@@ -45,14 +45,14 @@ const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: s
   });
 
 
-  const { mutate } = useMutation<any, Error>(
-    async () => {
+  const { mutate } = useMutation<any, Error, IComment>(
+    async (comment: any) => {
       return await fetch(`/api/comment/new`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(commentData),
+        body: JSON.stringify(comment),
       });
     },
     {
@@ -63,19 +63,16 @@ const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: s
     }
   );
 
-  const submitCommentHandler = useCallback(async () => {
+  const submitCommentHandler = useCallback(async (comment: IComment) => {
     if (isAuthenticated) {
-      return mutate();
+      return mutate(comment);
     } else {
       alert("Please sign-in to comment");
     }
   }, [ isAuthenticated, mutate ]);
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCommentData({
-      ...commentData,
-      text: e.target.value
-    })
+    setCommentData(state => ({ ...state, text: e.target.value }));
   };
 
   return (
@@ -86,7 +83,7 @@ const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: s
         value={commentData.text}
         />
       <SubmitButton 
-        onClick={submitCommentHandler}
+        onClick={() => submitCommentHandler(commentData)}
         tone="wheat"
       >
         Submit
