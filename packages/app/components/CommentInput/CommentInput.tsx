@@ -83,7 +83,11 @@ const CommentInput = ({ postId, parentCommentId, setShowComments }: { postId?: s
         value={commentData.text}
         />
       <SubmitButton 
-        onClick={() => submitCommentHandler(commentData)}
+        onClick={() => submitCommentHandler(
+          {
+            ...commentData,
+            postId: undefined
+          })}
         tone="wheat"
       >
         Submit

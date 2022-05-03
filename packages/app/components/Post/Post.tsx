@@ -179,7 +179,6 @@ const Post = ({
             <ClockIcon />{" "}
             {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
           </IconText>
-          {/* TODO: Set comment count/toggle */}
           <IconText onClick={() => setShowComments(!showComments)}>
             <SpeechIcon fill={commentCount != null && commentCount != undefined && commentCount > 0 ? true : false} />{" "}
             {commentCount != null && commentCount != undefined && commentCount > 0 ? commentCount?.toString() + " comment(s)" : "Add a comment"} { }
@@ -191,6 +190,7 @@ const Post = ({
             {comments ? comments.map(comment => <Comment
               key={comment._id}
               _id={comment._id}
+              postId={_id}
               text={comment.text}
               postedBy={comment.postedBy}
               created_at={new Date(comment.created_at).toISOString()}

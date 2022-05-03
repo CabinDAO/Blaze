@@ -71,6 +71,7 @@ const StyledCommentInput = styled(CommentInput, {});
 
 const Comment = ({
   _id,
+  postId,
   text,
   postedBy,
   created_at,
@@ -127,7 +128,7 @@ const Comment = ({
               </IconText>
             </AddComment>}
             { inputToggled &&
-              <StyledCommentInput parentCommentId={_id} setShowComments={setInputToggled}/>
+              <StyledCommentInput postId={postId} parentCommentId={_id} setShowComments={setInputToggled}/>
             }
           </div>
         }

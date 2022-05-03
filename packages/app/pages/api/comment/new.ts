@@ -16,7 +16,11 @@ export default async function handler(
     };
 
     try {
-      await supabase.from(comment.parentCommentId ? "SubComments" : "PostComments").insert(comment);
+      if (comment.parentCommentId) {
+      await supabase.from("SubComments").insert(comment);
+      } else {
+      await supabase.from("Comments").insert(comment);
+      }
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
