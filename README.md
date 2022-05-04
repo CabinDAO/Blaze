@@ -52,8 +52,8 @@ that directory, there are two packages that are under active development:
 3. Navigate to desired package subdirectory. 
    - *App*: `Blaze/packages/app` 
    - *Contracts*: `Blaze/packages/contracts`
-5. Install dependencies.  `npm i`
-6. Run development app.  `npm run dev`
+5. Install dependencies.  `yarn`
+6. Run development app.  `yarn app:dev`
 
 This should start a development web server and navigate your web browser 
 to `localhost:3000`.
