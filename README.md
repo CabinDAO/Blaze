@@ -49,11 +49,8 @@ that directory, there are two packages that are under active development:
 
 1. Fork this repo to your Github account.
 2. Clone the repo that you just forked to your local machine.
-3. Navigate to desired package subdirectory. 
-   - *App*: `Blaze/packages/app` 
-   - *Contracts*: `Blaze/packages/contracts`
-5. Install dependencies.  `yarn`
-6. Run development app.  `yarn app:dev`
+3. Install dependencies.  `yarn`
+4. Run development app.  `yarn app:dev`
 
 This should start a development web server and navigate your web browser 
 to `localhost:3000`.
