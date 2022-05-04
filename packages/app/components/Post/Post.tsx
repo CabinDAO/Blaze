@@ -91,6 +91,7 @@ async function loadComments (postId: string) {
 
 async function loadCommentCount (postId: string) 
 {
+  //TODO: This is a hack to get the comment count.
   const { data: comments, error: commentsError }= await supabase
     .from("PostComments")
     .select(`
