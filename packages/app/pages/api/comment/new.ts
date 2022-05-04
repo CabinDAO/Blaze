@@ -19,7 +19,7 @@ export default async function handler(
       if (comment.parentCommentId) {
       await supabase.from("SubComments").insert(comment);
       } else {
-      await supabase.from("Comments").insert(comment);
+      await supabase.from("PostComments").insert(comment);
       }
     } catch (error: any) {
       res.status(500).json({ message: error.message });

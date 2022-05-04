@@ -89,13 +89,35 @@ async function loadComments (postId: string) {
   return comments;
 }
 
-async function loadCommentCount (postId: string) {
-  const { count: commentCount, error: commentCountError }= await supabase
+async function loadCommentCount (postId: string) 
+{
+  const { data: comments, error: commentsError }= await supabase
     .from("PostComments")
-    .select("*", {count: "exact"})
-    .eq("postId", postId)
-  return commentCount;
+    .select(`
+    _id,
+    subcomments:SubComments (
+      _id
+    )
+    `)
+    .eq("postId", postId);
+    if(commentsError) console.log(commentsError);
+    
+    if (!comments) {
+      return 0;
+    } else {
+      let totalComments = comments?.length;
+      for (let i = 0; i < comments.length; i++) {
+        const subComments = comments[i].subcomments;
+        if (subComments) {
+          totalComments += subComments.length;
+        }
+      }
+      return totalComments;
+    }
+
+  
 }
+
 const Post = ({
   _id,
   title,
