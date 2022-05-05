@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
-
+import {BlazeLogoIcon} from "../components/Icons/Icons";
 import {
   Provider as WalletProvider,
   chain,
@@ -305,7 +305,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Header>
               <Link href="/">
                 <a>
-                  <DaoCampLogo>#blaze</DaoCampLogo>
+                  <DaoCampLogo>
+                    <BlazeLogoIcon />
+                    #blaze</DaoCampLogo>
                 </a>
               </Link>
               <ResponsiveNav />
