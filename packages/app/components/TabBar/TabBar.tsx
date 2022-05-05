@@ -1,9 +1,11 @@
-import {styled} from "@/stitches.config";
-import {useWallet} from "@/components/WalletAuth";
-import React, {useState, useMemo, useEffect} from "react";
-import {useStore} from "@/store/store";
+import { styled } from "@/stitches.config";
+import { useWallet } from "@/components/WalletAuth";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
+import { useStore } from "@/store/store";
 import DropdownMenu from "@/components/DropdownMenu";
-import {DoubleArrowUpIcon, SunIcon} from "@radix-ui/react-icons";
+import { DoubleArrowUpIcon, SunIcon } from "@radix-ui/react-icons";
+import { useQueryClient } from "react-query";
+import { useRouter } from "next/router";
 
 const TabBarWrapper = styled("div", {
   boxSizing: "border-box",
@@ -41,7 +43,7 @@ export const TabLink = styled("button", {
   },
 });
 
-export type Sort = "newest" | "trending" | "controversial";
+export type Sort = "newest" | "trending";
 
 const TabsContainer = ({
   className,
@@ -110,16 +112,17 @@ export const StickyTabBar = ({
   );
 };
 
-const TabBar = ({className}: {className?: string}) => {
-  const {sort, updateSort} = useStore();
-  const {address} = useWallet({fetchEns: true});
+const TabBar = ({ className }: { className?: string }) => {
+  const router = useRouter();
+  const { sort, updateSort } = useStore();
+  const { address } = useWallet({ fetchEns: true });
   const [activeTab, setActiveTab] = useState(0);
   const leftNav = useMemo(() => {
     if (address) {
       return [
-        {label: "Links", value: "links"},
-        {label: "Submissions", value: "submissions"},
-        {label: "Upvotes", value: "upvotes"},
+        { label: "Links", value: "links" },
+        { label: "Submissions", value: "submissions" },
+        { label: "Upvotes", value: "upvotes" },
       ];
     }
     return [
@@ -129,6 +132,14 @@ const TabBar = ({className}: {className?: string}) => {
       },
     ];
   }, [address]);
+
+  const onChangeSort = useCallback(
+    (sort: Sort) => {
+      updateSort(sort);
+    },
+    [updateSort]
+  );
+
   return (
     <StickyTabBar className={className}>
       <MobileTabs>
@@ -154,7 +165,15 @@ const TabBar = ({className}: {className?: string}) => {
             Links
           </TabLink>
         )}
-        {address && (
+        {address && router.pathname != "user/profile" && (
+          <TabLink
+            active={activeTab == 0 ? true : false}
+            onClick={() => setActiveTab(0)}
+          >
+            Links
+          </TabLink>
+        )}
+        {address && router.pathname === "/user/profile" && (
           <>
             <TabLink
               active={activeTab == 0 ? true : false}
@@ -217,7 +236,7 @@ const TabBar = ({className}: {className?: string}) => {
             // },
           ]}
           value={sort}
-          onChange={(key: Sort) => updateSort(key)}
+          onChange={onChangeSort}
         />
       </div>
     </StickyTabBar>

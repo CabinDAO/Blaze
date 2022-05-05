@@ -1,9 +1,8 @@
 import { styled } from "@/stitches.config";
 import Post from "../Post";
-import { useEffect } from "react";
-import { useStore } from "@/store/store";
-import supabase from "@/lib/supabase";
-import { useQueryClient, useQuery } from "react-query";
+
+import { useMemo } from "react";
+import { useEnsLookup } from "@/helpers/ens";
 
 const StyledPostList = styled("div", {
   display: "flex",
@@ -19,41 +18,25 @@ export interface Post {
   url: string;
   postedBy: string;
   upvotes: number;
+  upvoted?: boolean;
 }
-export type Sort = "newest" | "trending" | "controversial";
 export interface PostListProps {
+  loading?: boolean;
   posts: Post[];
-  sort: Sort;
 }
 
-const PostList = ({ posts, sort }: PostListProps) => {
-  const { currentProfile, incrementProfilePostsUpvoted } = useStore();
-
-  useEffect(() => {
-    const Upvotes = supabase
-      .from("Upvotes")
-      .on("INSERT", async (payload) => {
-        if (
-          currentProfile &&
-          payload.new.upvoter === currentProfile.walletAddress
-        ) {
-          incrementProfilePostsUpvoted();
-          await supabase
-            .from("Profiles")
-            .update({ postsUpvoted: currentProfile.postsUpvoted + 1 })
-            .eq("walletAddress", currentProfile.walletAddress);
-        }
-      })
-      .subscribe();
-    return () => {
-      supabase.removeSubscription(Upvotes);
-    };
-  });
+const PostList = ({ posts, loading = false }: PostListProps) => {
+  const addresses: string[] = useMemo(
+    () => posts?.map((p) => p.postedBy as string) ?? [],
+    [posts]
+  );
+  // prefetch ens names
+  const ensLookup = useEnsLookup(addresses);
 
   if (posts.length === 0) {
     return (
       <StyledPostList>
-        <div>No posts yet</div>
+        <div>{loading ? "Loading" : "No posts yet"}</div>
       </StyledPostList>
     );
   }
@@ -61,7 +44,7 @@ const PostList = ({ posts, sort }: PostListProps) => {
   return (
     <StyledPostList>
       {posts.map((post) => (
-        <Post key={post._id} {...post} />
+        <Post key={post._id} {...post} postedByEns={ensLookup[post.postedBy]} />
       ))}
     </StyledPostList>
   );

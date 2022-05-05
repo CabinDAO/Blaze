@@ -1,6 +1,7 @@
 {
-  "name": "dao-camp-contracts",
+  "name": "blaze-contracts",
   "version": "0.0.1",
+  "private": true,
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.4",
     "@nomiclabs/hardhat-etherscan": "^2.1.8",

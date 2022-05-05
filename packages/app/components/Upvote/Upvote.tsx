@@ -56,17 +56,17 @@ const Wrapper = styled("div", {
       },
       comment: {},
     },
-  upvoted: {
-    true: {
-      backgroundColor: "$forest",
-      color: "$sand",
-      "&:hover": {
-        [`& ${UpvoteArrowIcon}`]: {
-          opacity: 0.5,
+    upvoted: {
+      true: {
+        backgroundColor: "$forest",
+        color: "$sand",
+        "&:hover": {
+          [`& ${UpvoteArrowIcon}`]: {
+            opacity: 0.5,
+          },
         },
       },
     },
-  },
   },
   compoundVariants: [
     {
@@ -126,12 +126,14 @@ export interface UpvoteProps {
   upvoted?: boolean;
   type?: "post" | "comment";
   onClick?: () => void;
+  disabled?: boolean;
 }
 const Upvote = ({
   count = 0,
   upvoted = false,
   type = "post",
   onClick,
+  disabled = false,
 }: UpvoteProps) => {
   const countDisplay = useMemo(
     () =>
@@ -141,8 +143,13 @@ const Upvote = ({
       }).format(count),
     [count]
   );
+
   return (
-    <Wrapper upvoted={upvoted} type={type} onClick={onClick}>
+    <Wrapper
+      upvoted={upvoted}
+      type={type}
+      onClick={disabled ? undefined : onClick}
+    >
       <div>
         <UpvoteArrowIcon upvoted={upvoted} />
       </div>
