@@ -76,3 +76,15 @@ export const ExternalLinkIcon = ({
       </svg>
     </a>
 );
+
+export const LargeDiamondIcon = ({ className }: { className?: string }) => (
+  <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0.901388 4L6 0.600925L11.0986 4L6 7.39908L0.901388 4Z" stroke="#324841"/>
+</svg>
+);
+
+export const SmallDiamondIcon = ({ className }: { className?: string }) => (
+  <svg width="8" height="8" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fillRule="evenodd" clipRule="evenodd" d="M2 0.5L4 2L2 3.5L0 2L2 0.5Z" fill="#324841"/>
+</svg>
+);

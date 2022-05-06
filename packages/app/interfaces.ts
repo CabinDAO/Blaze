@@ -6,4 +6,17 @@ export interface IPost {
   postedBy: string;
   created_at: string;
   upvotes: number;
+  upvoted?: boolean;
+}
+
+export interface IComment {
+  _id: string;
+  text: string;
+  postedBy: string;
+  postId?: string;
+  parentCommentId?: string;
+  created_at: string;
+  subcomments?: IComment[];
+  upvotes: number;
+  upvoted?: boolean;
 }
