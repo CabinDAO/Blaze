@@ -1,14 +1,13 @@
 import Card from "@/components/Card";
 import UserCard from "@/components/UserCard";
-import { useWallet } from "@/components/WalletAuth";
+import {useWallet} from "@/components/WalletAuth";
 import Title from "@/components/Title";
-import { useStore } from "@/store/store";
-import { useEnsLookup } from "@/helpers/ens";
+import {useStore} from "@/store/store";
+
 
 const Profile = () => {
-  const { currentProfile } = useStore();
-  const { address } = useWallet({ fetchEns: true });
-  const ensLookup = useEnsLookup(address);
+  const { currentProfile} = useStore();
+  const {address, ens} = useWallet({fetchEns: true});
   return (
     <>
       {address && currentProfile && (
@@ -17,7 +16,7 @@ const Profile = () => {
           <Card>
             <UserCard
               address={address}
-              ens={{ name: ensLookup[address] }}
+              ens={ens}
               joinDate={currentProfile.joinDate}
               lastSeenDate={currentProfile.lastSeenDate}
               upvotesReceived={currentProfile.upvotesReceived}

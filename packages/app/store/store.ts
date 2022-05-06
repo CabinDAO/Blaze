@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import {useLayoutEffect} from "react";
 import create from "zustand";
 import createContext from "zustand/context";
 
@@ -16,13 +16,13 @@ export interface Post {
   upvotes: number;
 }
 export type PostList = Post[];
-export type Sort = "newest" | "trending";
+export type Sort = "newest" | "trending" | "controversial";
 export type Profile = {
-  _id?: string;
-  walletAddress?: string;
-  joinDate?: number;
-  lastSeenDate?: number;
-  upvotesReceived?: number;
+  _id: string;
+  walletAddress: string;
+  joinDate: number;
+  lastSeenDate: number;
+  upvotesReceived: number;
   postsUpvoted: number;
 };
 export interface Upvote {
@@ -39,20 +39,19 @@ export interface SiweState {
 }
 export interface InitialState {
   sort: Sort;
-  currentProfile?: Profile;
+  currentProfile: object;
   siwe: SiweState;
 }
 const initialState: InitialState = {
   sort: "trending",
-  currentProfile: {
-    postsUpvoted: 0,
-  },
+  currentProfile: {},
   siwe: {},
 };
 
 export default interface AppState {
   sort: Sort;
-  currentProfile?: Profile;
+  upvotes: Upvote[];
+  currentProfile: Profile;
   siwe: SiweState;
   updateSort: (sort: Sort) => void;
   loadProfileIntoStore: (profile: Profile) => void;
@@ -66,12 +65,12 @@ const zustandContext = createContext<AppState>();
 export const Provider = zustandContext.Provider;
 export const useStore = () => zustandContext.useStore();
 export const initializeStore = (preloadedState = {}) => {
-  return create<AppState>((set) => ({
+  return create((set: any) => ({
     ...initialState,
     ...preloadedState,
-    updateSort: (sort: Sort) => set({ sort }),
+    updateSort: (sort: Sort) => set({sort}),
     loadProfileIntoStore: (profile: Profile) => {
-      set({ currentProfile: profile });
+      set({currentProfile: profile});
     },
     incrementProfilePostsUpvoted: () => {
       set((state: AppState) => {
@@ -80,32 +79,40 @@ export const initializeStore = (preloadedState = {}) => {
           profile.postsUpvoted += 1;
         }
 
-        return { currentProfile: profile };
+        return {currentProfile: profile};
       });
     },
     setSiweAddress: (address: string) =>
-      set((state: AppState) => ({
-        siwe: { ...state.siwe, address } as SiweState,
-      })),
+      set((state: AppState) => ({siwe: {...state.siwe, address} as SiweState})),
     setSiweError: (error: Error | undefined) =>
-      set((state: AppState) => ({
-        siwe: { ...state.siwe, error } as SiweState,
-      })),
+      set((state: AppState) => ({siwe: {...state.siwe, error} as SiweState})),
     setSiweLoading: (loading: boolean | undefined) =>
-      set((state: AppState) => ({
-        siwe: { ...state.siwe, loading } as SiweState,
-      })),
-    clearSiweSession: () => set((state: AppState) => ({ siwe: {} })),
+      set((state: AppState) => ({siwe: {...state.siwe, loading} as SiweState})),
+    clearSiweSession: () => set((state: AppState) => ({siwe: {}})),
   }));
 };
 
-export function useCreateStore(initialState?: { sort: string }) {
-  const [createStore] = useState(() => () => initializeStore(initialState));
-  return useMemo(() => {
-    if (typeof window === "undefined") {
-      return createStore;
-    } else {
-      return () => createStore();
+export function useCreateStore(initialState: {sort: string}) {
+  // For SSR & SSG, always use a new store.
+  if (typeof window === "undefined") {
+    return () => initializeStore(initialState);
+  }
+
+  // For CSR, always re-use same store.
+  store = store ?? initializeStore(initialState);
+  // And if initialState changes, then merge states in the next render cycle.
+  //
+  // eslint complaining "React Hooks must be called in the exact same order in every component render"
+  // is ignorable as this code runs in same order in a given environment
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useLayoutEffect(() => {
+    if (initialState && store) {
+      store.setState({
+        ...store.getState(),
+        ...initialState,
+      });
     }
-  }, [createStore]);
+  }, [initialState]);
+
+  return () => store;
 }

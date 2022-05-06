@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import { styled } from "@/stitches.config";
+import {useMemo} from "react";
+
+import {styled} from "@/stitches.config";
 
 const AddressText = styled("span", {
   fontFamily: "$mono",
@@ -16,7 +17,7 @@ export interface WalletAddressProps
     avatar?: string | null;
   } | null;
 }
-const WalletAddress = ({ address, ens, ...props }: WalletAddressProps) => {
+const WalletAddress = ({address, ens, ...props}: WalletAddressProps) => {
   const addr = useMemo(() => {
     return [address.slice(0, 6), address.slice(-4)].join("...");
   }, [address]);

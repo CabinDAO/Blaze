@@ -244,11 +244,6 @@
     testrpc "0.0.1"
     web3-utils "^1.0.0-beta.31"
 
-"@ensdomains/eth-ens-namehash@^2.0.15":
-  version "2.0.15"
-  resolved "https://registry.yarnpkg.com/@ensdomains/eth-ens-namehash/-/eth-ens-namehash-2.0.15.tgz#5e5f2f24ba802aff8bc19edd822c9a11200cdf4a"
-  integrity sha512-JRDFP6+Hczb1E0/HhIg0PONgBYasfGfDheujmfxaZaAv/NAH4jE6Kf48WbqfRZdxt4IZI3jl3Ri7sZ1nP09lgw==
-
 "@ensdomains/resolver@^0.2.4":
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/@ensdomains/resolver/-/resolver-0.2.4.tgz#c10fe28bf5efbf49bff4666d909aed0265efbc89"
@@ -12103,11 +12098,6 @@ tweetnacl@^1.0.0, tweetnacl@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-1.0.3.tgz#ac0af71680458d8a6378d0d0d050ab1407d35596"
   integrity sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==
-
-twitter-api-v2@^1.12.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/twitter-api-v2/-/twitter-api-v2-1.12.0.tgz#0c69fd9578a4e870404bb449cd3634275c152d2e"
-  integrity sha512-8Fv+sUYY0P1gloiBSgG1w/NSuGUIP32lDKMPVzIMX3jd4zDhiJFtCft41fKs+JqcD8m7s+4vkMO/XwyY2+NULQ==
 
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"

@@ -27,8 +27,7 @@
         "*"
       ]
     },
-    "incremental": true,
-    "downlevelIteration": true,
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",

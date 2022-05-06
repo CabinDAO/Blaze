@@ -1,22 +1,20 @@
 {
-  "name": "blaze",
+  "name": "dao-camp",
   "version": "1.0.0",
   "description": "Hacker News for DAOs",
   "main": "index.js",
-  "repository": "https://github.com/CabinDAO/blaze.git",
+  "repository": "https://github.com/CabinDAO/dao-camp.git",
   "author": "@delightfulabyss",
   "license": "MIT",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "app:dev": "yarn workspace blaze-app next dev",
-    "app:build": "yarn workspace blaze-app next build",
-    "app:start": "yarn workspace blaze-app next start",
-    "app:lint": "yarn workspace blaze-app next lint",
-    "app:export": "yarn workspace blaze-app next export"
+    "app:dev": "yarn workspace dao-camp-app next dev",
+    "app:build": "yarn workspace dao-camp-app next build",
+    "app:start": "yarn workspace dao-camp-app next start",
+    "app:lint": "yarn workspace dao-camp-app next lint",
+    "app:export": "yarn workspace dao-camp-app next export"
   }
 }
