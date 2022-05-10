@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
-
+import {BlazeLogoIcon} from "../components/Icons/Icons";
 import {
   Provider as WalletProvider,
   chain,
@@ -53,12 +53,10 @@ const Header = styled("header", {
   padding: "$2",
 });
 
-const DaoCampLogo = styled("h2", {
-  margin: 0,
-  padding: 0,
-  fontSize: "1.5rem",
-  color: "$forest",
-});
+// const BlazeLogoIcon = styled("svg", {
+//   width: "25%",
+//   color: "$forest",
+// });
 
 const MainContainer = styled("div", {
   minHeight: "100vh",
@@ -305,7 +303,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Header>
               <Link href="/">
                 <a>
-                  <DaoCampLogo>#blaze</DaoCampLogo>
+                    <BlazeLogoIcon />
                 </a>
               </Link>
               <ResponsiveNav />
