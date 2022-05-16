@@ -57,7 +57,7 @@ export default interface AppState {
   updateSort: (sort: Sort) => void;
   loadProfileIntoStore: (profile: Profile) => void;
   incrementProfilePostsUpvoted: () => void;
-  setSiweAddress: (address: string) => void;
+  setSiweAddress: (address: string | undefined) => void;
   setSiweLoading: (status: boolean | undefined) => void;
   setSiweError: (error: Error | undefined) => void;
   clearSiweSession: () => void;
@@ -83,7 +83,7 @@ export const initializeStore = (preloadedState = {}) => {
         return { currentProfile: profile };
       });
     },
-    setSiweAddress: (address: string) =>
+    setSiweAddress: (address: string | undefined) =>
       set((state: AppState) => ({
         siwe: { ...state.siwe, address } as SiweState,
       })),

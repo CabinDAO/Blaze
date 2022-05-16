@@ -56,7 +56,7 @@ const WalletAuth = () => {
   return (
     <Link href="/user/sign_in" passHref>
       <a>
-        <Button type="secondary">Connect</Button>
+        <Button type="secondary">Sign In</Button>
       </a>
     </Link>
   );
