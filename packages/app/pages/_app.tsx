@@ -253,7 +253,7 @@ const MobileMenu = () => {
             </>
           ) : (
             <Link href="/user/sign_in">
-              <a>Connect</a>
+              <a>Sign In</a>
             </Link>
           )}
         </MenuBox>

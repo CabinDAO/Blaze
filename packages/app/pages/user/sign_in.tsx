@@ -1,8 +1,5 @@
 import {
   useConnect,
-  useAccount,
-  useNetwork,
-  useSignMessage,
   Connector,
 } from "wagmi";
 import { useRouter } from "next/router";
@@ -36,33 +33,29 @@ const SignIn = () => {
     loadProfileIntoStore,
   } = useStore();
 
-  const [{ data: accountData }] = useAccount();
-  const [{ data: networkData }] = useNetwork();
 
-  const [, signMessage] = useSignMessage();
-
-  const signIn = useCallback(async () => {
+  const signIn = useCallback(async (connector: Connector) => {
     try {
-      const address = accountData?.address;
-      const chainId = networkData?.chain?.id;
-      if (!address || !chainId) return;
 
       setSiweLoading(true);
       setSiweError(undefined);
+
+      const res = await connect(connector);
+      if(!res.data) throw res.error ?? new Error("Error connecting wallet. See console for details.");
 
       // Fetch random nonce, create SIWE message, and sign with wallet
       const nonceRes = await fetch("/api/nonce");
       const message = new SiweMessage({
         domain: window.location.host,
-        address,
+        address: res.data?.account,
         statement: "Sign in with Ethereum to the app.",
         uri: window.location.origin,
         version: "1",
-        chainId,
+        chainId: res.data.chain?.id,
         nonce: await nonceRes.text(),
       });
-      const signRes = await signMessage({ message: message.prepareMessage() });
-      if (signRes.error) throw signRes.error;
+      const signer = await connector.getSigner();
+      const signature = await signer.signMessage(message.prepareMessage());
 
       // Verify signature
       const verifyRes = await fetch("/api/verify", {
@@ -70,22 +63,19 @@ const SignIn = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message, signature: signRes.data }),
+        body: JSON.stringify({ message, signature}),
       });
       if (!verifyRes.ok) throw new Error("Error verifying message");
-      setSiweAddress(address);
+      setSiweAddress(res.data?.account);
       setSiweLoading(false);
     } catch (error: any) {
       setSiweError(error);
       setSiweLoading(false);
     }
   }, [
-    accountData?.address,
-    networkData?.chain?.id,
     setSiweAddress,
     setSiweError,
     setSiweLoading,
-    signMessage,
   ]);
 
   useEffect(() => {
@@ -132,26 +122,16 @@ const SignIn = () => {
     }
   }, [siwe.address, loadProfileIntoStore]);
 
-  if (!connected) {
-    return (
+  return (
       <ConnectList>
         {data.connectors.map((x) => (
-          <Button disabled={!x.ready} key={x.id} onClick={() => connect(x)}>
+          <Button disabled={siwe.loading} key={x.id} onClick={() => signIn(x)}>
             {x.name}
             {!x.ready && " (unsupported)"}
           </Button>
         ))}
       </ConnectList>
     );
-  } else {
-    return (
-      <ConnectList>
-        <Button disabled={siwe.loading} onClick={async () => signIn()}>
-          Sign-In with Ethereum
-        </Button>
-      </ConnectList>
-    );
-  }
 };
 
 export default SignIn;
