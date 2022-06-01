@@ -125,7 +125,7 @@ const SignIn = () => {
   return (
       <ConnectList>
         {data.connectors.map((x) => (
-          <Button disabled={siwe.loading} key={x.id} onClick={() => signIn(x)}>
+          <Button disabled={siwe.loading} key={x.id} onClick={async () => await signIn(x)}>
             {x.name}
             {!x.ready && " (unsupported)"}
           </Button>
